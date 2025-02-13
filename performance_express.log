@@ -1,0 +1,92 @@
+2025-02-13 09:00:34,402 - INFO - 开始获取 20100331 的数据
+2025-02-13 09:00:35,266 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,266 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,267 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,267 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,267 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,268 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,268 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,269 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,269 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,269 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,270 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:35,271 - ERROR - 处理 20100331 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:00:35,271 - INFO - 开始获取 20100631 的数据
+2025-02-13 09:00:35,654 - ERROR - 处理 20100631 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:00:35,655 - INFO - 开始获取 20100931 的数据
+2025-02-13 09:00:36,031 - ERROR - 处理 20100931 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:00:36,032 - INFO - 开始获取 20101231 的数据
+2025-02-13 09:00:37,664 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,665 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,665 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,666 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,666 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,666 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,666 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,667 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,667 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,667 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,668 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:37,670 - ERROR - 处理 20101231 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:00:37,670 - INFO - 开始获取 20110331 的数据
+2025-02-13 09:00:39,497 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,498 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,498 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,498 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,499 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,499 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,499 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,499 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,500 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,500 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,500 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:00:39,502 - ERROR - 处理 20110331 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:00:39,502 - INFO - 开始获取 20110631 的数据
+2025-02-13 09:00:39,930 - ERROR - 处理 20110631 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:00:39,931 - INFO - 开始获取 20110931 的数据
+2025-02-13 09:00:40,375 - ERROR - 处理 20110931 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:00:40,377 - INFO - 开始获取 20111231 的数据
+2025-02-13 09:01:08,824 - INFO - 开始获取 20100331 的数据
+2025-02-13 09:01:09,596 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,596 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,597 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,597 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,597 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,597 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,598 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,598 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,598 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,598 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,599 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:09,600 - ERROR - 处理 20100331 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:01:09,600 - INFO - 开始获取 20100631 的数据
+2025-02-13 09:01:10,089 - ERROR - 处理 20100631 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:01:10,090 - INFO - 开始获取 20100931 的数据
+2025-02-13 09:01:10,468 - ERROR - 处理 20100931 失败: 'NoneType' object is not subscriptable
+2025-02-13 09:01:10,469 - INFO - 开始获取 20101231 的数据
+2025-02-13 09:01:11,983 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,984 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,984 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,984 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,985 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,985 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,985 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,986 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,986 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,986 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,986 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:11,988 - ERROR - 处理 20101231 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:01:11,988 - INFO - 开始获取 20110331 的数据
+2025-02-13 09:01:12,768 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,768 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,769 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,769 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,770 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,770 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,770 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,771 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,771 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,772 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,772 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-02-13 09:01:12,773 - ERROR - 处理 20110331 失败: "['market_type', 'security_type'] not in index"
+2025-02-13 09:01:12,773 - INFO - 开始获取 20110631 的数据

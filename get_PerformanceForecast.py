@@ -87,12 +87,32 @@ class PerformanceForecastCollector:
         # 添加报告期
         df['report_period'] = report_period
         
+        # 确保日期格式正确
+        df['announce_date'] = pd.to_datetime(df['announce_date']).dt.strftime('%Y-%m-%d')
+        
+        # 数值类型转换
+        numeric_columns = ['forecast_indicator', 'performance_change', 'forecast_value', 
+                        'change_rate', 'last_year_value']
+        for col in numeric_columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+        # 文本类型转换
+        text_columns = ['change_reason', 'forecast_type']
+        for col in text_columns:
+            df[col] = df[col].astype(str)
+        
         # 选择需要的列
         columns = ['symbol', 'report_period', 'announce_date', 'stock_name', 
-                  'forecast_indicator', 'performance_change', 'forecast_value',
-                  'change_rate', 'change_reason', 'forecast_type', 'last_year_value']
+                'forecast_indicator', 'performance_change', 'forecast_value',
+                'change_rate', 'change_reason', 'forecast_type', 'last_year_value']
         
-        return df[columns]
+        df = df[columns]
+        
+        # 去除重复记录，保留最新的记录
+        df = df.sort_values('announce_date', ascending=False)
+        df = df.drop_duplicates(subset=['symbol', 'report_period', 'announce_date'], keep='first')
+        
+        return df
 
     def save_to_database(self, df: pd.DataFrame):
         """保存数据到数据库"""

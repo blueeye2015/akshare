@@ -154,3 +154,137 @@ CREATE TRIGGER update_financial_indicators_timestamp
     BEFORE UPDATE ON financial_indicators_ths
     FOR EACH ROW
     EXECUTE FUNCTION update_timestamp();
+	
+-- 创建资产负债表
+CREATE TABLE balance_sheet (
+    -- 主键
+    symbol VARCHAR(10) NOT NULL,  -- 股票代码
+    report_date VARCHAR(20) NOT NULL,  -- 报告期
+    
+    -- 基础信息
+    security_name VARCHAR(50),  -- 股票名称
+    
+    -- 资产负债表科目（单位：亿元）
+    total_current_assets DECIMAL(20,4),  -- 流动资产合计
+    total_current_liab DECIMAL(20,4),    -- 流动负债合计
+    goodwill DECIMAL(20,4),              -- 商誉
+    intangible_assets DECIMAL(20,4),     -- 无形资产
+    long_loan DECIMAL(20,4),             -- 长期借款
+    bonds_payable DECIMAL(20,4),         -- 应付债券
+    long_payable DECIMAL(20,4),          -- 长期应付款
+    special_payable DECIMAL(20,4),       -- 专项应付款
+    predict_liab DECIMAL(20,4),          -- 预计负债
+    defer_tax_liab DECIMAL(20,4),        -- 递延所得税负债
+    develop_expense DECIMAL(20,4),        -- 开发支出
+    long_rece DECIMAL(20,4),             -- 长期应收款
+    total_parent_equity DECIMAL(20,4),   -- 归属于母公司股东权益合计
+    preferred_stock DECIMAL(20,4),        -- 优先股
+    perpetual_bond DECIMAL(20,4),        -- 永续债（其他权益工具）
+    accounts_rece DECIMAL(20,4),         -- 应收账款
+    
+    -- 时间戳
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 更新时间
+    
+    -- 设置主键
+    PRIMARY KEY (symbol, report_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_balance_sheet_symbol ON balance_sheet(symbol);
+CREATE INDEX idx_balance_sheet_report_date ON balance_sheet(report_date);
+CREATE INDEX idx_balance_sheet_update_time ON balance_sheet(update_time);
+
+-- 添加表注释
+COMMENT ON TABLE balance_sheet IS '东方财富资产负债表数据';
+
+-- 添加字段注释
+COMMENT ON COLUMN balance_sheet.symbol IS '股票代码';
+COMMENT ON COLUMN balance_sheet.report_date IS '报告期';
+COMMENT ON COLUMN balance_sheet.security_name IS '股票名称';
+COMMENT ON COLUMN balance_sheet.total_current_assets IS '流动资产合计（亿元）';
+COMMENT ON COLUMN balance_sheet.total_current_liab IS '流动负债合计（亿元）';
+COMMENT ON COLUMN balance_sheet.goodwill IS '商誉（亿元）';
+COMMENT ON COLUMN balance_sheet.intangible_assets IS '无形资产（亿元）';
+COMMENT ON COLUMN balance_sheet.long_loan IS '长期借款（亿元）';
+COMMENT ON COLUMN balance_sheet.bonds_payable IS '应付债券（亿元）';
+COMMENT ON COLUMN balance_sheet.long_payable IS '长期应付款（亿元）';
+COMMENT ON COLUMN balance_sheet.special_payable IS '专项应付款（亿元）';
+COMMENT ON COLUMN balance_sheet.predict_liab IS '预计负债（亿元）';
+COMMENT ON COLUMN balance_sheet.defer_tax_liab IS '递延所得税负债（亿元）';
+COMMENT ON COLUMN balance_sheet.develop_expense IS '开发支出（亿元）';
+COMMENT ON COLUMN balance_sheet.long_rece IS '长期应收款（亿元）';
+COMMENT ON COLUMN balance_sheet.total_parent_equity IS '归属于母公司股东权益合计（亿元）';
+COMMENT ON COLUMN balance_sheet.preferred_stock IS '优先股（亿元）';
+COMMENT ON COLUMN balance_sheet.perpetual_bond IS '永续债（其他权益工具）（亿元）';
+COMMENT ON COLUMN balance_sheet.accounts_rece IS '应收账款（亿元）';
+COMMENT ON COLUMN balance_sheet.create_time IS '创建时间';
+COMMENT ON COLUMN balance_sheet.update_time IS '更新时间';
+
+-- 创建更新时间触发器
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.update_time = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_balance_sheet_timestamp
+    BEFORE UPDATE ON balance_sheet
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();
+
+
+	-- 创建利润表
+CREATE TABLE profit_sheet (
+    -- 主键
+    symbol VARCHAR(10) NOT NULL,  -- 股票代码
+    report_date VARCHAR(20) NOT NULL,  -- 报告期
+    
+    -- 基础信息
+    security_name VARCHAR(50),  -- 股票名称
+    
+    -- 利润表主要科目（单位：亿元）
+    total_operate_income DECIMAL(20,4),      -- 营业总收入
+    operate_income DECIMAL(20,4),            -- 营业收入
+    total_operate_cost DECIMAL(20,4),        -- 营业总成本
+    operate_cost DECIMAL(20,4),              -- 营业成本
+    sale_expense DECIMAL(20,4),              -- 销售费用
+    manage_expense DECIMAL(20,4),            -- 管理费用
+    finance_expense DECIMAL(20,4),           -- 财务费用
+    operate_profit DECIMAL(20,4),            -- 营业利润
+    total_profit DECIMAL(20,4),              -- 利润总额
+    income_tax DECIMAL(20,4),                -- 所得税费用
+    netprofit DECIMAL(20,4),                 -- 净利润
+    parent_netprofit DECIMAL(20,4),          -- 归属于母公司股东的净利润
+    deduct_parent_netprofit DECIMAL(20,4),   -- 扣除非经常性损益后的净利润
+    basic_eps DECIMAL(20,4),                 -- 基本每股收益
+    diluted_eps DECIMAL(20,4),               -- 稀释每股收益
+    
+    -- 时间戳
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 更新时间
+    
+    -- 设置主键
+    PRIMARY KEY (symbol, report_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_profit_sheet_symbol ON profit_sheet(symbol);
+CREATE INDEX idx_profit_sheet_report_date ON profit_sheet(report_date);
+CREATE INDEX idx_profit_sheet_update_time ON profit_sheet(update_time);
+
+-- 创建更新时间触发器
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.update_time = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_profit_sheet_timestamp
+    BEFORE UPDATE ON profit_sheet
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();

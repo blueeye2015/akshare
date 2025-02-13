@@ -1,0 +1,20 @@
+2025-02-13 14:05:26,205 - INFO - 开始初始数据采集...
+2025-02-13 14:06:00,235 - INFO - Successfully retrieved 4123 stock codes
+2025-02-13 14:06:00,236 - INFO - Starting initial balance sheet data collection for 4123 stocks
+2025-02-13 14:06:47,971 - INFO - Successfully fetched profit sheet data for 000001.SZ
+2025-02-13 14:06:48,063 - INFO - Successfully upserted 115 records
+2025-02-13 14:06:48,063 - INFO - Progress: 1/4123 - Successfully processed 000001.SZ
+2025-02-13 14:07:38,508 - INFO - Successfully fetched profit sheet data for 000002.SZ
+2025-02-13 14:07:38,550 - INFO - Successfully upserted 110 records
+2025-02-13 14:07:38,551 - INFO - Progress: 2/4123 - Successfully processed 000002.SZ
+2025-02-13 14:08:35,268 - INFO - Successfully fetched profit sheet data for 000004.SZ
+2025-02-13 14:08:35,305 - INFO - Successfully upserted 111 records
+2025-02-13 14:08:35,306 - INFO - Progress: 3/4123 - Successfully processed 000004.SZ
+2025-02-13 14:09:22,266 - INFO - Successfully fetched profit sheet data for 000006.SZ
+2025-02-13 14:09:22,310 - INFO - Successfully upserted 113 records
+2025-02-13 14:09:22,311 - INFO - Progress: 4/4123 - Successfully processed 000006.SZ
+2025-02-13 14:10:09,711 - INFO - Successfully fetched profit sheet data for 000007.SZ
+2025-02-13 14:10:09,756 - INFO - Successfully upserted 112 records
+2025-02-13 14:10:09,757 - INFO - Progress: 5/4123 - Successfully processed 000007.SZ
+2025-02-13 14:10:38,118 - INFO - 程序被用户中断
+2025-02-13 14:10:38,119 - INFO - 程序运行完成

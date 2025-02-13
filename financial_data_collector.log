@@ -929,3 +929,1546 @@ LINE 1: ...me) VALUES ('000004', '2024-09-30', '-3582.68万', '-1.78%', ...
 2025-02-12 15:58:15,894 - INFO - Progress: 371/4123 - Successfully processed 000926
 2025-02-12 15:58:22,142 - INFO - 程序被用户中断
 2025-02-12 15:58:22,142 - INFO - 程序运行完成
+2025-02-12 15:58:55,009 - INFO - 开始初始数据采集...
+2025-02-12 15:59:37,265 - INFO - Successfully retrieved 4123 stock codes
+2025-02-12 15:59:37,265 - INFO - Starting initial data collection for 4123 stocks
+2025-02-12 15:59:43,093 - INFO - Successfully fetched data for 000001
+2025-02-12 15:59:43,189 - INFO - Progress: 1/4123 - Successfully processed 000001
+2025-02-12 15:59:48,105 - INFO - Successfully fetched data for 000002
+2025-02-12 15:59:48,155 - INFO - Progress: 2/4123 - Successfully processed 000002
+2025-02-12 15:59:53,639 - INFO - Successfully fetched data for 000004
+2025-02-12 15:59:53,690 - INFO - Progress: 3/4123 - Successfully processed 000004
+2025-02-12 15:59:59,011 - INFO - Successfully fetched data for 000006
+2025-02-12 15:59:59,063 - INFO - Progress: 4/4123 - Successfully processed 000006
+2025-02-12 16:00:05,915 - INFO - Successfully fetched data for 000007
+2025-02-12 16:00:06,047 - INFO - Progress: 5/4123 - Successfully processed 000007
+2025-02-12 16:00:13,347 - INFO - Successfully fetched data for 000008
+2025-02-12 16:00:13,506 - INFO - Progress: 6/4123 - Successfully processed 000008
+2025-02-12 16:00:20,024 - INFO - Successfully fetched data for 000009
+2025-02-12 16:00:20,262 - INFO - Progress: 7/4123 - Successfully processed 000009
+2025-02-12 16:00:26,840 - INFO - Successfully fetched data for 000010
+2025-02-12 16:00:26,970 - INFO - Progress: 8/4123 - Successfully processed 000010
+2025-02-12 16:00:33,328 - INFO - Successfully fetched data for 000011
+2025-02-12 16:00:33,447 - INFO - Progress: 9/4123 - Successfully processed 000011
+2025-02-12 16:00:39,913 - INFO - Successfully fetched data for 000012
+2025-02-12 16:00:40,065 - INFO - Progress: 10/4123 - Successfully processed 000012
+2025-02-12 16:00:44,634 - INFO - Successfully fetched data for 000014
+2025-02-12 16:00:44,762 - INFO - Progress: 11/4123 - Successfully processed 000014
+2025-02-12 16:00:49,227 - INFO - Successfully fetched data for 000016
+2025-02-12 16:00:49,371 - INFO - Progress: 12/4123 - Successfully processed 000016
+2025-02-12 16:00:54,328 - INFO - Successfully fetched data for 000017
+2025-02-12 16:00:54,485 - INFO - Progress: 13/4123 - Successfully processed 000017
+2025-02-12 16:00:58,572 - INFO - Successfully fetched data for 000019
+2025-02-12 16:00:58,754 - INFO - Progress: 14/4123 - Successfully processed 000019
+2025-02-12 16:01:03,844 - INFO - Successfully fetched data for 000020
+2025-02-12 16:01:04,000 - INFO - Progress: 15/4123 - Successfully processed 000020
+2025-02-12 16:01:09,714 - INFO - Successfully fetched data for 000021
+2025-02-12 16:01:09,843 - INFO - Progress: 16/4123 - Successfully processed 000021
+2025-02-12 16:01:19,090 - INFO - Successfully fetched data for 000025
+2025-02-12 16:01:19,336 - INFO - Progress: 17/4123 - Successfully processed 000025
+2025-02-12 16:01:27,591 - INFO - Successfully fetched data for 000026
+2025-02-12 16:01:27,743 - INFO - Progress: 18/4123 - Successfully processed 000026
+2025-02-12 16:01:35,557 - INFO - Successfully fetched data for 000027
+2025-02-12 16:01:35,683 - INFO - Progress: 19/4123 - Successfully processed 000027
+2025-02-12 16:02:07,050 - ERROR - Error fetching data for 000028: Response ended prematurely
+2025-02-12 16:02:14,655 - INFO - Successfully fetched data for 000028
+2025-02-12 16:02:14,780 - INFO - Progress: 20/4123 - Successfully processed 000028
+2025-02-12 16:02:20,305 - INFO - Successfully fetched data for 000029
+2025-02-12 16:02:20,422 - INFO - Progress: 21/4123 - Successfully processed 000029
+2025-02-12 16:02:24,602 - INFO - Successfully fetched data for 000030
+2025-02-12 16:02:24,722 - INFO - Progress: 22/4123 - Successfully processed 000030
+2025-02-12 16:02:29,817 - INFO - Successfully fetched data for 000031
+2025-02-12 16:02:29,942 - INFO - Progress: 23/4123 - Successfully processed 000031
+2025-02-12 16:02:37,237 - INFO - Successfully fetched data for 000032
+2025-02-12 16:02:37,384 - INFO - Progress: 24/4123 - Successfully processed 000032
+2025-02-12 16:02:41,858 - INFO - Successfully fetched data for 000034
+2025-02-12 16:02:41,988 - INFO - Progress: 25/4123 - Successfully processed 000034
+2025-02-12 16:02:47,008 - INFO - Successfully fetched data for 000035
+2025-02-12 16:02:47,147 - INFO - Progress: 26/4123 - Successfully processed 000035
+2025-02-12 16:02:51,334 - INFO - Successfully fetched data for 000036
+2025-02-12 16:02:51,527 - INFO - Progress: 27/4123 - Successfully processed 000036
+2025-02-12 16:02:57,368 - INFO - Successfully fetched data for 000037
+2025-02-12 16:02:57,492 - INFO - Progress: 28/4123 - Successfully processed 000037
+2025-02-12 16:03:03,755 - INFO - Successfully fetched data for 000039
+2025-02-12 16:03:03,882 - INFO - Progress: 29/4123 - Successfully processed 000039
+2025-02-12 16:03:08,629 - INFO - Successfully fetched data for 000040
+2025-02-12 16:03:08,775 - INFO - Progress: 30/4123 - Successfully processed 000040
+2025-02-12 16:03:14,567 - INFO - Successfully fetched data for 000042
+2025-02-12 16:03:14,685 - INFO - Progress: 31/4123 - Successfully processed 000042
+2025-02-12 16:03:20,979 - INFO - Successfully fetched data for 000045
+2025-02-12 16:03:21,124 - INFO - Progress: 32/4123 - Successfully processed 000045
+2025-02-12 16:03:27,970 - INFO - Successfully fetched data for 000048
+2025-02-12 16:03:28,111 - INFO - Progress: 33/4123 - Successfully processed 000048
+2025-02-12 16:03:38,220 - INFO - Successfully fetched data for 000049
+2025-02-12 16:03:38,351 - INFO - Progress: 34/4123 - Successfully processed 000049
+2025-02-12 16:04:21,979 - ERROR - Error fetching data for 000050: Response ended prematurely
+2025-02-12 16:04:28,781 - INFO - Successfully fetched data for 000050
+2025-02-12 16:04:28,899 - INFO - Progress: 35/4123 - Successfully processed 000050
+2025-02-12 16:04:35,174 - INFO - Successfully fetched data for 000055
+2025-02-12 16:04:35,297 - INFO - Progress: 36/4123 - Successfully processed 000055
+2025-02-12 16:04:39,236 - INFO - Successfully fetched data for 000056
+2025-02-12 16:04:39,356 - INFO - Progress: 37/4123 - Successfully processed 000056
+2025-02-12 16:04:44,081 - INFO - Successfully fetched data for 000058
+2025-02-12 16:04:44,196 - INFO - Progress: 38/4123 - Successfully processed 000058
+2025-02-12 16:04:49,301 - INFO - Successfully fetched data for 000059
+2025-02-12 16:04:49,422 - INFO - Progress: 39/4123 - Successfully processed 000059
+2025-02-12 16:04:54,297 - INFO - Successfully fetched data for 000060
+2025-02-12 16:04:54,413 - INFO - Progress: 40/4123 - Successfully processed 000060
+2025-02-12 16:04:58,906 - INFO - Successfully fetched data for 000061
+2025-02-12 16:04:59,031 - INFO - Progress: 41/4123 - Successfully processed 000061
+2025-02-12 16:05:05,033 - INFO - Successfully fetched data for 000062
+2025-02-12 16:05:05,152 - INFO - Progress: 42/4123 - Successfully processed 000062
+2025-02-12 16:05:11,595 - INFO - Successfully fetched data for 000063
+2025-02-12 16:05:11,683 - INFO - Progress: 43/4123 - Successfully processed 000063
+2025-02-12 16:05:17,753 - INFO - Successfully fetched data for 000065
+2025-02-12 16:05:17,872 - INFO - Progress: 44/4123 - Successfully processed 000065
+2025-02-12 16:05:23,757 - INFO - Successfully fetched data for 000066
+2025-02-12 16:05:23,905 - INFO - Progress: 45/4123 - Successfully processed 000066
+2025-02-12 16:05:29,233 - INFO - Successfully fetched data for 000068
+2025-02-12 16:05:29,358 - INFO - Progress: 46/4123 - Successfully processed 000068
+2025-02-12 16:05:33,721 - INFO - Successfully fetched data for 000069
+2025-02-12 16:05:33,957 - INFO - Progress: 47/4123 - Successfully processed 000069
+2025-02-12 16:05:39,211 - INFO - Successfully fetched data for 000070
+2025-02-12 16:05:39,326 - INFO - Progress: 48/4123 - Successfully processed 000070
+2025-02-12 16:05:44,801 - INFO - Successfully fetched data for 000078
+2025-02-12 16:05:44,930 - INFO - Progress: 49/4123 - Successfully processed 000078
+2025-02-12 16:05:50,776 - INFO - Successfully fetched data for 000088
+2025-02-12 16:05:50,900 - INFO - Progress: 50/4123 - Successfully processed 000088
+2025-02-12 16:05:56,893 - INFO - Successfully fetched data for 000089
+2025-02-12 16:05:57,005 - INFO - Progress: 51/4123 - Successfully processed 000089
+2025-02-12 16:06:01,684 - INFO - Successfully fetched data for 000090
+2025-02-12 16:06:01,806 - INFO - Progress: 52/4123 - Successfully processed 000090
+2025-02-12 16:06:06,051 - INFO - Successfully fetched data for 000096
+2025-02-12 16:06:06,173 - INFO - Progress: 53/4123 - Successfully processed 000096
+2025-02-12 16:06:11,208 - INFO - Successfully fetched data for 000099
+2025-02-12 16:06:11,405 - INFO - Progress: 54/4123 - Successfully processed 000099
+2025-02-12 16:06:16,932 - INFO - Successfully fetched data for 000100
+2025-02-12 16:06:17,039 - INFO - Progress: 55/4123 - Successfully processed 000100
+2025-02-12 16:06:22,816 - INFO - Successfully fetched data for 000151
+2025-02-12 16:06:22,930 - INFO - Progress: 56/4123 - Successfully processed 000151
+2025-02-12 16:06:28,724 - INFO - Successfully fetched data for 000153
+2025-02-12 16:06:28,838 - INFO - Progress: 57/4123 - Successfully processed 000153
+2025-02-12 16:06:33,285 - INFO - Successfully fetched data for 000155
+2025-02-12 16:06:33,395 - INFO - Progress: 58/4123 - Successfully processed 000155
+2025-02-12 16:06:37,983 - INFO - Successfully fetched data for 000156
+2025-02-12 16:06:38,095 - INFO - Progress: 59/4123 - Successfully processed 000156
+2025-02-12 16:06:42,694 - INFO - Successfully fetched data for 000157
+2025-02-12 16:06:42,812 - INFO - Progress: 60/4123 - Successfully processed 000157
+2025-02-12 16:06:49,911 - INFO - Successfully fetched data for 000158
+2025-02-12 16:06:50,123 - INFO - Progress: 61/4123 - Successfully processed 000158
+2025-02-12 16:06:55,243 - INFO - Successfully fetched data for 000159
+2025-02-12 16:06:55,360 - INFO - Progress: 62/4123 - Successfully processed 000159
+2025-02-12 16:07:00,330 - INFO - Successfully fetched data for 000166
+2025-02-12 16:07:00,386 - INFO - Progress: 63/4123 - Successfully processed 000166
+2025-02-12 16:07:05,931 - INFO - Successfully fetched data for 000301
+2025-02-12 16:07:06,079 - INFO - Progress: 64/4123 - Successfully processed 000301
+2025-02-12 16:07:10,943 - INFO - Successfully fetched data for 000333
+2025-02-12 16:07:11,044 - INFO - Progress: 65/4123 - Successfully processed 000333
+2025-02-12 16:07:16,795 - INFO - Successfully fetched data for 000338
+2025-02-12 16:07:16,908 - INFO - Progress: 66/4123 - Successfully processed 000338
+2025-02-12 16:07:22,886 - INFO - Successfully fetched data for 000400
+2025-02-12 16:07:22,998 - INFO - Progress: 67/4123 - Successfully processed 000400
+2025-02-12 16:07:27,643 - INFO - Successfully fetched data for 000401
+2025-02-12 16:07:27,869 - INFO - Progress: 68/4123 - Successfully processed 000401
+2025-02-12 16:07:33,279 - INFO - Successfully fetched data for 000402
+2025-02-12 16:07:33,407 - INFO - Progress: 69/4123 - Successfully processed 000402
+2025-02-12 16:07:38,893 - INFO - Successfully fetched data for 000403
+2025-02-12 16:07:39,022 - INFO - Progress: 70/4123 - Successfully processed 000403
+2025-02-12 16:07:43,284 - INFO - Successfully fetched data for 000404
+2025-02-12 16:07:43,400 - INFO - Progress: 71/4123 - Successfully processed 000404
+2025-02-12 16:07:48,673 - INFO - Successfully fetched data for 000407
+2025-02-12 16:07:48,802 - INFO - Progress: 72/4123 - Successfully processed 000407
+2025-02-12 16:07:54,723 - INFO - Successfully fetched data for 000408
+2025-02-12 16:07:54,849 - INFO - Progress: 73/4123 - Successfully processed 000408
+2025-02-12 16:07:59,289 - INFO - Successfully fetched data for 000409
+2025-02-12 16:07:59,407 - INFO - Progress: 74/4123 - Successfully processed 000409
+2025-02-12 16:08:05,588 - INFO - Successfully fetched data for 000410
+2025-02-12 16:08:05,703 - INFO - Progress: 75/4123 - Successfully processed 000410
+2025-02-12 16:08:10,647 - INFO - Successfully fetched data for 000411
+2025-02-12 16:08:10,773 - INFO - Progress: 76/4123 - Successfully processed 000411
+2025-02-12 16:08:15,709 - INFO - Successfully fetched data for 000415
+2025-02-12 16:08:15,830 - INFO - Progress: 77/4123 - Successfully processed 000415
+2025-02-12 16:08:20,728 - INFO - Successfully fetched data for 000417
+2025-02-12 16:08:20,852 - INFO - Progress: 78/4123 - Successfully processed 000417
+2025-02-12 16:08:29,468 - INFO - Successfully fetched data for 000419
+2025-02-12 16:08:29,580 - INFO - Progress: 79/4123 - Successfully processed 000419
+2025-02-12 16:08:34,473 - INFO - Successfully fetched data for 000420
+2025-02-12 16:08:34,606 - INFO - Progress: 80/4123 - Successfully processed 000420
+2025-02-12 16:08:40,176 - INFO - Successfully fetched data for 000421
+2025-02-12 16:08:40,299 - INFO - Progress: 81/4123 - Successfully processed 000421
+2025-02-12 16:08:45,665 - INFO - Successfully fetched data for 000422
+2025-02-12 16:08:45,800 - INFO - Progress: 82/4123 - Successfully processed 000422
+2025-02-12 16:08:51,743 - INFO - Successfully fetched data for 000423
+2025-02-12 16:08:51,863 - INFO - Progress: 83/4123 - Successfully processed 000423
+2025-02-12 16:08:55,978 - INFO - Successfully fetched data for 000425
+2025-02-12 16:08:56,110 - INFO - Progress: 84/4123 - Successfully processed 000425
+2025-02-12 16:09:01,927 - INFO - Successfully fetched data for 000426
+2025-02-12 16:09:02,055 - INFO - Progress: 85/4123 - Successfully processed 000426
+2025-02-12 16:09:08,526 - INFO - Successfully fetched data for 000428
+2025-02-12 16:09:08,646 - INFO - Progress: 86/4123 - Successfully processed 000428
+2025-02-12 16:09:12,800 - INFO - Successfully fetched data for 000429
+2025-02-12 16:09:12,923 - INFO - Progress: 87/4123 - Successfully processed 000429
+2025-02-12 16:09:18,735 - INFO - Successfully fetched data for 000430
+2025-02-12 16:09:18,952 - INFO - Progress: 88/4123 - Successfully processed 000430
+2025-02-12 16:09:23,289 - INFO - Successfully fetched data for 000488
+2025-02-12 16:09:23,401 - INFO - Progress: 89/4123 - Successfully processed 000488
+2025-02-12 16:09:27,945 - INFO - Successfully fetched data for 000498
+2025-02-12 16:09:28,063 - INFO - Progress: 90/4123 - Successfully processed 000498
+2025-02-12 16:09:33,349 - INFO - Successfully fetched data for 000501
+2025-02-12 16:09:33,477 - INFO - Progress: 91/4123 - Successfully processed 000501
+2025-02-12 16:09:38,562 - INFO - Successfully fetched data for 000503
+2025-02-12 16:09:38,703 - INFO - Progress: 92/4123 - Successfully processed 000503
+2025-02-12 16:09:43,568 - INFO - Successfully fetched data for 000504
+2025-02-12 16:09:43,709 - INFO - Progress: 93/4123 - Successfully processed 000504
+2025-02-12 16:09:49,812 - INFO - Successfully fetched data for 000505
+2025-02-12 16:09:49,929 - INFO - Progress: 94/4123 - Successfully processed 000505
+2025-02-12 16:09:59,300 - INFO - Successfully fetched data for 000506
+2025-02-12 16:09:59,437 - INFO - Progress: 95/4123 - Successfully processed 000506
+2025-02-12 16:10:04,635 - INFO - Successfully fetched data for 000507
+2025-02-12 16:10:04,757 - INFO - Progress: 96/4123 - Successfully processed 000507
+2025-02-12 16:10:09,616 - INFO - Successfully fetched data for 000509
+2025-02-12 16:10:09,743 - INFO - Progress: 97/4123 - Successfully processed 000509
+2025-02-12 16:10:17,102 - INFO - Successfully fetched data for 000510
+2025-02-12 16:10:17,220 - INFO - Progress: 98/4123 - Successfully processed 000510
+2025-02-12 16:10:23,843 - INFO - Successfully fetched data for 000513
+2025-02-12 16:10:23,950 - INFO - Progress: 99/4123 - Successfully processed 000513
+2025-02-12 16:10:29,279 - INFO - Successfully fetched data for 000514
+2025-02-12 16:10:29,398 - INFO - Progress: 100/4123 - Successfully processed 000514
+2025-02-12 16:10:54,226 - ERROR - Error fetching data for 000516: HTTPSConnectionPool(host='basic.10jqka.com.cn', port=443): Max retries exceeded with url: /new/000516/finance.html (Caused by SSLError(SSLZeroReturnError(6, 'TLS/SSL connection has been closed (EOF) (_ssl.c:1147)')))
+2025-02-12 16:11:11,283 - INFO - Successfully fetched data for 000516
+2025-02-12 16:11:11,505 - INFO - Progress: 101/4123 - Successfully processed 000516
+2025-02-12 16:11:16,804 - INFO - Successfully fetched data for 000517
+2025-02-12 16:11:16,936 - INFO - Progress: 102/4123 - Successfully processed 000517
+2025-02-12 16:11:21,671 - INFO - Successfully fetched data for 000518
+2025-02-12 16:11:21,792 - INFO - Progress: 103/4123 - Successfully processed 000518
+2025-02-12 16:11:26,372 - INFO - Successfully fetched data for 000519
+2025-02-12 16:11:26,504 - INFO - Progress: 104/4123 - Successfully processed 000519
+2025-02-12 16:11:31,651 - INFO - Successfully fetched data for 000520
+2025-02-12 16:11:31,782 - INFO - Progress: 105/4123 - Successfully processed 000520
+2025-02-12 16:11:37,553 - INFO - Successfully fetched data for 000521
+2025-02-12 16:11:37,684 - INFO - Progress: 106/4123 - Successfully processed 000521
+2025-02-12 16:11:42,609 - INFO - Successfully fetched data for 000523
+2025-02-12 16:11:42,745 - INFO - Progress: 107/4123 - Successfully processed 000523
+2025-02-12 16:11:47,337 - INFO - Successfully fetched data for 000524
+2025-02-12 16:11:47,462 - INFO - Progress: 108/4123 - Successfully processed 000524
+2025-02-12 16:11:54,012 - INFO - Successfully fetched data for 000525
+2025-02-12 16:11:54,143 - INFO - Progress: 109/4123 - Successfully processed 000525
+2025-02-12 16:12:00,203 - INFO - Successfully fetched data for 000526
+2025-02-12 16:12:00,335 - INFO - Progress: 110/4123 - Successfully processed 000526
+2025-02-12 16:12:06,725 - INFO - Successfully fetched data for 000528
+2025-02-12 16:12:06,838 - INFO - Progress: 111/4123 - Successfully processed 000528
+2025-02-12 16:12:11,013 - INFO - Successfully fetched data for 000529
+2025-02-12 16:12:11,147 - INFO - Progress: 112/4123 - Successfully processed 000529
+2025-02-12 16:12:16,428 - INFO - Successfully fetched data for 000530
+2025-02-12 16:12:16,549 - INFO - Progress: 113/4123 - Successfully processed 000530
+2025-02-12 16:12:22,326 - INFO - Successfully fetched data for 000531
+2025-02-12 16:12:22,456 - INFO - Progress: 114/4123 - Successfully processed 000531
+2025-02-12 16:12:27,126 - INFO - Successfully fetched data for 000532
+2025-02-12 16:12:27,248 - INFO - Progress: 115/4123 - Successfully processed 000532
+2025-02-12 16:12:32,400 - INFO - Successfully fetched data for 000533
+2025-02-12 16:12:32,521 - INFO - Progress: 116/4123 - Successfully processed 000533
+2025-02-12 16:12:38,016 - INFO - Successfully fetched data for 000534
+2025-02-12 16:12:38,244 - INFO - Progress: 117/4123 - Successfully processed 000534
+2025-02-12 16:12:44,908 - INFO - Successfully fetched data for 000536
+2025-02-12 16:12:45,039 - INFO - Progress: 118/4123 - Successfully processed 000536
+2025-02-12 16:12:51,956 - INFO - Successfully fetched data for 000537
+2025-02-12 16:12:52,096 - INFO - Progress: 119/4123 - Successfully processed 000537
+2025-02-12 16:12:58,862 - INFO - Successfully fetched data for 000538
+2025-02-12 16:12:58,991 - INFO - Progress: 120/4123 - Successfully processed 000538
+2025-02-12 16:13:04,717 - INFO - Successfully fetched data for 000539
+2025-02-12 16:13:04,863 - INFO - Progress: 121/4123 - Successfully processed 000539
+2025-02-12 16:13:13,521 - INFO - Successfully fetched data for 000541
+2025-02-12 16:13:13,653 - INFO - Progress: 122/4123 - Successfully processed 000541
+2025-02-12 16:13:23,309 - INFO - Successfully fetched data for 000543
+2025-02-12 16:13:23,450 - INFO - Progress: 123/4123 - Successfully processed 000543
+2025-02-12 16:13:35,806 - INFO - Successfully fetched data for 000544
+2025-02-12 16:13:35,933 - INFO - Progress: 124/4123 - Successfully processed 000544
+2025-02-12 16:13:41,387 - INFO - Successfully fetched data for 000545
+2025-02-12 16:13:41,515 - INFO - Progress: 125/4123 - Successfully processed 000545
+2025-02-12 16:13:46,219 - INFO - Successfully fetched data for 000546
+2025-02-12 16:13:46,365 - INFO - Progress: 126/4123 - Successfully processed 000546
+2025-02-12 16:13:50,484 - INFO - Successfully fetched data for 000547
+2025-02-12 16:13:50,714 - INFO - Progress: 127/4123 - Successfully processed 000547
+2025-02-12 16:13:56,437 - INFO - Successfully fetched data for 000548
+2025-02-12 16:13:56,560 - INFO - Progress: 128/4123 - Successfully processed 000548
+2025-02-12 16:14:02,454 - INFO - Successfully fetched data for 000550
+2025-02-12 16:14:02,629 - INFO - Progress: 129/4123 - Successfully processed 000550
+2025-02-12 16:14:06,993 - INFO - Successfully fetched data for 000551
+2025-02-12 16:14:07,122 - INFO - Progress: 130/4123 - Successfully processed 000551
+2025-02-12 16:14:11,637 - INFO - Successfully fetched data for 000552
+2025-02-12 16:14:11,757 - INFO - Progress: 131/4123 - Successfully processed 000552
+2025-02-12 16:14:16,462 - INFO - Successfully fetched data for 000553
+2025-02-12 16:14:16,593 - INFO - Progress: 132/4123 - Successfully processed 000553
+2025-02-12 16:14:21,970 - INFO - Successfully fetched data for 000554
+2025-02-12 16:14:22,095 - INFO - Progress: 133/4123 - Successfully processed 000554
+2025-02-12 16:14:28,667 - INFO - Successfully fetched data for 000555
+2025-02-12 16:14:28,806 - INFO - Progress: 134/4123 - Successfully processed 000555
+2025-02-12 16:14:34,096 - INFO - Successfully fetched data for 000557
+2025-02-12 16:14:34,229 - INFO - Progress: 135/4123 - Successfully processed 000557
+2025-02-12 16:14:39,917 - INFO - Successfully fetched data for 000558
+2025-02-12 16:14:40,037 - INFO - Progress: 136/4123 - Successfully processed 000558
+2025-02-12 16:14:45,512 - INFO - Successfully fetched data for 000559
+2025-02-12 16:14:45,720 - INFO - Progress: 137/4123 - Successfully processed 000559
+2025-02-12 16:14:49,843 - INFO - Successfully fetched data for 000560
+2025-02-12 16:14:49,991 - INFO - Progress: 138/4123 - Successfully processed 000560
+2025-02-12 16:14:54,671 - INFO - Successfully fetched data for 000561
+2025-02-12 16:14:54,802 - INFO - Progress: 139/4123 - Successfully processed 000561
+2025-02-12 16:15:00,231 - INFO - Successfully fetched data for 000563
+2025-02-12 16:15:00,362 - INFO - Progress: 140/4123 - Successfully processed 000563
+2025-02-12 16:15:06,356 - INFO - Successfully fetched data for 000564
+2025-02-12 16:15:06,484 - INFO - Progress: 141/4123 - Successfully processed 000564
+2025-02-12 16:15:11,890 - INFO - Successfully fetched data for 000565
+2025-02-12 16:15:12,008 - INFO - Progress: 142/4123 - Successfully processed 000565
+2025-02-12 16:15:16,649 - INFO - Successfully fetched data for 000566
+2025-02-12 16:15:16,770 - INFO - Progress: 143/4123 - Successfully processed 000566
+2025-02-12 16:15:21,707 - INFO - Successfully fetched data for 000567
+2025-02-12 16:15:21,824 - INFO - Progress: 144/4123 - Successfully processed 000567
+2025-02-12 16:15:27,167 - INFO - Successfully fetched data for 000568
+2025-02-12 16:15:27,290 - INFO - Progress: 145/4123 - Successfully processed 000568
+2025-02-12 16:15:32,510 - INFO - Successfully fetched data for 000570
+2025-02-12 16:15:32,641 - INFO - Progress: 146/4123 - Successfully processed 000570
+2025-02-12 16:15:36,920 - INFO - Successfully fetched data for 000571
+2025-02-12 16:15:37,064 - INFO - Progress: 147/4123 - Successfully processed 000571
+2025-02-12 16:15:44,024 - INFO - Successfully fetched data for 000572
+2025-02-12 16:15:44,166 - INFO - Progress: 148/4123 - Successfully processed 000572
+2025-02-12 16:15:51,289 - INFO - Successfully fetched data for 000573
+2025-02-12 16:15:51,411 - INFO - Progress: 149/4123 - Successfully processed 000573
+2025-02-12 16:15:56,670 - INFO - Successfully fetched data for 000576
+2025-02-12 16:15:56,880 - INFO - Progress: 150/4123 - Successfully processed 000576
+2025-02-12 16:16:02,191 - INFO - Successfully fetched data for 000581
+2025-02-12 16:16:02,312 - INFO - Progress: 151/4123 - Successfully processed 000581
+2025-02-12 16:16:07,234 - INFO - Successfully fetched data for 000582
+2025-02-12 16:16:07,352 - INFO - Progress: 152/4123 - Successfully processed 000582
+2025-02-12 16:16:13,890 - INFO - Successfully fetched data for 000584
+2025-02-12 16:16:14,015 - INFO - Progress: 153/4123 - Successfully processed 000584
+2025-02-12 16:16:21,523 - INFO - Successfully fetched data for 000586
+2025-02-12 16:16:21,646 - INFO - Progress: 154/4123 - Successfully processed 000586
+2025-02-12 16:16:27,485 - INFO - Successfully fetched data for 000589
+2025-02-12 16:16:27,622 - INFO - Progress: 155/4123 - Successfully processed 000589
+2025-02-12 16:16:33,520 - INFO - Successfully fetched data for 000590
+2025-02-12 16:16:33,640 - INFO - Progress: 156/4123 - Successfully processed 000590
+2025-02-12 16:16:39,906 - INFO - Successfully fetched data for 000591
+2025-02-12 16:16:40,022 - INFO - Progress: 157/4123 - Successfully processed 000591
+2025-02-12 16:16:46,024 - INFO - Successfully fetched data for 000592
+2025-02-12 16:16:46,152 - INFO - Progress: 158/4123 - Successfully processed 000592
+2025-02-12 16:16:52,001 - INFO - Successfully fetched data for 000593
+2025-02-12 16:16:52,141 - INFO - Progress: 159/4123 - Successfully processed 000593
+2025-02-12 16:16:57,348 - INFO - Successfully fetched data for 000595
+2025-02-12 16:16:57,572 - INFO - Progress: 160/4123 - Successfully processed 000595
+2025-02-12 16:17:03,537 - INFO - Successfully fetched data for 000596
+2025-02-12 16:17:03,660 - INFO - Progress: 161/4123 - Successfully processed 000596
+2025-02-12 16:17:09,850 - INFO - Successfully fetched data for 000597
+2025-02-12 16:17:09,980 - INFO - Progress: 162/4123 - Successfully processed 000597
+2025-02-12 16:17:16,069 - INFO - Successfully fetched data for 000598
+2025-02-12 16:17:16,199 - INFO - Progress: 163/4123 - Successfully processed 000598
+2025-02-12 16:17:21,821 - INFO - Successfully fetched data for 000599
+2025-02-12 16:17:21,965 - INFO - Progress: 164/4123 - Successfully processed 000599
+2025-02-12 16:17:26,657 - INFO - Successfully fetched data for 000600
+2025-02-12 16:17:26,783 - INFO - Progress: 165/4123 - Successfully processed 000600
+2025-02-12 16:17:36,477 - INFO - Successfully fetched data for 000601
+2025-02-12 16:17:36,598 - INFO - Progress: 166/4123 - Successfully processed 000601
+2025-02-12 16:17:43,183 - INFO - Successfully fetched data for 000603
+2025-02-12 16:17:43,310 - INFO - Progress: 167/4123 - Successfully processed 000603
+2025-02-12 16:17:55,716 - INFO - Successfully fetched data for 000605
+2025-02-12 16:17:55,833 - INFO - Progress: 168/4123 - Successfully processed 000605
+2025-02-12 16:18:18,306 - INFO - Successfully fetched data for 000607
+2025-02-12 16:18:18,427 - INFO - Progress: 169/4123 - Successfully processed 000607
+2025-02-12 16:18:23,000 - INFO - Successfully fetched data for 000608
+2025-02-12 16:18:23,267 - INFO - Progress: 170/4123 - Successfully processed 000608
+2025-02-12 16:20:20,406 - INFO - Successfully fetched data for 000609
+2025-02-12 16:20:20,586 - INFO - Progress: 171/4123 - Successfully processed 000609
+2025-02-12 16:20:26,237 - INFO - Successfully fetched data for 000610
+2025-02-12 16:20:26,401 - INFO - Progress: 172/4123 - Successfully processed 000610
+2025-02-12 16:20:39,676 - INFO - Successfully fetched data for 000612
+2025-02-12 16:20:39,782 - INFO - Progress: 173/4123 - Successfully processed 000612
+2025-02-12 16:20:45,659 - INFO - Successfully fetched data for 000615
+2025-02-12 16:20:45,788 - INFO - Progress: 174/4123 - Successfully processed 000615
+2025-02-12 16:20:50,553 - INFO - Successfully fetched data for 000617
+2025-02-12 16:20:50,669 - INFO - Progress: 175/4123 - Successfully processed 000617
+2025-02-12 16:20:54,899 - INFO - Successfully fetched data for 000619
+2025-02-12 16:20:55,020 - INFO - Progress: 176/4123 - Successfully processed 000619
+2025-02-12 16:21:01,300 - INFO - Successfully fetched data for 000620
+2025-02-12 16:21:01,480 - INFO - Progress: 177/4123 - Successfully processed 000620
+2025-02-12 16:21:07,586 - INFO - Successfully fetched data for 000622
+2025-02-12 16:21:07,712 - INFO - Progress: 178/4123 - Successfully processed 000622
+2025-02-12 16:21:14,253 - INFO - Successfully fetched data for 000623
+2025-02-12 16:21:14,388 - INFO - Progress: 179/4123 - Successfully processed 000623
+2025-02-12 16:21:21,233 - INFO - Successfully fetched data for 000625
+2025-02-12 16:21:21,354 - INFO - Progress: 180/4123 - Successfully processed 000625
+2025-02-12 16:21:26,900 - INFO - Successfully fetched data for 000626
+2025-02-12 16:21:27,047 - INFO - Progress: 181/4123 - Successfully processed 000626
+2025-02-12 16:21:32,289 - INFO - Successfully fetched data for 000627
+2025-02-12 16:21:32,457 - INFO - Progress: 182/4123 - Successfully processed 000627
+2025-02-12 16:21:39,344 - INFO - Successfully fetched data for 000628
+2025-02-12 16:21:39,480 - INFO - Progress: 183/4123 - Successfully processed 000628
+2025-02-12 16:21:45,588 - INFO - Successfully fetched data for 000629
+2025-02-12 16:21:45,735 - INFO - Progress: 184/4123 - Successfully processed 000629
+2025-02-12 16:21:51,987 - INFO - Successfully fetched data for 000630
+2025-02-12 16:21:52,116 - INFO - Progress: 185/4123 - Successfully processed 000630
+2025-02-12 16:21:57,202 - INFO - Successfully fetched data for 000631
+2025-02-12 16:21:57,315 - INFO - Progress: 186/4123 - Successfully processed 000631
+2025-02-12 16:22:05,106 - INFO - Successfully fetched data for 000632
+2025-02-12 16:22:05,325 - INFO - Progress: 187/4123 - Successfully processed 000632
+2025-02-12 16:22:12,544 - INFO - Successfully fetched data for 000633
+2025-02-12 16:22:12,672 - INFO - Progress: 188/4123 - Successfully processed 000633
+2025-02-12 16:22:18,116 - INFO - Successfully fetched data for 000635
+2025-02-12 16:22:18,237 - INFO - Progress: 189/4123 - Successfully processed 000635
+2025-02-12 16:22:23,445 - INFO - Successfully fetched data for 000636
+2025-02-12 16:22:23,566 - INFO - Progress: 190/4123 - Successfully processed 000636
+2025-02-12 16:22:29,161 - INFO - Successfully fetched data for 000637
+2025-02-12 16:22:29,330 - INFO - Progress: 191/4123 - Successfully processed 000637
+2025-02-12 16:22:35,158 - INFO - Successfully fetched data for 000638
+2025-02-12 16:22:35,249 - INFO - Progress: 192/4123 - Successfully processed 000638
+2025-02-12 16:22:41,022 - INFO - Successfully fetched data for 000639
+2025-02-12 16:22:41,094 - INFO - Progress: 193/4123 - Successfully processed 000639
+2025-02-12 16:22:46,176 - INFO - Successfully fetched data for 000650
+2025-02-12 16:22:46,257 - INFO - Progress: 194/4123 - Successfully processed 000650
+2025-02-12 16:22:50,624 - INFO - Successfully fetched data for 000651
+2025-02-12 16:22:50,704 - INFO - Progress: 195/4123 - Successfully processed 000651
+2025-02-12 16:22:56,385 - INFO - Successfully fetched data for 000652
+2025-02-12 16:22:56,470 - INFO - Progress: 196/4123 - Successfully processed 000652
+2025-02-12 16:23:03,325 - INFO - Successfully fetched data for 000655
+2025-02-12 16:23:03,471 - INFO - Progress: 197/4123 - Successfully processed 000655
+2025-02-12 16:23:08,223 - INFO - Successfully fetched data for 000656
+2025-02-12 16:23:08,320 - INFO - Progress: 198/4123 - Successfully processed 000656
+2025-02-12 16:23:14,281 - INFO - Successfully fetched data for 000657
+2025-02-12 16:23:14,382 - INFO - Progress: 199/4123 - Successfully processed 000657
+2025-02-12 16:23:19,366 - INFO - Successfully fetched data for 000659
+2025-02-12 16:23:19,464 - INFO - Progress: 200/4123 - Successfully processed 000659
+2025-02-12 16:23:23,916 - INFO - Successfully fetched data for 000661
+2025-02-12 16:23:24,021 - INFO - Progress: 201/4123 - Successfully processed 000661
+2025-02-12 16:23:28,672 - INFO - Successfully fetched data for 000663
+2025-02-12 16:23:28,767 - INFO - Progress: 202/4123 - Successfully processed 000663
+2025-02-12 16:23:34,243 - INFO - Successfully fetched data for 000665
+2025-02-12 16:23:34,327 - INFO - Progress: 203/4123 - Successfully processed 000665
+2025-02-12 16:23:40,490 - INFO - Successfully fetched data for 000668
+2025-02-12 16:23:40,590 - INFO - Progress: 204/4123 - Successfully processed 000668
+2025-02-12 16:23:48,149 - INFO - Successfully fetched data for 000669
+2025-02-12 16:23:48,252 - INFO - Progress: 205/4123 - Successfully processed 000669
+2025-02-12 16:23:53,503 - INFO - Successfully fetched data for 000670
+2025-02-12 16:23:53,616 - INFO - Progress: 206/4123 - Successfully processed 000670
+2025-02-12 16:24:01,249 - INFO - Successfully fetched data for 000672
+2025-02-12 16:24:01,335 - INFO - Progress: 207/4123 - Successfully processed 000672
+2025-02-12 16:24:07,960 - INFO - Successfully fetched data for 000676
+2025-02-12 16:24:08,063 - INFO - Progress: 208/4123 - Successfully processed 000676
+2025-02-12 16:24:13,630 - INFO - Successfully fetched data for 000677
+2025-02-12 16:24:13,718 - INFO - Progress: 209/4123 - Successfully processed 000677
+2025-02-12 16:24:18,532 - INFO - Successfully fetched data for 000678
+2025-02-12 16:24:18,634 - INFO - Progress: 210/4123 - Successfully processed 000678
+2025-02-12 16:24:24,061 - INFO - Successfully fetched data for 000679
+2025-02-12 16:24:24,151 - INFO - Progress: 211/4123 - Successfully processed 000679
+2025-02-12 16:24:30,994 - INFO - Successfully fetched data for 000680
+2025-02-12 16:24:31,098 - INFO - Progress: 212/4123 - Successfully processed 000680
+2025-02-12 16:24:38,201 - INFO - Successfully fetched data for 000681
+2025-02-12 16:24:38,293 - INFO - Progress: 213/4123 - Successfully processed 000681
+2025-02-12 16:24:42,585 - INFO - Successfully fetched data for 000682
+2025-02-12 16:24:42,716 - INFO - Progress: 214/4123 - Successfully processed 000682
+2025-02-12 16:24:48,291 - INFO - Successfully fetched data for 000683
+2025-02-12 16:24:48,427 - INFO - Progress: 215/4123 - Successfully processed 000683
+2025-02-12 16:24:54,255 - INFO - Successfully fetched data for 000685
+2025-02-12 16:24:54,374 - INFO - Progress: 216/4123 - Successfully processed 000685
+2025-02-12 16:25:01,093 - INFO - Successfully fetched data for 000686
+2025-02-12 16:25:01,210 - INFO - Progress: 217/4123 - Successfully processed 000686
+2025-02-12 16:25:05,564 - INFO - Successfully fetched data for 000688
+2025-02-12 16:25:05,673 - INFO - Progress: 218/4123 - Successfully processed 000688
+2025-02-12 16:25:11,272 - INFO - Successfully fetched data for 000690
+2025-02-12 16:25:11,380 - INFO - Progress: 219/4123 - Successfully processed 000690
+2025-02-12 16:25:17,207 - INFO - Successfully fetched data for 000691
+2025-02-12 16:25:17,304 - INFO - Progress: 220/4123 - Successfully processed 000691
+2025-02-12 16:25:24,163 - INFO - Successfully fetched data for 000692
+2025-02-12 16:25:24,252 - INFO - Progress: 221/4123 - Successfully processed 000692
+2025-02-12 16:25:30,554 - INFO - Successfully fetched data for 000695
+2025-02-12 16:25:30,684 - INFO - Progress: 222/4123 - Successfully processed 000695
+2025-02-12 16:25:35,564 - INFO - Successfully fetched data for 000697
+2025-02-12 16:25:35,675 - INFO - Progress: 223/4123 - Successfully processed 000697
+2025-02-12 16:25:41,363 - INFO - Successfully fetched data for 000698
+2025-02-12 16:25:41,498 - INFO - Progress: 224/4123 - Successfully processed 000698
+2025-02-12 16:25:45,984 - INFO - Successfully fetched data for 000700
+2025-02-12 16:25:46,130 - INFO - Progress: 225/4123 - Successfully processed 000700
+2025-02-12 16:25:49,901 - INFO - Successfully fetched data for 000701
+2025-02-12 16:25:49,992 - INFO - Progress: 226/4123 - Successfully processed 000701
+2025-02-12 16:25:54,973 - INFO - Successfully fetched data for 000702
+2025-02-12 16:25:55,069 - INFO - Progress: 227/4123 - Successfully processed 000702
+2025-02-12 16:25:59,167 - INFO - Successfully fetched data for 000703
+2025-02-12 16:25:59,264 - INFO - Progress: 228/4123 - Successfully processed 000703
+2025-02-12 16:26:03,360 - INFO - Successfully fetched data for 000705
+2025-02-12 16:26:03,467 - INFO - Progress: 229/4123 - Successfully processed 000705
+2025-02-12 16:26:08,589 - INFO - Successfully fetched data for 000707
+2025-02-12 16:26:08,708 - INFO - Progress: 230/4123 - Successfully processed 000707
+2025-02-12 16:26:13,811 - INFO - Successfully fetched data for 000708
+2025-02-12 16:26:13,933 - INFO - Progress: 231/4123 - Successfully processed 000708
+2025-02-12 16:26:18,720 - INFO - Successfully fetched data for 000709
+2025-02-12 16:26:18,828 - INFO - Progress: 232/4123 - Successfully processed 000709
+2025-02-12 16:26:23,985 - INFO - Successfully fetched data for 000710
+2025-02-12 16:26:24,118 - INFO - Progress: 233/4123 - Successfully processed 000710
+2025-02-12 16:26:30,118 - INFO - Successfully fetched data for 000711
+2025-02-12 16:26:30,238 - INFO - Progress: 234/4123 - Successfully processed 000711
+2025-02-12 16:26:35,513 - INFO - Successfully fetched data for 000712
+2025-02-12 16:26:35,654 - INFO - Progress: 235/4123 - Successfully processed 000712
+2025-02-12 16:26:41,008 - INFO - Successfully fetched data for 000713
+2025-02-12 16:26:41,125 - INFO - Progress: 236/4123 - Successfully processed 000713
+2025-02-12 16:26:46,290 - INFO - Successfully fetched data for 000715
+2025-02-12 16:26:46,401 - INFO - Progress: 237/4123 - Successfully processed 000715
+2025-02-12 16:26:51,512 - INFO - Successfully fetched data for 000716
+2025-02-12 16:26:51,631 - INFO - Progress: 238/4123 - Successfully processed 000716
+2025-02-12 16:26:57,031 - INFO - Successfully fetched data for 000717
+2025-02-12 16:26:57,154 - INFO - Progress: 239/4123 - Successfully processed 000717
+2025-02-12 16:27:03,255 - INFO - Successfully fetched data for 000718
+2025-02-12 16:27:03,380 - INFO - Progress: 240/4123 - Successfully processed 000718
+2025-02-12 16:27:08,868 - INFO - Successfully fetched data for 000719
+2025-02-12 16:27:09,075 - INFO - Progress: 241/4123 - Successfully processed 000719
+2025-02-12 16:27:13,107 - INFO - Successfully fetched data for 000720
+2025-02-12 16:27:13,229 - INFO - Progress: 242/4123 - Successfully processed 000720
+2025-02-12 16:27:19,076 - INFO - Successfully fetched data for 000721
+2025-02-12 16:27:19,200 - INFO - Progress: 243/4123 - Successfully processed 000721
+2025-02-12 16:27:24,159 - INFO - Successfully fetched data for 000722
+2025-02-12 16:27:24,278 - INFO - Progress: 244/4123 - Successfully processed 000722
+2025-02-12 16:27:30,809 - INFO - Successfully fetched data for 000723
+2025-02-12 16:27:30,929 - INFO - Progress: 245/4123 - Successfully processed 000723
+2025-02-12 16:27:36,092 - INFO - Successfully fetched data for 000725
+2025-02-12 16:27:36,202 - INFO - Progress: 246/4123 - Successfully processed 000725
+2025-02-12 16:27:42,211 - INFO - Successfully fetched data for 000726
+2025-02-12 16:27:42,329 - INFO - Progress: 247/4123 - Successfully processed 000726
+2025-02-12 16:27:47,877 - INFO - Successfully fetched data for 000727
+2025-02-12 16:27:48,088 - INFO - Progress: 248/4123 - Successfully processed 000727
+2025-02-12 16:27:53,239 - INFO - Successfully fetched data for 000728
+2025-02-12 16:27:53,351 - INFO - Progress: 249/4123 - Successfully processed 000728
+2025-02-12 16:27:57,900 - INFO - Successfully fetched data for 000729
+2025-02-12 16:27:58,045 - INFO - Progress: 250/4123 - Successfully processed 000729
+2025-02-12 16:28:04,040 - INFO - Successfully fetched data for 000731
+2025-02-12 16:28:04,157 - INFO - Progress: 251/4123 - Successfully processed 000731
+2025-02-12 16:28:10,879 - INFO - Successfully fetched data for 000733
+2025-02-12 16:28:11,015 - INFO - Progress: 252/4123 - Successfully processed 000733
+2025-02-12 16:28:16,899 - INFO - Successfully fetched data for 000735
+2025-02-12 16:28:17,049 - INFO - Progress: 253/4123 - Successfully processed 000735
+2025-02-12 16:28:22,308 - INFO - Successfully fetched data for 000736
+2025-02-12 16:28:22,411 - INFO - Progress: 254/4123 - Successfully processed 000736
+2025-02-12 16:28:26,474 - INFO - Successfully fetched data for 000737
+2025-02-12 16:28:26,671 - INFO - Progress: 255/4123 - Successfully processed 000737
+2025-02-12 16:28:34,338 - INFO - Successfully fetched data for 000738
+2025-02-12 16:28:34,469 - INFO - Progress: 256/4123 - Successfully processed 000738
+2025-02-12 16:28:40,695 - INFO - Successfully fetched data for 000739
+2025-02-12 16:28:40,809 - INFO - Progress: 257/4123 - Successfully processed 000739
+2025-02-12 16:28:45,142 - INFO - Successfully fetched data for 000750
+2025-02-12 16:28:45,241 - INFO - Progress: 258/4123 - Successfully processed 000750
+2025-02-12 16:28:50,253 - INFO - Successfully fetched data for 000751
+2025-02-12 16:28:50,383 - INFO - Progress: 259/4123 - Successfully processed 000751
+2025-02-12 16:28:55,377 - INFO - Successfully fetched data for 000752
+2025-02-12 16:28:55,539 - INFO - Progress: 260/4123 - Successfully processed 000752
+2025-02-12 16:29:00,765 - INFO - Successfully fetched data for 000753
+2025-02-12 16:29:00,802 - INFO - Progress: 261/4123 - Successfully processed 000753
+2025-02-12 16:29:06,349 - INFO - Successfully fetched data for 000755
+2025-02-12 16:29:06,446 - INFO - Progress: 262/4123 - Successfully processed 000755
+2025-02-12 16:29:13,217 - INFO - Successfully fetched data for 000756
+2025-02-12 16:29:13,263 - INFO - Progress: 263/4123 - Successfully processed 000756
+2025-02-12 16:29:18,826 - INFO - Successfully fetched data for 000757
+2025-02-12 16:29:18,866 - INFO - Progress: 264/4123 - Successfully processed 000757
+2025-02-12 16:29:27,971 - INFO - Successfully fetched data for 000758
+2025-02-12 16:29:28,019 - INFO - Progress: 265/4123 - Successfully processed 000758
+2025-02-12 16:29:33,373 - INFO - Successfully fetched data for 000759
+2025-02-12 16:29:33,422 - INFO - Progress: 266/4123 - Successfully processed 000759
+2025-02-12 16:29:37,555 - INFO - Successfully fetched data for 000761
+2025-02-12 16:29:37,602 - INFO - Progress: 267/4123 - Successfully processed 000761
+2025-02-12 16:29:43,373 - INFO - Successfully fetched data for 000762
+2025-02-12 16:29:43,412 - INFO - Progress: 268/4123 - Successfully processed 000762
+2025-02-12 16:29:47,598 - INFO - Successfully fetched data for 000766
+2025-02-12 16:29:47,707 - INFO - Progress: 269/4123 - Successfully processed 000766
+2025-02-12 16:29:52,624 - INFO - Successfully fetched data for 000767
+2025-02-12 16:29:52,670 - INFO - Progress: 270/4123 - Successfully processed 000767
+2025-02-12 16:29:59,853 - INFO - Successfully fetched data for 000768
+2025-02-12 16:29:59,903 - INFO - Progress: 271/4123 - Successfully processed 000768
+2025-02-12 16:30:04,959 - INFO - Successfully fetched data for 000776
+2025-02-12 16:30:04,999 - INFO - Progress: 272/4123 - Successfully processed 000776
+2025-02-12 16:30:09,339 - INFO - Successfully fetched data for 000777
+2025-02-12 16:30:09,376 - INFO - Progress: 273/4123 - Successfully processed 000777
+2025-02-12 16:30:15,578 - INFO - Successfully fetched data for 000778
+2025-02-12 16:30:15,625 - INFO - Progress: 274/4123 - Successfully processed 000778
+2025-02-12 16:30:19,887 - INFO - Successfully fetched data for 000779
+2025-02-12 16:30:19,934 - INFO - Progress: 275/4123 - Successfully processed 000779
+2025-02-12 16:30:24,967 - INFO - Successfully fetched data for 000782
+2025-02-12 16:30:25,021 - INFO - Progress: 276/4123 - Successfully processed 000782
+2025-02-12 16:30:31,123 - INFO - Successfully fetched data for 000783
+2025-02-12 16:30:31,166 - INFO - Progress: 277/4123 - Successfully processed 000783
+2025-02-12 16:30:35,922 - INFO - Successfully fetched data for 000785
+2025-02-12 16:30:35,960 - INFO - Progress: 278/4123 - Successfully processed 000785
+2025-02-12 16:30:41,769 - INFO - Successfully fetched data for 000786
+2025-02-12 16:30:41,816 - INFO - Progress: 279/4123 - Successfully processed 000786
+2025-02-12 16:30:47,858 - INFO - Successfully fetched data for 000788
+2025-02-12 16:30:47,907 - INFO - Progress: 280/4123 - Successfully processed 000788
+2025-02-12 16:30:53,568 - INFO - Successfully fetched data for 000789
+2025-02-12 16:30:53,615 - INFO - Progress: 281/4123 - Successfully processed 000789
+2025-02-12 16:30:59,713 - INFO - Successfully fetched data for 000790
+2025-02-12 16:30:59,750 - INFO - Progress: 282/4123 - Successfully processed 000790
+2025-02-12 16:31:08,390 - INFO - 程序被用户中断
+2025-02-12 16:31:08,390 - INFO - 程序运行完成
+2025-02-13 15:31:39,804 - INFO - Successfully fetched forecast data for period 20240331
+2025-02-13 15:31:39,976 - INFO - Successfully upserted 642 records to financial_forecast
+2025-02-13 15:31:39,977 - INFO - Successfully collected forecast data for period 20240331
+2025-02-13 15:31:41,161 - INFO - Successfully fetched express data for period 20240331
+2025-02-13 15:31:41,172 - ERROR - Error processing express row: 序号                       1
+股票代码                603409
+股票简称                  汇通控股
+每股收益                   NaN
+营业收入-营业收入      195483500.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长    -319.174621
+净利润-净利润         36168800.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长     -365.024971
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  None
+公告日期            2025-02-13
+Name: 0, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,175 - ERROR - Error processing express row: 序号                       2
+股票代码                301173
+股票简称                  毓恬冠佳
+每股收益                   NaN
+营业收入-营业收入      518313600.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长     -336.20378
+净利润-净利润         51058200.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长     -254.829479
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  None
+公告日期            2025-02-12
+Name: 1, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,178 - ERROR - Error processing express row: 序号                       3
+股票代码                301607
+股票简称                  富特科技
+每股收益                   NaN
+营业收入-营业收入      259843900.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长    -458.774875
+净利润-净利润         19977600.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长    -8869.666335
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-08-16
+Name: 2, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,181 - ERROR - Error processing express row: 序号                       4
+股票代码                301581
+股票简称                  黄山谷捷
+每股收益                   NaN
+营业收入-营业收入      140142500.0
+营业收入-去年同期      155413900.0
+营业收入-同比增长        -9.826277
+营业收入-季度环比增长    -409.731853
+净利润-净利润         26127800.0
+净利润-去年同期        28535200.0
+净利润-同比增长         -8.436598
+净利润-季度环比增长     -373.396398
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-08-02
+Name: 3, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,183 - ERROR - Error processing express row: 序号                      5
+股票代码               688583
+股票简称                 思看科技
+每股收益                  NaN
+营业收入-营业收入      68928000.0
+营业收入-去年同期      56329200.0
+营业收入-同比增长       22.366375
+营业收入-季度环比增长   -331.433132
+净利润-净利润        22250300.0
+净利润-去年同期       15512400.0
+净利润-同比增长        43.435574
+净利润-季度环比增长    -319.060755
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 仪器仪表
+公告日期           2024-07-26
+Name: 4, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,185 - ERROR - Error processing express row: 序号                       6
+股票代码                301628
+股票简称                  强达电路
+每股收益                   NaN
+营业收入-营业收入      181662400.0
+营业收入-去年同期      179918100.0
+营业收入-同比增长         0.969497
+营业收入-季度环比增长    -390.761015
+净利润-净利润         26136600.0
+净利润-去年同期        22357800.0
+净利润-同比增长         16.901484
+净利润-季度环比增长     -366.958616
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-07-26
+Name: 5, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,188 - ERROR - Error processing express row: 序号                       7
+股票代码                301631
+股票简称                  壹连科技
+每股收益                   NaN
+营业收入-营业收入      781678900.0
+营业收入-去年同期      591047200.0
+营业收入-同比增长        32.253211
+营业收入-季度环比增长    -325.166839
+净利润-净利润         60244600.0
+净利润-去年同期        55799200.0
+净利润-同比增长          7.966781
+净利润-季度环比增长     -340.974009
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-07-22
+Name: 6, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,190 - ERROR - Error processing express row: 序号                      8
+股票代码               301592
+股票简称                 六九一二
+每股收益                  NaN
+营业收入-营业收入      35171600.0
+营业收入-去年同期      16881600.0
+营业收入-同比增长      108.342811
+营业收入-季度环比增长   -223.055678
+净利润-净利润        -2358500.0
+净利润-去年同期       -5224300.0
+净利润-同比增长        54.855196
+净利润-季度环比增长    -205.050814
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 软件开发
+公告日期           2024-07-15
+Name: 7, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,193 - ERROR - Error processing express row: 序号                         9
+股票代码                  301606
+股票简称                    绿联科技
+每股收益                     NaN
+营业收入-营业收入       1284435200.0
+营业收入-去年同期      1010867161.34
+营业收入-同比增长          27.062709
+营业收入-季度环比增长      -342.446827
+净利润-净利润          100958300.0
+净利润-去年同期         92443818.07
+净利润-同比增长            9.210439
+净利润-季度环比增长       -307.705193
+每股净资产                    NaN
+净资产收益率                   NaN
+所处行业                    消费电子
+公告日期              2024-07-05
+Name: 8, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,196 - ERROR - Error processing express row: 序号                     10
+股票代码               301556
+股票简称                 托普云农
+每股收益                  NaN
+营业收入-营业收入      66310300.0
+营业收入-去年同期      52600300.0
+营业收入-同比增长        26.06449
+营业收入-季度环比增长   -350.160923
+净利润-净利润         4638400.0
+净利润-去年同期        4397800.0
+净利润-同比增长         5.470917
+净利润-季度环比增长    -328.445881
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 软件开发
+公告日期           2024-07-02
+Name: 9, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,199 - ERROR - Error processing express row: 序号                      11
+股票代码                301613
+股票简称                  新铝时代
+每股收益                   NaN
+营业收入-营业收入      370715500.0
+营业收入-去年同期      484353500.0
+营业收入-同比增长        -23.46179
+营业收入-季度环比增长    -454.802713
+净利润-净利润         43629200.0
+净利润-去年同期        42900200.0
+净利润-同比增长          1.699293
+净利润-季度环比增长     -511.024295
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-06-17
+Name: 10, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,201 - ERROR - Error processing express row: 序号                      12
+股票代码                301522
+股票简称                  上大股份
+每股收益                   NaN
+营业收入-营业收入      619580900.0
+营业收入-去年同期      452397800.0
+营业收入-同比增长        36.954888
+营业收入-季度环比增长    -370.225758
+净利润-净利润         37075000.0
+净利润-去年同期        29063900.0
+净利润-同比增长         27.563747
+净利润-季度环比增长     -451.921833
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  有色金属
+公告日期            2024-06-11
+Name: 11, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,203 - ERROR - Error processing express row: 序号                      13
+股票代码                688449
+股票简称                  联芸科技
+每股收益                   NaN
+营业收入-营业收入      216803500.0
+营业收入-去年同期       78938500.0
+营业收入-同比增长       174.648619
+营业收入-季度环比增长    -334.869994
+净利润-净利润         10220300.0
+净利润-去年同期       -47089700.0
+净利润-同比增长        121.703897
+净利润-季度环比增长     -178.963243
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                   半导体
+公告日期            2024-06-03
+Name: 12, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,205 - ERROR - Error processing express row: 序号                      14
+股票代码                301600
+股票简称                  慧翰股份
+每股收益                   NaN
+营业收入-营业收入      185099700.0
+营业收入-去年同期      142616200.0
+营业收入-同比增长        29.788692
+营业收入-季度环比增长    -341.264377
+净利润-净利润         33135700.0
+净利润-去年同期        24736400.0
+净利润-同比增长         33.955224
+净利润-季度环比增长     -374.661817
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  通信设备
+公告日期            2024-05-28
+Name: 13, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,207 - ERROR - Error processing express row: 序号                      15
+股票代码                301571
+股票简称                  国科天成
+每股收益                   NaN
+营业收入-营业收入      105600900.0
+营业收入-去年同期       82229400.0
+营业收入-同比增长        28.422316
+营业收入-季度环比增长    -327.970557
+净利润-净利润         10761600.0
+净利润-去年同期         9031000.0
+净利润-同比增长         19.162883
+净利润-季度环比增长      -326.08345
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-05-27
+Name: 14, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,209 - ERROR - Error processing express row: 序号                       16
+股票代码                 688692
+股票简称                   达梦数据
+每股收益                    NaN
+营业收入-营业收入       165884900.0
+营业收入-去年同期      130837084.29
+营业收入-同比增长         26.787371
+营业收入-季度环比增长     -280.721878
+净利润-净利润          55651800.0
+净利润-去年同期        33554485.54
+净利润-同比增长          65.855024
+净利润-季度环比增长      -235.180254
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                   软件开发
+公告日期             2024-05-23
+Name: 15, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,210 - ERROR - Error processing express row: 序号                      17
+股票代码                301551
+股票简称                  无线传媒
+每股收益                   NaN
+营业收入-营业收入      151756700.0
+营业收入-去年同期      165377900.0
+营业收入-同比增长        -8.236409
+营业收入-季度环比增长    -422.375319
+净利润-净利润         55617900.0
+净利润-去年同期        73575000.0
+净利润-同比增长        -24.406524
+净利润-季度环比增长     -458.078537
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  文化传媒
+公告日期            2024-05-20
+Name: 16, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,213 - ERROR - Error processing express row: 序号                      18
+股票代码                603205
+股票简称                   健尔康
+每股收益                   NaN
+营业收入-营业收入      211887800.0
+营业收入-去年同期      210880300.0
+营业收入-同比增长         0.477759
+营业收入-季度环比增长    -355.014027
+净利润-净利润         24956200.0
+净利润-去年同期        24115400.0
+净利润-同比增长          3.486569
+净利润-季度环比增长     -345.575518
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  医疗器械
+公告日期            2024-05-13
+Name: 17, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,216 - ERROR - Error processing express row: 序号                       19
+股票代码                 688530
+股票简称                   欧莱新材
+每股收益                    NaN
+营业收入-营业收入       111416100.0
+营业收入-去年同期      105725225.58
+营业收入-同比增长          5.382703
+营业收入-季度环比增长     -494.385324
+净利润-净利润          10601300.0
+净利润-去年同期         10352779.9
+净利润-同比增长           2.400516
+净利润-季度环比增长      -781.215804
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                    半导体
+公告日期             2024-05-06
+Name: 18, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,219 - ERROR - Error processing express row: 序号                      20
+股票代码                688710
+股票简称                   益诺思
+每股收益                   NaN
+营业收入-营业收入      296008700.0
+营业收入-去年同期      252731700.0
+营业收入-同比增长        17.123693
+营业收入-季度环比增长    -409.884651
+净利润-净利润         56879800.0
+净利润-去年同期        65837400.0
+净利润-同比增长        -13.605641
+净利润-季度环比增长    -1092.047439
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  生物制品
+公告日期            2024-04-26
+Name: 19, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,221 - ERROR - Error processing express row: 序号                      21
+股票代码                002692
+股票简称                  远程股份
+每股收益                 0.023
+营业收入-营业收入      810114300.0
+营业收入-去年同期      581626500.0
+营业收入-同比增长        39.284283
+营业收入-季度环比增长    -356.469033
+净利润-净利润         16505200.0
+净利润-去年同期         5497600.0
+净利润-同比增长        200.225553
+净利润-季度环比增长     -281.063917
+每股净资产                 1.58
+净资产收益率                1.46
+所处行业                  电网设备
+公告日期            2024-04-20
+Name: 20, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,222 - ERROR - Error processing express row: 序号                       22
+股票代码                 301611
+股票简称                   珂玛科技
+每股收益                    NaN
+营业收入-营业收入       161196900.0
+营业收入-去年同期      113599741.07
+营业收入-同比增长         41.899003
+营业收入-季度环比增长     -350.082736
+净利润-净利润          49667700.0
+净利润-去年同期        14346394.62
+净利润-同比增长         246.203359
+净利润-季度环比增长      -230.035356
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                  非金属材料
+公告日期             2024-04-17
+Name: 21, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,224 - ERROR - Error processing express row: 序号                       23
+股票代码                 000928
+股票简称                   中钢国际
+每股收益                 0.1502
+营业收入-营业收入      4904319500.0
+营业收入-去年同期      5109464500.0
+营业收入-同比增长            -4.015
+营业收入-季度环比增长     -332.946811
+净利润-净利润         215424900.0
+净利润-去年同期        208083600.0
+净利润-同比增长           3.528053
+净利润-季度环比增长       -302.01438
+每股净资产                  5.66
+净资产收益率                 2.69
+所处行业                 工程咨询服务
+公告日期             2024-04-17
+Name: 22, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,226 - ERROR - Error processing express row: 序号                      24
+股票代码                000563
+股票简称                  陕国投A
+每股收益                0.0719
+营业收入-营业收入      717332100.0
+营业收入-去年同期      603817500.0
+营业收入-同比增长        18.799488
+营业收入-季度环比增长    -334.039283
+净利润-净利润        367597000.0
+净利润-去年同期       334076400.0
+净利润-同比增长         10.033813
+净利润-季度环比增长     -385.601595
+每股净资产                 3.41
+净资产收益率                2.13
+所处行业                  多元金融
+公告日期            2024-04-15
+Name: 23, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,228 - ERROR - Error processing express row: 序号                       25
+股票代码                 601139
+股票简称                   深圳燃气
+每股收益                    0.1
+营业收入-营业收入      6862510000.0
+营业收入-去年同期      7577670000.0
+营业收入-同比增长          -9.43773
+营业收入-季度环比增长     -411.122799
+净利润-净利润         275680000.0
+净利润-去年同期        258300000.0
+净利润-同比增长            6.72861
+净利润-季度环比增长      -448.042599
+每股净资产                  5.15
+净资产收益率                 1.88
+所处行业                     燃气
+公告日期             2024-04-13
+Name: 24, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,230 - ERROR - Error processing express row: 序号                       26
+股票代码                 600161
+股票简称                   天坛生物
+每股收益                   0.19
+营业收入-营业收入      1221955200.0
+营业收入-去年同期      1291975900.0
+营业收入-同比增长          -5.41966
+营业收入-季度环比增长     -441.708591
+净利润-净利润         316674000.0
+净利润-去年同期        261909000.0
+净利润-同比增长          20.909934
+净利润-季度环比增长      -456.519866
+每股净资产                  6.15
+净资产收益率                 3.17
+所处行业                   生物制品
+公告日期             2024-04-12
+Name: 25, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,232 - ERROR - Error processing express row: 序号                        27
+股票代码                  601888
+股票简称                    中国中免
+每股收益                  1.1158
+营业收入-营业收入      18807168700.0
+营业收入-去年同期      20769431400.0
+营业收入-同比增长           -9.44784
+营业收入-季度环比增长      -391.759943
+净利润-净利润         2308338400.0
+净利润-去年同期        2300772300.0
+净利润-同比增长             0.32885
+净利润-季度环比增长       -392.237011
+每股净资产                27.1425
+净资产收益率                   4.2
+所处行业                    旅游酒店
+公告日期              2024-04-09
+Name: 26, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,233 - ERROR - Error processing express row: 序号                      28
+股票代码                300962
+股票简称                  中金辐照
+每股收益                 0.113
+营业收入-营业收入      83621422.72
+营业收入-去年同期      80334442.58
+营业收入-同比增长          4.09162
+营业收入-季度环比增长      -403.5518
+净利润-净利润        29836447.36
+净利润-去年同期       29302851.57
+净利润-同比增长          1.820969
+净利润-季度环比增长     -776.193672
+每股净资产               3.5833
+净资产收益率                 3.2
+所处行业                  专业服务
+公告日期            2024-04-08
+Name: 27, dtype: object, error: '市场板块'
+2025-02-13 15:31:41,235 - INFO - Successfully collected express data for period 20240331
+2025-02-13 15:31:41,236 - INFO - 数据采集完成
+2025-02-13 15:36:45,190 - INFO - Successfully fetched forecast data for period 20240331
+2025-02-13 15:36:45,355 - INFO - Successfully upserted 642 records to financial_forecast
+2025-02-13 15:36:45,356 - INFO - Successfully collected forecast data for period 20240331
+2025-02-13 15:36:46,522 - INFO - Successfully fetched express data for period 20240331
+2025-02-13 15:36:46,524 - ERROR - Error processing express row: 序号                       1
+股票代码                603409
+股票简称                  汇通控股
+每股收益                   NaN
+营业收入-营业收入      195483500.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长    -319.174621
+净利润-净利润         36168800.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长     -365.024971
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  None
+公告日期            2025-02-13
+Name: 0, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,526 - ERROR - Error processing express row: 序号                       2
+股票代码                301173
+股票简称                  毓恬冠佳
+每股收益                   NaN
+营业收入-营业收入      518313600.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长     -336.20378
+净利润-净利润         51058200.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长     -254.829479
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  None
+公告日期            2025-02-12
+Name: 1, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,530 - ERROR - Error processing express row: 序号                       3
+股票代码                301607
+股票简称                  富特科技
+每股收益                   NaN
+营业收入-营业收入      259843900.0
+营业收入-去年同期              NaN
+营业收入-同比增长              NaN
+营业收入-季度环比增长    -458.774875
+净利润-净利润         19977600.0
+净利润-去年同期               NaN
+净利润-同比增长               NaN
+净利润-季度环比增长    -8869.666335
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-08-16
+Name: 2, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,531 - ERROR - Error processing express row: 序号                       4
+股票代码                301581
+股票简称                  黄山谷捷
+每股收益                   NaN
+营业收入-营业收入      140142500.0
+营业收入-去年同期      155413900.0
+营业收入-同比增长        -9.826277
+营业收入-季度环比增长    -409.731853
+净利润-净利润         26127800.0
+净利润-去年同期        28535200.0
+净利润-同比增长         -8.436598
+净利润-季度环比增长     -373.396398
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-08-02
+Name: 3, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,533 - ERROR - Error processing express row: 序号                      5
+股票代码               688583
+股票简称                 思看科技
+每股收益                  NaN
+营业收入-营业收入      68928000.0
+营业收入-去年同期      56329200.0
+营业收入-同比增长       22.366375
+营业收入-季度环比增长   -331.433132
+净利润-净利润        22250300.0
+净利润-去年同期       15512400.0
+净利润-同比增长        43.435574
+净利润-季度环比增长    -319.060755
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 仪器仪表
+公告日期           2024-07-26
+Name: 4, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,534 - ERROR - Error processing express row: 序号                       6
+股票代码                301628
+股票简称                  强达电路
+每股收益                   NaN
+营业收入-营业收入      181662400.0
+营业收入-去年同期      179918100.0
+营业收入-同比增长         0.969497
+营业收入-季度环比增长    -390.761015
+净利润-净利润         26136600.0
+净利润-去年同期        22357800.0
+净利润-同比增长         16.901484
+净利润-季度环比增长     -366.958616
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-07-26
+Name: 5, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,536 - ERROR - Error processing express row: 序号                       7
+股票代码                301631
+股票简称                  壹连科技
+每股收益                   NaN
+营业收入-营业收入      781678900.0
+营业收入-去年同期      591047200.0
+营业收入-同比增长        32.253211
+营业收入-季度环比增长    -325.166839
+净利润-净利润         60244600.0
+净利润-去年同期        55799200.0
+净利润-同比增长          7.966781
+净利润-季度环比增长     -340.974009
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-07-22
+Name: 6, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,539 - ERROR - Error processing express row: 序号                      8
+股票代码               301592
+股票简称                 六九一二
+每股收益                  NaN
+营业收入-营业收入      35171600.0
+营业收入-去年同期      16881600.0
+营业收入-同比增长      108.342811
+营业收入-季度环比增长   -223.055678
+净利润-净利润        -2358500.0
+净利润-去年同期       -5224300.0
+净利润-同比增长        54.855196
+净利润-季度环比增长    -205.050814
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 软件开发
+公告日期           2024-07-15
+Name: 7, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,542 - ERROR - Error processing express row: 序号                         9
+股票代码                  301606
+股票简称                    绿联科技
+每股收益                     NaN
+营业收入-营业收入       1284435200.0
+营业收入-去年同期      1010867161.34
+营业收入-同比增长          27.062709
+营业收入-季度环比增长      -342.446827
+净利润-净利润          100958300.0
+净利润-去年同期         92443818.07
+净利润-同比增长            9.210439
+净利润-季度环比增长       -307.705193
+每股净资产                    NaN
+净资产收益率                   NaN
+所处行业                    消费电子
+公告日期              2024-07-05
+Name: 8, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,544 - ERROR - Error processing express row: 序号                     10
+股票代码               301556
+股票简称                 托普云农
+每股收益                  NaN
+营业收入-营业收入      66310300.0
+营业收入-去年同期      52600300.0
+营业收入-同比增长        26.06449
+营业收入-季度环比增长   -350.160923
+净利润-净利润         4638400.0
+净利润-去年同期        4397800.0
+净利润-同比增长         5.470917
+净利润-季度环比增长    -328.445881
+每股净资产                 NaN
+净资产收益率                NaN
+所处行业                 软件开发
+公告日期           2024-07-02
+Name: 9, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,547 - ERROR - Error processing express row: 序号                      11
+股票代码                301613
+股票简称                  新铝时代
+每股收益                   NaN
+营业收入-营业收入      370715500.0
+营业收入-去年同期      484353500.0
+营业收入-同比增长        -23.46179
+营业收入-季度环比增长    -454.802713
+净利润-净利润         43629200.0
+净利润-去年同期        42900200.0
+净利润-同比增长          1.699293
+净利润-季度环比增长     -511.024295
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                 汽车零部件
+公告日期            2024-06-17
+Name: 10, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,549 - ERROR - Error processing express row: 序号                      12
+股票代码                301522
+股票简称                  上大股份
+每股收益                   NaN
+营业收入-营业收入      619580900.0
+营业收入-去年同期      452397800.0
+营业收入-同比增长        36.954888
+营业收入-季度环比增长    -370.225758
+净利润-净利润         37075000.0
+净利润-去年同期        29063900.0
+净利润-同比增长         27.563747
+净利润-季度环比增长     -451.921833
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  有色金属
+公告日期            2024-06-11
+Name: 11, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,551 - ERROR - Error processing express row: 序号                      13
+股票代码                688449
+股票简称                  联芸科技
+每股收益                   NaN
+营业收入-营业收入      216803500.0
+营业收入-去年同期       78938500.0
+营业收入-同比增长       174.648619
+营业收入-季度环比增长    -334.869994
+净利润-净利润         10220300.0
+净利润-去年同期       -47089700.0
+净利润-同比增长        121.703897
+净利润-季度环比增长     -178.963243
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                   半导体
+公告日期            2024-06-03
+Name: 12, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,553 - ERROR - Error processing express row: 序号                      14
+股票代码                301600
+股票简称                  慧翰股份
+每股收益                   NaN
+营业收入-营业收入      185099700.0
+营业收入-去年同期      142616200.0
+营业收入-同比增长        29.788692
+营业收入-季度环比增长    -341.264377
+净利润-净利润         33135700.0
+净利润-去年同期        24736400.0
+净利润-同比增长         33.955224
+净利润-季度环比增长     -374.661817
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  通信设备
+公告日期            2024-05-28
+Name: 13, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,556 - ERROR - Error processing express row: 序号                      15
+股票代码                301571
+股票简称                  国科天成
+每股收益                   NaN
+营业收入-营业收入      105600900.0
+营业收入-去年同期       82229400.0
+营业收入-同比增长        28.422316
+营业收入-季度环比增长    -327.970557
+净利润-净利润         10761600.0
+净利润-去年同期         9031000.0
+净利润-同比增长         19.162883
+净利润-季度环比增长      -326.08345
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  电子元件
+公告日期            2024-05-27
+Name: 14, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,557 - ERROR - Error processing express row: 序号                       16
+股票代码                 688692
+股票简称                   达梦数据
+每股收益                    NaN
+营业收入-营业收入       165884900.0
+营业收入-去年同期      130837084.29
+营业收入-同比增长         26.787371
+营业收入-季度环比增长     -280.721878
+净利润-净利润          55651800.0
+净利润-去年同期        33554485.54
+净利润-同比增长          65.855024
+净利润-季度环比增长      -235.180254
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                   软件开发
+公告日期             2024-05-23
+Name: 15, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,559 - ERROR - Error processing express row: 序号                      17
+股票代码                301551
+股票简称                  无线传媒
+每股收益                   NaN
+营业收入-营业收入      151756700.0
+营业收入-去年同期      165377900.0
+营业收入-同比增长        -8.236409
+营业收入-季度环比增长    -422.375319
+净利润-净利润         55617900.0
+净利润-去年同期        73575000.0
+净利润-同比增长        -24.406524
+净利润-季度环比增长     -458.078537
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  文化传媒
+公告日期            2024-05-20
+Name: 16, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,560 - ERROR - Error processing express row: 序号                      18
+股票代码                603205
+股票简称                   健尔康
+每股收益                   NaN
+营业收入-营业收入      211887800.0
+营业收入-去年同期      210880300.0
+营业收入-同比增长         0.477759
+营业收入-季度环比增长    -355.014027
+净利润-净利润         24956200.0
+净利润-去年同期        24115400.0
+净利润-同比增长          3.486569
+净利润-季度环比增长     -345.575518
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  医疗器械
+公告日期            2024-05-13
+Name: 17, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,562 - ERROR - Error processing express row: 序号                       19
+股票代码                 688530
+股票简称                   欧莱新材
+每股收益                    NaN
+营业收入-营业收入       111416100.0
+营业收入-去年同期      105725225.58
+营业收入-同比增长          5.382703
+营业收入-季度环比增长     -494.385324
+净利润-净利润          10601300.0
+净利润-去年同期         10352779.9
+净利润-同比增长           2.400516
+净利润-季度环比增长      -781.215804
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                    半导体
+公告日期             2024-05-06
+Name: 18, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,564 - ERROR - Error processing express row: 序号                      20
+股票代码                688710
+股票简称                   益诺思
+每股收益                   NaN
+营业收入-营业收入      296008700.0
+营业收入-去年同期      252731700.0
+营业收入-同比增长        17.123693
+营业收入-季度环比增长    -409.884651
+净利润-净利润         56879800.0
+净利润-去年同期        65837400.0
+净利润-同比增长        -13.605641
+净利润-季度环比增长    -1092.047439
+每股净资产                  NaN
+净资产收益率                 NaN
+所处行业                  生物制品
+公告日期            2024-04-26
+Name: 19, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,566 - ERROR - Error processing express row: 序号                      21
+股票代码                002692
+股票简称                  远程股份
+每股收益                 0.023
+营业收入-营业收入      810114300.0
+营业收入-去年同期      581626500.0
+营业收入-同比增长        39.284283
+营业收入-季度环比增长    -356.469033
+净利润-净利润         16505200.0
+净利润-去年同期         5497600.0
+净利润-同比增长        200.225553
+净利润-季度环比增长     -281.063917
+每股净资产                 1.58
+净资产收益率                1.46
+所处行业                  电网设备
+公告日期            2024-04-20
+Name: 20, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,568 - ERROR - Error processing express row: 序号                       22
+股票代码                 301611
+股票简称                   珂玛科技
+每股收益                    NaN
+营业收入-营业收入       161196900.0
+营业收入-去年同期      113599741.07
+营业收入-同比增长         41.899003
+营业收入-季度环比增长     -350.082736
+净利润-净利润          49667700.0
+净利润-去年同期        14346394.62
+净利润-同比增长         246.203359
+净利润-季度环比增长      -230.035356
+每股净资产                   NaN
+净资产收益率                  NaN
+所处行业                  非金属材料
+公告日期             2024-04-17
+Name: 21, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,570 - ERROR - Error processing express row: 序号                       23
+股票代码                 000928
+股票简称                   中钢国际
+每股收益                 0.1502
+营业收入-营业收入      4904319500.0
+营业收入-去年同期      5109464500.0
+营业收入-同比增长            -4.015
+营业收入-季度环比增长     -332.946811
+净利润-净利润         215424900.0
+净利润-去年同期        208083600.0
+净利润-同比增长           3.528053
+净利润-季度环比增长       -302.01438
+每股净资产                  5.66
+净资产收益率                 2.69
+所处行业                 工程咨询服务
+公告日期             2024-04-17
+Name: 22, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,573 - ERROR - Error processing express row: 序号                      24
+股票代码                000563
+股票简称                  陕国投A
+每股收益                0.0719
+营业收入-营业收入      717332100.0
+营业收入-去年同期      603817500.0
+营业收入-同比增长        18.799488
+营业收入-季度环比增长    -334.039283
+净利润-净利润        367597000.0
+净利润-去年同期       334076400.0
+净利润-同比增长         10.033813
+净利润-季度环比增长     -385.601595
+每股净资产                 3.41
+净资产收益率                2.13
+所处行业                  多元金融
+公告日期            2024-04-15
+Name: 23, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,574 - ERROR - Error processing express row: 序号                       25
+股票代码                 601139
+股票简称                   深圳燃气
+每股收益                    0.1
+营业收入-营业收入      6862510000.0
+营业收入-去年同期      7577670000.0
+营业收入-同比增长          -9.43773
+营业收入-季度环比增长     -411.122799
+净利润-净利润         275680000.0
+净利润-去年同期        258300000.0
+净利润-同比增长            6.72861
+净利润-季度环比增长      -448.042599
+每股净资产                  5.15
+净资产收益率                 1.88
+所处行业                     燃气
+公告日期             2024-04-13
+Name: 24, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,576 - ERROR - Error processing express row: 序号                       26
+股票代码                 600161
+股票简称                   天坛生物
+每股收益                   0.19
+营业收入-营业收入      1221955200.0
+营业收入-去年同期      1291975900.0
+营业收入-同比增长          -5.41966
+营业收入-季度环比增长     -441.708591
+净利润-净利润         316674000.0
+净利润-去年同期        261909000.0
+净利润-同比增长          20.909934
+净利润-季度环比增长      -456.519866
+每股净资产                  6.15
+净资产收益率                 3.17
+所处行业                   生物制品
+公告日期             2024-04-12
+Name: 25, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,577 - ERROR - Error processing express row: 序号                        27
+股票代码                  601888
+股票简称                    中国中免
+每股收益                  1.1158
+营业收入-营业收入      18807168700.0
+营业收入-去年同期      20769431400.0
+营业收入-同比增长           -9.44784
+营业收入-季度环比增长      -391.759943
+净利润-净利润         2308338400.0
+净利润-去年同期        2300772300.0
+净利润-同比增长             0.32885
+净利润-季度环比增长       -392.237011
+每股净资产                27.1425
+净资产收益率                   4.2
+所处行业                    旅游酒店
+公告日期              2024-04-09
+Name: 26, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,580 - ERROR - Error processing express row: 序号                      28
+股票代码                300962
+股票简称                  中金辐照
+每股收益                 0.113
+营业收入-营业收入      83621422.72
+营业收入-去年同期      80334442.58
+营业收入-同比增长          4.09162
+营业收入-季度环比增长      -403.5518
+净利润-净利润        29836447.36
+净利润-去年同期       29302851.57
+净利润-同比增长          1.820969
+净利润-季度环比增长     -776.193672
+每股净资产               3.5833
+净资产收益率                 3.2
+所处行业                  专业服务
+公告日期            2024-04-08
+Name: 27, dtype: object, error: '证券类型'
+2025-02-13 15:36:46,581 - INFO - Successfully collected express data for period 20240331
+2025-02-13 15:36:46,582 - INFO - 数据采集完成
+2025-02-13 15:37:13,543 - INFO - Successfully fetched forecast data for period 20240331
+2025-02-13 15:37:13,710 - INFO - Successfully upserted 642 records to financial_forecast
+2025-02-13 15:37:13,711 - INFO - Successfully collected forecast data for period 20240331
+2025-02-13 15:37:14,845 - INFO - Successfully fetched express data for period 20240331
+2025-02-13 15:37:14,857 - INFO - Successfully upserted 28 records to financial_express
+2025-02-13 15:37:14,858 - INFO - Successfully collected express data for period 20240331
+2025-02-13 15:37:14,859 - INFO - 数据采集完成

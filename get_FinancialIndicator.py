@@ -72,7 +72,7 @@ class FinancialDataCollector:
     def __init__(self, db_config: Dict):
         self.db_url = f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
         self.engine = create_engine(self.db_url)
-        Base.metadata.create_all(self.engine)
+        
         self.Session = sessionmaker(bind=self.engine)
         
     @retry(stop_max_attempt_number=3, wait_random_min=2000, wait_random_max=5000)

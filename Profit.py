@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer
+from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer,text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.dialects.postgresql import insert
 from datetime import datetime
@@ -174,7 +174,7 @@ class ProfitSheetCollector:
             current_quarter = (now.month - 1) // 3 + 1
             quarter_start = datetime(now.year, (current_quarter - 1) * 3 + 1, 1)
             
-            query = """
+            query = text("""
                 SELECT DISTINCT symbol 
                 FROM balance_sheet
                 WHERE update_time < :quarter_start 
@@ -182,7 +182,7 @@ class ProfitSheetCollector:
                     SELECT DISTINCT symbol 
                     FROM balance_sheet
                 )
-            """
+            """)
             
             result = session.execute(query, {'quarter_start': quarter_start})
             stocks_to_update = [row[0] for row in result]
@@ -217,6 +217,34 @@ class ProfitSheetCollector:
                 
             except Exception as e:
                 logger.error(f"Error processing {symbol}: {str(e)}")
+                continue
+
+    def incremental_update(self):
+        """增量更新数据"""
+        stock_list = self.get_stocks_to_update()
+        total_stocks = len(stock_list)
+        
+        for i, symbol in enumerate(stock_list, 1):
+            try:
+                logger.info(f"Updating {symbol} ({i}/{total_stocks})")
+                
+                # 获取数据
+                df = self.fetch_profit_sheet_data(symbol)
+                if df.empty:
+                    logger.warning(f"No data found for {symbol}")
+                    continue
+                    
+                # 处理数据
+                records = self.process_data(df, symbol)
+                
+                # 更新数据库
+                self.upsert_records(records)
+                
+                # 随机延时1-3秒，避免请求过快
+                time.sleep(random.uniform(1, 3))
+                
+            except Exception as e:
+                logger.error(f"Error updating {symbol}: {str(e)}")
                 continue
 
 def main():

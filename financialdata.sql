@@ -288,3 +288,60 @@ CREATE TRIGGER update_profit_sheet_timestamp
     BEFORE UPDATE ON profit_sheet
     FOR EACH ROW
     EXECUTE FUNCTION update_timestamp();
+
+-- 创建股票指标表
+CREATE TABLE stock_indicator (
+    -- 主键
+    symbol VARCHAR(10),           -- 股票代码
+    trade_date DATE,             -- 交易日期
+    
+    -- 指标数据
+    pe NUMERIC(20,4),            -- 市盈率
+    pe_ttm NUMERIC(20,4),        -- 市盈率TTM
+    pb NUMERIC(20,4),            -- 市净率
+    ps NUMERIC(20,4),            -- 市销率
+    ps_ttm NUMERIC(20,4),        -- 市销率TTM
+    dv_ratio NUMERIC(20,4),      -- 股息率
+    dv_ttm NUMERIC(20,4),        -- 股息率TTM
+    total_mv NUMERIC(20,4),      -- 总市值
+    
+    -- 时间戳
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- 设置复合主键
+    PRIMARY KEY (symbol, trade_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_stock_indicator_symbol ON stock_indicator(symbol);
+CREATE INDEX idx_stock_indicator_trade_date ON stock_indicator(trade_date);
+
+-- 添加更新时间触发器
+CREATE OR REPLACE FUNCTION update_timestamp_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.update_time = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_stock_indicator_timestamp
+    BEFORE UPDATE ON stock_indicator
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp_column();
+
+-- 添加表注释
+COMMENT ON TABLE stock_indicator IS 'A股个股指标数据表';
+
+-- 添加字段注释
+COMMENT ON COLUMN stock_indicator.symbol IS '股票代码';
+COMMENT ON COLUMN stock_indicator.trade_date IS '交易日期';
+COMMENT ON COLUMN stock_indicator.pe IS '市盈率';
+COMMENT ON COLUMN stock_indicator.pe_ttm IS '市盈率TTM';
+COMMENT ON COLUMN stock_indicator.pb IS '市净率';
+COMMENT ON COLUMN stock_indicator.ps IS '市销率';
+COMMENT ON COLUMN stock_indicator.ps_ttm IS '市销率TTM';
+COMMENT ON COLUMN stock_indicator.dv_ratio IS '股息率';
+COMMENT ON COLUMN stock_indicator.dv_ttm IS '股息率TTM';
+COMMENT ON COLUMN stock_indicator.total_mv IS '总市值';

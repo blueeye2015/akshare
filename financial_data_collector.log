@@ -2472,3 +2472,18 @@ Name: 27, dtype: object, error: '证券类型'
 2025-02-13 15:37:14,857 - INFO - Successfully upserted 28 records to financial_express
 2025-02-13 15:37:14,858 - INFO - Successfully collected express data for period 20240331
 2025-02-13 15:37:14,859 - INFO - 数据采集完成
+2025-02-13 20:16:48,617 - INFO - Successfully fetched forecast data for period 20250331
+2025-02-13 20:16:48,746 - INFO - Successfully upserted 6 records to financial_forecast
+2025-02-13 20:16:48,746 - INFO - Successfully collected forecast data for period 20250331
+2025-02-13 20:16:49,704 - ERROR - Error fetching express data for period 20250331: 'NoneType' object is not subscriptable
+2025-02-13 20:16:54,041 - ERROR - Error fetching express data for period 20250331: 'NoneType' object is not subscriptable
+2025-02-13 20:16:59,090 - ERROR - Error fetching express data for period 20250331: 'NoneType' object is not subscriptable
+2025-02-13 20:16:59,091 - ERROR - Error collecting data for period 20250331: 'NoneType' object is not subscriptable
+2025-02-13 20:16:59,091 - ERROR - 程序运行出错: 'NoneType' object is not subscriptable
+2025-02-14 13:55:33,133 - INFO - Successfully fetched forecast data for period 20241231
+2025-02-14 13:55:37,432 - INFO - Successfully upserted 7416 records to financial_forecast
+2025-02-14 13:55:37,436 - INFO - Successfully collected forecast data for period 20241231
+2025-02-14 13:55:38,694 - INFO - Successfully fetched express data for period 20241231
+2025-02-14 13:55:38,764 - INFO - Successfully upserted 99 records to financial_express
+2025-02-14 13:55:38,764 - INFO - Successfully collected express data for period 20241231
+2025-02-14 13:55:38,772 - INFO - 数据采集完成

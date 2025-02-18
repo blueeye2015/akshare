@@ -174,18 +174,21 @@ class ProfitSheetCollector:
             current_quarter = (now.month - 1) // 3 + 1
             quarter_start = datetime(now.year, (current_quarter - 1) * 3 + 1, 1)
             
+            # 获取所有应该存在的股票代码
+            all_stocks = set(self.get_all_stocks())
+            
+            # 获取数据库中本季度已更新的股票
             query = text("""
                 SELECT DISTINCT symbol 
-                FROM balance_sheet
-                WHERE update_time < :quarter_start 
-                OR symbol NOT IN (
-                    SELECT DISTINCT symbol 
-                    FROM balance_sheet
-                )
+                FROM balance_sheet 
+                WHERE update_time >= :quarter_start
             """)
             
             result = session.execute(query, {'quarter_start': quarter_start})
-            stocks_to_update = [row[0] for row in result]
+            updated_stocks = set(row[0] for row in result)
+            
+            # 需要更新的股票 = 所有股票 - 已更新的股票
+            stocks_to_update = list(all_stocks - updated_stocks)
             
             session.close()
             logger.info(f"Found {len(stocks_to_update)} stocks to update")

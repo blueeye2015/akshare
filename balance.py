@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer
+from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.dialects.postgresql import insert
 from datetime import datetime
@@ -160,7 +160,8 @@ class BalanceSheetCollector:
         except Exception as e:
             logger.error(f"Error getting stock list: {str(e)}")
             return []
-
+        
+        
     def get_stocks_to_update(self) -> List[str]:
         """获取需要更新的股票代码"""
         try:
@@ -171,18 +172,21 @@ class BalanceSheetCollector:
             current_quarter = (now.month - 1) // 3 + 1
             quarter_start = datetime(now.year, (current_quarter - 1) * 3 + 1, 1)
             
-            query = """
+            # 获取所有应该存在的股票代码
+            all_stocks = set(self.get_all_stocks())
+            
+            # 获取数据库中本季度已更新的股票
+            query = text("""
                 SELECT DISTINCT symbol 
-                FROM balance_sheet
-                WHERE update_time < :quarter_start 
-                OR symbol NOT IN (
-                    SELECT DISTINCT symbol 
-                    FROM balance_sheet
-                )
-            """
+                FROM balance_sheet 
+                WHERE update_time >= :quarter_start
+            """)
             
             result = session.execute(query, {'quarter_start': quarter_start})
-            stocks_to_update = [row[0] for row in result]
+            updated_stocks = set(row[0] for row in result)
+            
+            # 需要更新的股票 = 所有股票 - 已更新的股票
+            stocks_to_update = list(all_stocks - updated_stocks)
             
             session.close()
             logger.info(f"Found {len(stocks_to_update)} stocks to update")
@@ -191,6 +195,37 @@ class BalanceSheetCollector:
         except Exception as e:
             logger.error(f"Error getting stocks to update: {str(e)}")
             return []
+
+    # def get_stocks_to_update(self) -> List[str]:
+    #     """获取需要更新的股票代码"""
+    #     try:
+    #         session = self.Session()
+            
+    #         # 获取当前季度的第一天
+    #         now = datetime.now()
+    #         current_quarter = (now.month - 1) // 3 + 1
+    #         quarter_start = datetime(now.year, (current_quarter - 1) * 3 + 1, 1)
+            
+    #         query = """
+    #             SELECT DISTINCT symbol 
+    #             FROM balance_sheet
+    #             WHERE update_time < :quarter_start 
+    #             OR symbol NOT IN (
+    #                 SELECT DISTINCT symbol 
+    #                 FROM balance_sheet
+    #             )
+    #         """
+            
+    #         result = session.execute(query, {'quarter_start': quarter_start})
+    #         stocks_to_update = [row[0] for row in result]
+            
+    #         session.close()
+    #         logger.info(f"Found {len(stocks_to_update)} stocks to update")
+    #         return stocks_to_update
+            
+    #     except Exception as e:
+    #         logger.error(f"Error getting stocks to update: {str(e)}")
+    #         return []
     
     def initial_data_collection(self):
         """初始化数据收集"""

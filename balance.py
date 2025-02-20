@@ -105,7 +105,7 @@ class BalanceSheetCollector:
             'PERPETUAL_BOND': 'perpetual_bond',             # 永续债
             'ACCOUNTS_RECE': 'accounts_rece',               # 应收账款
             'NOTE_RECE': 'note_rece',                       # 应收票据
-            'OTHER_RECE': 'OTHER_RECE',                     # 其他票据
+            'OTHER_RECE': 'other_rece',                     # 其他票据
         }
         
         for _, row in df.iterrows():

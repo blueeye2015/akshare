@@ -52,6 +52,8 @@ class BalanceSheet(Base):
     preferred_stock = Column(Float)       # 优先股
     perpetual_bond = Column(Float)       # 永续债（其他权益工具）
     accounts_rece = Column(Float)        # 应收账款
+    note_rece = Column(Float)            # 应收票据
+    other_rece = Column(Float)           # 其他票据
     
     # 时间戳
     create_time = Column(DateTime, default=datetime.now)
@@ -102,6 +104,8 @@ class BalanceSheetCollector:
             'PREFERRED_STOCK': 'preferred_stock',            # 优先股
             'PERPETUAL_BOND': 'perpetual_bond',             # 永续债
             'ACCOUNTS_RECE': 'accounts_rece',               # 应收账款
+            'NOTE_RECE': 'note_rece',                       # 应收票据
+            'OTHER_RECE': 'OTHER_RECE',                     # 其他票据
         }
         
         for _, row in df.iterrows():

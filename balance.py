@@ -100,7 +100,7 @@ class BalanceSheetCollector:
             'DEFER_TAX_LIAB': 'defer_tax_liab',             # 递延所得税负债
             'DEVELOP_EXPENSE': 'develop_expense',            # 开发支出
             'LONG_RECE': 'long_rece',                       # 长期应收款
-            'TOTAL_EQUITY_PARENT': 'total_parent_equity',    # 归属于母公司股东权益
+            'TOTAL_PARENT_EQUITY': 'total_parent_equity',    # 归属于母公司股东权益
             'PREFERRED_STOCK': 'preferred_stock',            # 优先股
             'PERPETUAL_BOND': 'perpetual_bond',             # 永续债
             'ACCOUNTS_RECE': 'accounts_rece',               # 应收账款

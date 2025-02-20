@@ -86,3 +86,27 @@ LINE 1: ...25-02-13T11:19:37.576244'::timestamp) ON CONFLICT (secucode,...
 2025-02-13 11:23:22,616 - INFO - Progress: 4/4123 - Successfully processed 000006.SZ
 2025-02-13 11:23:46,197 - INFO - 程序被用户中断
 2025-02-13 11:23:46,198 - INFO - 程序运行完成
+2025-02-20 14:37:08,758 - INFO - 开始增量更新...
+2025-02-20 14:37:43,277 - INFO - Successfully retrieved 4122 stock codes
+2025-02-20 14:38:16,509 - INFO - 开始增量更新...
+2025-02-20 14:38:54,363 - INFO - Successfully retrieved 4122 stock codes
+2025-02-20 14:40:14,321 - INFO - Found 1 stocks to update
+2025-02-20 14:40:14,322 - INFO - Starting incremental update for 1 stocks
+2025-02-20 14:41:14,042 - INFO - Successfully fetched balance sheet data for 600519.SH
+2025-02-20 14:48:17,556 - INFO - 程序被用户中断
+2025-02-20 14:48:17,557 - INFO - 程序运行完成
+2025-02-20 14:48:39,243 - INFO - 开始增量更新...
+2025-02-20 14:49:09,475 - INFO - Successfully retrieved 4122 stock codes
+2025-02-20 14:49:35,074 - INFO - Found 1 stocks to update
+2025-02-20 14:49:54,752 - INFO - Starting incremental update for 1 stocks
+2025-02-20 14:50:56,331 - INFO - Successfully fetched balance sheet data for 600519.SH
+2025-02-20 14:53:55,266 - INFO - 开始增量更新...
+2025-02-20 14:54:23,353 - INFO - Successfully retrieved 4122 stock codes
+2025-02-20 14:54:29,791 - INFO - Found 1 stocks to update
+2025-02-20 14:54:29,792 - INFO - Starting incremental update for 1 stocks
+2025-02-20 14:54:45,288 - INFO - Successfully fetched balance sheet data for 600519.SH
+2025-02-20 14:55:51,506 - INFO - 开始增量更新...
+2025-02-20 14:56:20,988 - INFO - Successfully retrieved 4122 stock codes
+2025-02-20 14:56:26,528 - INFO - Found 1 stocks to update
+2025-02-20 14:56:26,529 - INFO - Starting incremental update for 1 stocks
+2025-02-20 14:57:14,010 - INFO - Successfully fetched balance sheet data for 600519.SH

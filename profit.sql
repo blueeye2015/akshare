@@ -574,21 +574,25 @@ from cte a  where left(symbol,6) in (select symbol from financial_express where 
 or left(symbol,6) in (select symbol from financial_forecast where report_period = '20241231')
 union all
 select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,
-CAST(report_period as timestamp)::VARCHAR ,0,round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2) from forecast where report_period='20241231'
+CAST(report_period as timestamp)::VARCHAR ,NULLIF("营业收入", 0),round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2) from forecast where report_period='20241231'
 union all
 select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,CAST(report_period as timestamp)::VARCHAR ,round(revenue/100000000,2),round(net_profit/100000000,2),0 
 from financial_express where report_period = '20241231'
 ), cte2 as (
 select symbol,report_date,
+CASE WHEN total_operate_income =0 THEN 0 ELSE
 round(total_operate_income-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' 
-THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END, 2) as "总营收/亿",
-round((parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(parent_netprofit, 1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) as "净利润/亿",
-round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) as "扣非净利润/亿" from cte1
+THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END, 2) END as "总营收/亿",
+CASE WHEN parent_netprofit =0 THEN 0 ELSE 
+round((parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(parent_netprofit, 1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END as "净利润/亿",
+CASE WHEN deduct_parent_netprofit =0 THEN 0 ELSE 
+round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END as "扣非净利润/亿" from cte1
 order by symbol,report_date
 )
 select * into TEMPORARY cte2 from cte2
 --删除新股数据，会有超过2年的日期
 delete from cte2 where report_date < '2023-01-01'
+delete from cte2 where "总营收/亿" is null and "净利润/亿" is null and "扣非净利润/亿" is null
 -- 总营收
 SELECT *
 FROM crosstab(
@@ -639,3 +643,4 @@ FROM crosstab(
   "2024-09-30" numeric,
   "2024-12-31" numeric
 );
+DROP TABLE CTE2

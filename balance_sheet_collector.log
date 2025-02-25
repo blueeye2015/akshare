@@ -110,3 +110,19 @@ LINE 1: ...25-02-13T11:19:37.576244'::timestamp) ON CONFLICT (secucode,...
 2025-02-20 14:56:26,528 - INFO - Found 1 stocks to update
 2025-02-20 14:56:26,529 - INFO - Starting incremental update for 1 stocks
 2025-02-20 14:57:14,010 - INFO - Successfully fetched balance sheet data for 600519.SH
+2025-02-25 13:47:40,023 - INFO - 开始增量更新...
+2025-02-25 13:48:10,535 - INFO - Successfully retrieved 4122 stock codes
+2025-02-25 13:54:57,715 - INFO - Found 0 stocks to update
+2025-02-25 13:54:59,440 - INFO - Starting incremental update for 0 stocks
+2025-02-25 13:55:01,568 - INFO - 程序运行完成
+2025-02-25 14:12:27,899 - INFO - 开始初始数据采集...
+2025-02-25 14:13:15,492 - INFO - 开始初始数据采集...
+2025-02-25 14:14:09,685 - INFO - Successfully retrieved 4122 stock codes
+2025-02-25 14:14:14,655 - INFO - Starting initial balance sheet data collection for 4122 stocks
+2025-02-25 14:15:21,595 - INFO - Successfully fetched balance sheet data for 000001.SZ
+2025-02-25 14:18:00,547 - INFO - Successfully upserted 112 records
+2025-02-25 14:18:01,547 - INFO - Progress: 1/4122 - Successfully processed 000001.SZ
+2025-02-25 14:19:28,646 - INFO - Successfully fetched balance sheet data for 000002.SZ
+2025-02-25 14:20:06,637 - INFO - Successfully upserted 109 records
+2025-02-25 14:20:07,123 - INFO - Progress: 2/4122 - Successfully processed 000002.SZ
+2025-02-25 14:21:07,094 - INFO - Successfully fetched balance sheet data for 000004.SZ

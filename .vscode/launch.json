@@ -10,7 +10,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "d:/akshare/balance.py",
-            "args": ["--mode", "update"],
+            "args": ["--mode", "initial"],
             "python": "D:/ProgramData/anaconda3/envs/trade/python.exe",
             "cwd": "${workspaceFolder}"
         }

@@ -6,6 +6,7 @@ import numpy as np
 # engine = create_engine(database_url)
 # 获取数据
 #stock_balance_sheet_by_report_em_df = ak.stock_balance_sheet_by_report_em(symbol="SH600651")
+stock_financial_analysis_indicator = ak.stock_financial_analysis_indicator(symbol="600519", start_year="2020")
 #stock_profit_sheet_by_quarterly_em_df = ak.stock_profit_sheet_by_quarterly_em(symbol="SH600519")
 #stock_yjkb_em_df = ak.stock_yjkb_em(date="20241231")
 # df = ak.stock_info_a_code_name()

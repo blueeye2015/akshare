@@ -345,3 +345,68 @@ COMMENT ON COLUMN stock_indicator.ps_ttm IS '市销率TTM';
 COMMENT ON COLUMN stock_indicator.dv_ratio IS '股息率';
 COMMENT ON COLUMN stock_indicator.dv_ttm IS '股息率TTM';
 COMMENT ON COLUMN stock_indicator.total_mv IS '总市值';
+
+CREATE TABLE financial_indicators (
+    -- 复合主键
+    symbol VARCHAR(10),
+    report_date DATE,
+    
+    -- 每股指标
+    eps_basic NUMERIC,  -- 摊薄每股收益
+    eps_diluted NUMERIC,  -- 加权每股收益
+    eps_adjusted NUMERIC,  -- 每股收益_调整后
+    eps_excl_nonrecurring NUMERIC,  -- 扣除非经常性损益后的每股收益
+    bps_pre_adjusted NUMERIC,  -- 每股净资产_调整前
+    bps_post_adjusted NUMERIC,  -- 每股净资产_调整后
+    ocf_per_share NUMERIC,  -- 每股经营性现金流
+    capital_reserve_per_share NUMERIC,  -- 每股资本公积金
+    undistributed_profit_per_share NUMERIC,  -- 每股未分配利润
+    bps_adjusted NUMERIC,  -- 调整后的每股净资产
+
+    -- 盈利能力指标
+    roa_profit NUMERIC,  -- 总资产利润率
+    main_business_profit_rate NUMERIC,  -- 主营业务利润率
+    roa_net_profit NUMERIC,  -- 总资产净利润率
+    cost_expense_profit_rate NUMERIC,  -- 成本费用利润率
+    operating_profit_rate NUMERIC,  -- 营业利润率
+    main_business_cost_rate NUMERIC,  -- 主营业务成本率
+    net_profit_margin NUMERIC,  -- 销售净利率
+    return_on_equity NUMERIC,  -- 净资产收益率
+    weighted_roe NUMERIC,  -- 加权净资产收益率
+    
+    -- 成长能力指标
+    revenue_growth NUMERIC,  -- 主营业务收入增长率
+    net_profit_growth NUMERIC,  -- 净利润增长率
+    net_asset_growth NUMERIC,  -- 净资产增长率
+    total_asset_growth NUMERIC,  -- 总资产增长率
+    
+    -- 营运能力指标
+    accounts_receivable_turnover NUMERIC,  -- 应收账款周转率
+    inventory_turnover NUMERIC,  -- 存货周转率
+    fixed_asset_turnover NUMERIC,  -- 固定资产周转率
+    total_asset_turnover NUMERIC,  -- 总资产周转率
+    
+    -- 偿债能力指标
+    current_ratio NUMERIC,  -- 流动比率
+    quick_ratio NUMERIC,  -- 速动比率
+    cash_ratio NUMERIC,  -- 现金比率
+    interest_coverage NUMERIC,  -- 利息支付倍数
+    debt_to_equity NUMERIC,  -- 负债与所有者权益比率
+    asset_liability_ratio NUMERIC,  -- 资产负债率
+    
+    -- 现金流量指标
+    ocf_to_revenue NUMERIC,  -- 经营现金净流量对销售收入比率
+    ocf_to_asset NUMERIC,  -- 资产的经营现金流量回报率
+    ocf_to_net_profit NUMERIC,  -- 经营现金净流量与净利润的比率
+    
+    -- 时间戳
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- 设置复合主键
+    PRIMARY KEY (symbol, report_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_financial_indicators_symbol ON financial_indicators(symbol);
+CREATE INDEX idx_financial_indicators_report_date ON financial_indicators(report_date);

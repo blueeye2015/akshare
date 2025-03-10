@@ -22154,3 +22154,37 @@ HINT:  Ensure that no rows proposed for insertion within the same command have d
 2025-02-17 04:11:40,960 - INFO - 开始获取股票 603072 的数据 (5386/5386)
 2025-02-17 04:11:48,270 - INFO - 成功保存 25 条记录
 2025-02-17 04:11:48,270 - INFO - 完成股票 603072 的数据获取和保存
+2025-03-05 21:12:26,131 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-03-05 21:12:34,388 - ERROR - 保存数据失败: 'TextClause' object has no attribute 'encode'
+2025-03-05 21:12:34,388 - ERROR - 处理股票 002162 失败: 'TextClause' object has no attribute 'encode'
+2025-03-05 21:12:34,389 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-03-06 09:27:17,137 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-03-06 09:28:30,815 - ERROR - 保存数据失败: 'TextClause' object has no attribute 'encode'
+2025-03-06 09:28:36,726 - ERROR - 处理股票 002162 失败: 'TextClause' object has no attribute 'encode'
+2025-03-06 09:28:57,360 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-03-06 10:09:18,396 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-03-06 10:09:22,913 - ERROR - 保存数据失败: syntax error at or near "{"
+LINE 2:                     INSERT INTO {self.table_name} ({','.join...
+                                        ^
+
+2025-03-06 10:09:22,914 - ERROR - 处理股票 002162 失败: syntax error at or near "{"
+LINE 2:                     INSERT INTO {self.table_name} ({','.join...
+                                        ^
+
+2025-03-06 10:09:22,914 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-03-06 10:09:27,201 - ERROR - 保存数据失败: syntax error at or near "{"
+LINE 2:                     INSERT INTO {self.table_name} ({','.join...
+                                        ^
+
+2025-03-06 10:09:27,202 - ERROR - 处理股票 002163 失败: syntax error at or near "{"
+LINE 2:                     INSERT INTO {self.table_name} ({','.join...
+                                        ^
+
+2025-03-06 10:09:27,202 - INFO - 开始获取股票 002164 的数据 (3/5386)
+2025-03-06 14:05:46,446 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-03-06 14:05:50,929 - INFO - 成功保存 13 条记录
+2025-03-06 14:05:50,929 - INFO - 完成股票 002162 的数据获取和保存
+2025-03-06 14:05:51,945 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-03-06 14:05:56,342 - INFO - 成功保存 13 条记录
+2025-03-06 14:05:56,343 - INFO - 完成股票 002163 的数据获取和保存
+2025-03-06 14:05:57,351 - INFO - 开始获取股票 002164 的数据 (3/5386)

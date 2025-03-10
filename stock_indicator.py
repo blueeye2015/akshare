@@ -7,7 +7,7 @@ import logging
 from typing import List, Optional
 import time
 from retrying import retry
-from sqlalchemy import text  # 添加这行导入
+#from sqlalchemy import text  # 添加这行导入
 
 # 设置日志
 logging.basicConfig(
@@ -110,13 +110,13 @@ class StockIndicatorCollector:
                 values = [tuple(x) for x in df.values]
                 
                 # 构建 UPSERT 语句
-                insert_stmt = text("""
+                insert_stmt = f"""
                     INSERT INTO {self.table_name} ({','.join(columns)})
                     VALUES %s
                     ON CONFLICT (symbol, trade_date)
                     DO UPDATE SET
                     {','.join(f"{col}=EXCLUDED.{col}" for col in columns if col not in ['symbol', 'trade_date'])}
-                """)
+                """
                 
                 try:
                     execute_values(cur, insert_stmt, values)

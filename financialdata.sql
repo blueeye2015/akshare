@@ -410,3 +410,72 @@ CREATE TABLE financial_indicators (
 -- 创建索引
 CREATE INDEX idx_financial_indicators_symbol ON financial_indicators(symbol);
 CREATE INDEX idx_financial_indicators_report_date ON financial_indicators(report_date);
+
+CREATE TABLE cash_flow_sheet (
+    -- 复合主键
+    symbol VARCHAR(10),
+    report_date VARCHAR(10),
+    
+    -- 基本信息
+    security_code VARCHAR(10),
+    security_name_abbr VARCHAR(50),
+    
+    -- 经营活动产生的现金流量
+    sales_services NUMERIC,  -- 销售商品、提供劳务收到的现金
+    tax_refund NUMERIC,  -- 收到的税费返还
+    other_operate_received NUMERIC,  -- 收到其他与经营活动有关的现金
+    total_operate_received NUMERIC,  -- 经营活动现金流入小计
+    goods_services_received NUMERIC,  -- 购买商品、接受劳务支付的现金
+    employee_received NUMERIC,  -- 支付给职工以及为职工支付的现金
+    tax_payments NUMERIC,  -- 支付的各项税费
+    other_operate_payments NUMERIC,  -- 支付其他与经营活动有关的现金
+    total_operate_payments NUMERIC,  -- 经营活动现金流出小计
+    operate_net_cash_flow NUMERIC,  -- 经营活动产生的现金流量净额
+
+    -- 投资活动产生的现金流量
+    invest_withdrawal NUMERIC,  -- 收回投资收到的现金
+    invest_income NUMERIC,  -- 取得投资收益收到的现金
+    fix_asset_disposal NUMERIC,  -- 处置固定资产、无形资产和其他长期资产收回的现金净额
+    subsidiary_received NUMERIC,  -- 处置子公司及其他营业单位收到的现金净额
+    other_invest_received NUMERIC,  -- 收到其他与投资活动有关的现金
+    total_invest_received NUMERIC,  -- 投资活动现金流入小计
+    fix_asset_acquisition NUMERIC,  -- 购建固定资产、无形资产和其他长期资产支付的现金
+    invest_payments NUMERIC,  -- 投资支付的现金
+    subsidiary_payments NUMERIC,  -- 取得子公司及其他营业单位支付的现金净额
+    other_invest_payments NUMERIC,  -- 支付其他与投资活动有关的现金
+    total_invest_payments NUMERIC,  -- 投资活动现金流出小计
+    invest_net_cash_flow NUMERIC,  -- 投资活动产生的现金流量净额
+
+    -- 筹资活动产生的现金流量
+    accept_invest_received NUMERIC,  -- 吸收投资收到的现金
+    subsidiary_accept_invest NUMERIC,  -- 子公司吸收少数股东投资收到的现金
+    loan_received NUMERIC,  -- 取得借款收到的现金
+    bond_issue NUMERIC,  -- 发行债券收到的现金
+    other_finance_received NUMERIC,  -- 收到其他与筹资活动有关的现金
+    total_finance_received NUMERIC,  -- 筹资活动现金流入小计
+    loan_repayment NUMERIC,  -- 偿还债务支付的现金
+    dividend_interest_payments NUMERIC,  -- 分配股利、利润或偿付利息支付的现金
+    subsidiary_dividend_payments NUMERIC,  -- 子公司支付给少数股东的股利、利润
+    other_finance_payments NUMERIC,  -- 支付其他与筹资活动有关的现金
+    total_finance_payments NUMERIC,  -- 筹资活动现金流出小计
+    finance_net_cash_flow NUMERIC,  -- 筹资活动产生的现金流量净额
+
+    -- 汇率变动对现金的影响
+    exchange_rate_effects NUMERIC,  -- 汇率变动对现金及现金等价物的影响
+
+    -- 现金及现金等价物净增加
+    cash_equivalent_increase NUMERIC,  -- 现金及现金等价物净增加额
+    begin_cash_equivalent NUMERIC,  -- 期初现金及现金等价物余额
+    end_cash_equivalent NUMERIC,  -- 期末现金及现金等价物余额
+
+    -- 时间戳
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- 设置复合主键
+    PRIMARY KEY (symbol, report_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_cash_flow_sheet_symbol ON cash_flow_sheet(symbol);
+CREATE INDEX idx_cash_flow_sheet_report_date ON cash_flow_sheet(report_date);

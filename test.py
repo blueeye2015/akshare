@@ -6,15 +6,15 @@ import numpy as np
 # engine = create_engine(database_url)
 # 获取数据
 #stock_balance_sheet_by_report_em_df = ak.stock_balance_sheet_by_report_em(symbol="SH600651")
-stock_financial_analysis_indicator = ak.stock_financial_analysis_indicator(symbol="600519", start_year="2020")
+stock_cash_flow_sheet_by_report_em = ak.stock_cash_flow_sheet_by_report_em(symbol="SH600519")
 #stock_profit_sheet_by_quarterly_em_df = ak.stock_profit_sheet_by_quarterly_em(symbol="SH600519")
 #stock_yjkb_em_df = ak.stock_yjkb_em(date="20241231")
 # df = ak.stock_info_a_code_name()
 # df.to_sql('stock_info_a_code_name', engine, if_exists='replace', index=False)
 #stock_yjkb_em_df = ak.stock_yjkb_em(date="20200331")
 # 保存为CSV文件
-#stock_balance_sheet_by_report_em_df.to_csv('stock_balance_sheet_by_report_em_df.csv', encoding='utf-8-sig', index=False)
-#print(stock_balance_sheet_by_report_em_df)
+stock_cash_flow_sheet_by_report_em.to_csv('stock_cash_flow_sheet_by_report_em.csv', encoding='utf-8-sig', index=False)
+#print(stock_cash_flow_sheet_by_report_em)
 
-stock_individual_info_em_df = ak.stock_individual_info_em(symbol="SZ000001")
-print(stock_individual_info_em_df)
+#stock_individual_info_em_df = ak.stock_individual_info_em(symbol="SZ000001")
+#print(stock_individual_info_em_df)

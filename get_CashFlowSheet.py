@@ -108,6 +108,7 @@ class CashFlowSheetCollector:
             
         # 打印原始列名，用于调试
         logger.debug(f"Original columns: {df.columns.tolist()}")
+        logger.debug(f"Data sample:\n{df.head()}")
         
         # 重命名列（根据实际的 akshare 返回数据调整）
         column_mapping = {

@@ -112,64 +112,78 @@ class CashFlowSheetCollector:
         
         # 重命名列（根据实际的 akshare 返回数据调整）
         column_mapping = {
-            '股票代码': 'security_code',
-            '股票简称': 'security_name_abbr',
-            '报告期': 'report_date',
-            '销售商品、提供劳务收到的现金': 'sales_services',
-            '收到的税费返还': 'tax_refund',
-            '收到其他与经营活动有关的现金': 'other_operate_received',
-            '经营活动现金流入小计': 'total_operate_received',
-            '购买商品、接受劳务支付的现金': 'goods_services_received',
-            '支付给职工以及为职工支付的现金': 'employee_received',
-            '支付的各项税费': 'tax_payments',
-            '支付其他与经营活动有关的现金': 'other_operate_payments',
-            '经营活动现金流出小计': 'total_operate_payments',
-            '经营活动产生的现金流量净额': 'operate_net_cash_flow',
-            '收回投资收到的现金': 'invest_withdrawal',
-            '取得投资收益收到的现金': 'invest_income',
-            '处置固定资产、无形资产和其他长期资产收回的现金净额': 'fix_asset_disposal',
-            '处置子公司及其他营业单位收到的现金净额': 'subsidiary_received',
-            '收到其他与投资活动有关的现金': 'other_invest_received',
-            '投资活动现金流入小计': 'total_invest_received',
-            '购建固定资产、无形资产和其他长期资产支付的现金': 'fix_asset_acquisition',
-            '投资支付的现金': 'invest_payments',
-            '取得子公司及其他营业单位支付的现金净额': 'subsidiary_payments',
-            '支付其他与投资活动有关的现金': 'other_invest_payments',
-            '投资活动现金流出小计': 'total_invest_payments',
-            '投资活动产生的现金流量净额': 'invest_net_cash_flow',
-            '吸收投资收到的现金': 'accept_invest_received',
-            '子公司吸收少数股东投资收到的现金': 'subsidiary_accept_invest',
-            '取得借款收到的现金': 'loan_received',
-            '发行债券收到的现金': 'bond_issue',
-            '收到其他与筹资活动有关的现金': 'other_finance_received',
-            '筹资活动现金流入小计': 'total_finance_received',
-            '偿还债务支付的现金': 'loan_repayment',
-            '分配股利、利润或偿付利息支付的现金': 'dividend_interest_payments',
-            '子公司支付给少数股东的股利、利润': 'subsidiary_dividend_payments',
-            '支付其他与筹资活动有关的现金': 'other_finance_payments',
-            '筹资活动现金流出小计': 'total_finance_payments',
-            '筹资活动产生的现金流量净额': 'finance_net_cash_flow',
-            '汇率变动对现金及现金等价物的影响': 'exchange_rate_effects',
-            '现金及现金等价物净增加额': 'cash_equivalent_increase',
-            '期初现金及现金等价物余额': 'begin_cash_equivalent',
-            '期末现金及现金等价物余额': 'end_cash_equivalent'
+            'SECURITY_CODE': 'security_code',
+            'SECURITY_NAME_ABBR': 'security_name_abbr',
+            'REPORT_DATE': 'report_date',
+            'SALES_SERVICES': 'sales_services',
+            'RECEIVE_TAX_REFUND': 'tax_refund',
+            'RECEIVE_OTHER_OPERATE': 'other_operate_received',
+            'TOTAL_OPERATE_INFLOW': 'total_operate_received',
+            'BUY_SERVICES': 'goods_services_received',
+            'PAY_STAFF_CASH': 'employee_received',
+            'PAY_ALL_TAX': 'tax_payments',
+            'PAY_OTHER_OPERATE': 'other_operate_payments',
+            'TOTAL_OPERATE_OUTFLOW': 'total_operate_payments',
+            'NETCASH_OPERATE': 'operate_net_cash_flow',
+            'WITHDRAW_INVEST': 'invest_withdrawal',
+            'RECEIVE_INVEST_INCOME': 'invest_income',
+            'DISPOSAL_LONG_ASSET': 'fix_asset_disposal',
+            'DISPOSAL_SUBSIDIARY_OTHER': 'subsidiary_received',
+            'RECEIVE_OTHER_INVEST': 'other_invest_received',
+            'TOTAL_INVEST_INFLOW': 'total_invest_received',
+            'CONSTRUCT_LONG_ASSET': 'fix_asset_acquisition',
+            'INVEST_PAY_CASH': 'invest_payments',
+            'OBTAIN_SUBSIDIARY_OTHER': 'subsidiary_payments',
+            'PAY_OTHER_INVEST': 'other_invest_payments',
+            'TOTAL_INVEST_OUTFLOW': 'total_invest_payments',
+            'NETCASH_INVEST': 'invest_net_cash_flow',
+            'ACCEPT_INVEST_CASH': 'accept_invest_received',
+            'SUBSIDIARY_ACCEPT_INVEST': 'subsidiary_accept_invest',
+            'RECEIVE_LOAN_CASH': 'loan_received',
+            'ISSUE_BOND': 'bond_issue',
+            'RECEIVE_OTHER_FINANCE': 'other_finance_received',
+            'TOTAL_FINANCE_INFLOW': 'total_finance_received',
+            'PAY_DEBT_CASH': 'loan_repayment',
+            'ASSIGN_DIVIDEND_PORFIT': 'dividend_interest_payments',
+            'SUBSIDIARY_PAY_DIVIDEND': 'subsidiary_dividend_payments',
+            'PAY_OTHER_FINANCE': 'other_finance_payments',
+            'TOTAL_FINANCE_OUTFLOW': 'total_finance_payments',
+            'NETCASH_FINANCE': 'finance_net_cash_flow',
+            'RATE_CHANGE_EFFECT': 'exchange_rate_effects',
+            'CCE_ADD': 'cash_equivalent_increase',
+            'BEGIN_CCE': 'begin_cash_equivalent',
+            'END_CCE': 'end_cash_equivalent'
         }
+
         
-        # 创建新的 DataFrame，用 0 填充缺失值
+         # 创建结果 DataFrame
         result_df = pd.DataFrame()
-        result_df['symbol'] = [symbol]
-        result_df['report_date'] = df['报告期'].iloc[0] if '报告期' in df.columns else None
-        result_df['security_code'] = df['股票代码'].iloc[0] if '股票代码' in df.columns else None
-        result_df['security_name_abbr'] = df['股票简称'].iloc[0] if '股票简称' in df.columns else None
         
-        # 对于其他列，如果存在则使用实际值，不存在则填充 0
-        for original_col, new_col in column_mapping.items():
-            if original_col in df.columns:
-                result_df[new_col] = df[original_col].iloc[0]
+        # 添加 symbol 列
+        result_df['symbol'] = [symbol] * len(df)
+        
+        # 复制必要的列
+        for col in ['REPORT_DATE', 'SECURITY_CODE', 'SECURITY_NAME_ABBR']:
+            if col in df.columns:
+                result_df[column_mapping[col]] = df[col]
             else:
-                result_df[new_col] = 0
-                logger.debug(f"Column {original_col} not found in data, filling with 0")
+                result_df[column_mapping[col]] = None
         
+        # 处理其他数值列
+        for original_col, new_col in column_mapping.items():
+            if original_col not in ['REPORT_DATE', 'SECURITY_CODE', 'SECURITY_NAME_ABBR']:
+                if original_col in df.columns:
+                    result_df[new_col] = df[original_col]
+                else:
+                    result_df[new_col] = 0
+                    logger.debug(f"Column {original_col} not found in data, filling with 0")
+        
+        # 确保所有必要的列都存在
+        for col in column_mapping.values():
+            if col not in result_df.columns:
+                result_df[col] = 0
+                
+        logger.info(f"处理完成，共 {len(result_df)} 条记录")
         return result_df
 
     def save_to_database(self, df: pd.DataFrame):

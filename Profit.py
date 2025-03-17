@@ -169,29 +169,66 @@ class ProfitSheetCollector:
         try:
             session = self.Session()
             
-            # 获取当前季度的第一天
+            # 获取当前日期
             now = datetime.now()
-            current_quarter = (now.month - 1) // 3 + 1
-            quarter_start = datetime(now.year, (current_quarter - 1) * 3 + 1, 1)
+            current_year = now.year
+            current_month = now.month
             
+            # 确定最新的财报期
+            # 一季报（4月底前）：去年年报 + 今年一季报
+            # 中报（8月底前）：今年一季报 + 今年中报
+            # 三季报（10月底前）：今年中报 + 今年三季报
+            # 年报（来年4月底前）：今年三季报 + 今年年报
+            if current_month <= 4:  # 1-4月
+                report_dates = [
+                    f"{current_year-1}-12-31",  # 去年年报
+                    f"{current_year}-03-31"     # 今年一季报
+                ]
+            elif current_month <= 8:  # 5-8月
+                report_dates = [
+                    f"{current_year}-03-31",    # 今年一季报
+                    f"{current_year}-06-30"     # 今年中报
+                ]
+            elif current_month <= 10:  # 9-10月
+                report_dates = [
+                    f"{current_year}-06-30",    # 今年中报
+                    f"{current_year}-09-30"     # 今年三季报
+                ]
+            else:  # 11-12月
+                report_dates = [
+                    f"{current_year}-09-30",    # 今年三季报
+                    f"{current_year}-12-31"     # 今年年报
+                ]
+                
             # 获取所有应该存在的股票代码
             all_stocks = set(self.get_all_stocks())
             
-            # 获取数据库中本季度已更新的股票
+            # 获取数据库中最新两期财报都已更新的股票
             query = text("""
-                SELECT DISTINCT symbol 
-                FROM balance_sheet 
-                WHERE update_time >= :quarter_start
+                WITH latest_updates AS (
+                    SELECT symbol, report_date, update_time,
+                        COUNT(*) OVER (PARTITION BY symbol) as report_count
+                    FROM profit_sheet
+                    WHERE report_date IN :report_dates
+                )
+                SELECT DISTINCT symbol
+                FROM latest_updates
+                WHERE report_count = 2
+                AND update_time >= CURRENT_DATE - INTERVAL '7 days'
             """)
             
-            result = session.execute(query, {'quarter_start': quarter_start})
+            result = session.execute(query, {'report_dates': tuple(report_dates)})
             updated_stocks = set(row[0] for row in result)
             
             # 需要更新的股票 = 所有股票 - 已更新的股票
             stocks_to_update = list(all_stocks - updated_stocks)
             
             session.close()
-            logger.info(f"Found {len(stocks_to_update)} stocks to update")
+            
+            logger.info(f"当前检查的报告期: {report_dates}")
+            logger.info(f"需要更新的股票数量: {len(stocks_to_update)}")
+            logger.info(f"已更新的股票数量: {len(updated_stocks)}")
+            
             return stocks_to_update
             
         except Exception as e:

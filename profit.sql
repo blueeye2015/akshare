@@ -645,7 +645,7 @@ FROM crosstab(
 );
 DROP TABLE CTE2
 
-select COALESCE(is_nan_or_null(other_rece),is_nan_or_null(total_current_assets)/nullif(is_nan_or_null(total_current_liab),0),0) as "流动比例",
+select COALESCE(is_nan_or_null(total_current_assets)/nullif(is_nan_or_null(total_current_liab),0),0) as "流动比例",
 is_nan_or_null(accounts_rece)+is_nan_or_null(note_rece)+is_nan_or_null(other_rece) as "应收账款",
 COALESCE(( is_nan_or_null(goodwill)+is_nan_or_null(intangible_assets)+is_nan_or_null(develop_expense) )/nullif((is_nan_or_null(total_parent_equity)-is_nan_or_null(preferred_stock)-is_nan_or_null(perpetual_bond)),0),0) as "商誉减值风险小"
 ,COALESCE((is_nan_or_null(total_current_assets)-is_nan_or_null(total_current_liab))/nullif((is_nan_or_null(long_loan)+is_nan_or_null(bonds_payable)),0),0) as "wc除lt dedt",

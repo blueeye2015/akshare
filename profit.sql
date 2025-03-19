@@ -521,13 +521,16 @@ with cte as (
 select * from (
 select symbol,report_date,coalesce(total_operate_income,operate_income) as total_operate_income, netprofit ,deduct_parent_netprofit ,
 ROW_NUMBER() OVER (PARTITION BY symbol order by report_date desc)cnt from public.profit_sheet 
-) a where cnt <=7
+) a where cnt <=8 and symbol in (select symbol from public.profit_sheet where report_date='2024-12-31 00:00:00')
 ) 
 select symbol,report_date,total_operate_income , CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END,
 round((total_operate_income-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END)/10000,2) as "总营收/亿",
 round((netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END)/10000,2) as "净利润/亿",
-round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END)/10000,2) as "扣非净利润/亿" from cte
+round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END)/10000,2) as "扣非净利润/亿" 
+into TEMPORARY cte1
+from cte
 order by symbol,report_date
+delete from cte1 where report_date < '2023-03-31'
 
 
 SELECT symbol,report_period,营业收入,归属于上市公司股东的净利润,扣除非经常性损益后的净利润 into TEMPORARY forecast

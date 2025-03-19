@@ -21,8 +21,8 @@ class FinancialAIAnalyzer:
             WHERE  RIGHT(TO_CHAR(report_date, 'YYYY-MM-DD') ,5)='12-31' AND symbol = '{symbol}'
         )
         SELECT 
-            symbol,
-            report_date,
+            a.symbol,
+            a.report_date,
             roe,
             weighted_roe,
             net_profit_margin,
@@ -38,9 +38,10 @@ class FinancialAIAnalyzer:
             revenue_growth,
             net_profit_growth,
             total_asset_growth
-        FROM latest_data
+        FROM latest_data a left join cash_flow_sheet b
+		on a.symbol = b.security_code and a.report_date::VARCHAR = LEFT(b.report_date,10)
         WHERE cnt <= {periods}
-        ORDER BY report_date DESC
+        ORDER BY a.report_date DESC
         """
         df = pd.read_sql(query, self.engine)
         # 确保 report_date 是 datetime 格式
@@ -204,7 +205,7 @@ def main():
     analyzer = FinancialAIAnalyzer(db_params, api_key)
     
     # 分析特定公司
-    symbol = '300068'
+    symbol = '002245'
     result = analyzer.analyze_company(symbol)
     
     # 打印分析结果

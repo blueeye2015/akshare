@@ -649,11 +649,14 @@ FROM crosstab(
 DROP TABLE CTE2
 
 select COALESCE(is_nan_or_null(total_current_assets)/nullif(is_nan_or_null(total_current_liab),0),0) as "流动比例",
-is_nan_or_null(accounts_rece)+is_nan_or_null(note_rece)+is_nan_or_null(other_rece) as "应收账款",
+COALESCE((is_nan_or_null(accounts_rece)+is_nan_or_null(note_rece)+is_nan_or_null(other_rece))/10000/is_nan_or_null(total_operate_income),0) as "应收账款风险",
 COALESCE(( is_nan_or_null(goodwill)+is_nan_or_null(intangible_assets)+is_nan_or_null(develop_expense) )/nullif((is_nan_or_null(total_parent_equity)-is_nan_or_null(preferred_stock)-is_nan_or_null(perpetual_bond)),0),0) as "商誉减值风险小"
 ,COALESCE((is_nan_or_null(total_current_assets)-is_nan_or_null(total_current_liab))/nullif((is_nan_or_null(long_loan)+is_nan_or_null(bonds_payable)),0),0) as "wc除lt dedt",
 * from (
 select symbol,report_date,total_current_assets,total_current_liab,goodwill,intangible_assets,long_loan,bonds_payable,long_payable,
 develop_expense,long_rece,preferred_stock,perpetual_bond,accounts_rece,total_parent_equity,note_rece,other_rece,ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date desc)cnt 
 from balance_sheet 
-) a where cnt =1
+) a CROSS JOIN LATERAL (select total_operate_income from public.profit_sheet where symbol = a.symbol ORDER BY report_date desc limit 1) c where cnt =1 and a.symbol = '300502.SZ'
+
+select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,round(total_mv/10000,2) from public.stock_indicator where trade_date =(select max(trade_date) from stock_indicator)
+

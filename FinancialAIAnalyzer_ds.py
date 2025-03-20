@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import time
 from typing import Dict, List
 import requests  # 或其他 HTTP 客户端库
 from sqlalchemy import create_engine
@@ -11,97 +12,194 @@ class FinancialAIAnalyzer:
         self.api_key = api_key
         self.engine = create_engine(f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}")
 
-    def get_financial_data(self, symbol: str, periods: int = 10) -> pd.DataFrame:
-        """从数据库获取财务数据"""
-        query = f"""
-        WITH latest_data AS (
-            SELECT *,
-                   ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) cnt
-            FROM public.financial_indicators 
-            WHERE  RIGHT(TO_CHAR(report_date, 'YYYY-MM-DD') ,5)='12-31' AND symbol = '{symbol}'
-        )
-        SELECT 
-            a.symbol,
-            a.report_date,
-            roe,
-            weighted_roe,
-            net_profit_margin,
-            gross_profit_margin,
-            total_asset_turnover,
-            accounts_receivable_days,
-            inventory_days,
-            asset_liability_ratio,
-            current_ratio,
-            quick_ratio,
-            ocf_to_revenue,
-            cash_flow_ratio,
-            revenue_growth,
-            net_profit_growth,
-            total_asset_growth
-        FROM latest_data a left join cash_flow_sheet b
-		on a.symbol = b.security_code and a.report_date::VARCHAR = LEFT(b.report_date,10)
-        WHERE cnt <= {periods}
-        ORDER BY a.report_date DESC
-        """
-        df = pd.read_sql(query, self.engine)
-        # 确保 report_date 是 datetime 格式
-        df['report_date'] = pd.to_datetime(df['report_date'])
-        return df
-
-    def prepare_data_for_ai(self, df: pd.DataFrame) -> Dict:
-        """将财务数据转换为适合AI分析的格式"""
-        latest = df.iloc[0]  # 最新一期数据
+    def get_financial_data(self, symbol: str, periods: int = 40) -> Dict[str, pd.DataFrame]:
+        """从数据库获取三张财务报表数据，并计算单季数据
         
-        # 处理可能的 NaN 值
-        def safe_round(value, decimals=2):
-            try:
-                if pd.isna(value):
-                    return None
-                return round(float(value), decimals)
-            except:
-                return None
-        # 计算同比变化
-        yoy_changes = {
-            'revenue_growth': latest['revenue_growth'],
-            'net_profit_growth': latest['net_profit_growth'],
-            'total_asset_growth': latest['total_asset_growth']
+        Args:
+            symbol: 股票代码
+            periods: 获取的期数（默认40期，约10年的季报数据）
+        """
+        
+        # 资产负债表查询 - 获取所有季报数据
+        balance_query = f"""
+        SELECT *
+        FROM balance_sheet
+        WHERE security_code = '{symbol}'
+        ORDER BY report_date DESC
+        LIMIT {periods}
+        """
+        
+        # 现金流量表查询
+        cashflow_query = f"""
+        SELECT *
+        FROM cash_flow_sheet
+        WHERE security_code = '{symbol}'
+        ORDER BY report_date DESC
+        LIMIT {periods}
+        """
+        
+        # 利润表查询
+        profit_query = f"""
+        SELECT *
+        FROM profit_sheet
+        WHERE security_code = '{symbol}'
+        ORDER BY report_date DESC
+        LIMIT {periods}
+        """
+        
+        # 获取数据
+        balance_df = pd.read_sql(balance_query, self.engine)
+        cashflow_df = pd.read_sql(cashflow_query, self.engine)
+        profit_df = pd.read_sql(profit_query, self.engine)
+        
+        # 统一日期格式
+        for df in [balance_df, cashflow_df, profit_df]:
+            df['report_date'] = pd.to_datetime(df['report_date'])
+            # 添加季度列
+            df['quarter'] = df['report_date'].dt.quarter
+            df['year'] = df['report_date'].dt.year
+        
+        # 计算单季数据
+        def calculate_quarterly_data(df: pd.DataFrame, cumulative_columns: List[str]) -> pd.DataFrame:
+            """计算单季数据
+            
+            Args:
+                df: 原始DataFrame
+                cumulative_columns: 需要计算单季的累计列名列表
+            """
+            # 按年份和季度排序
+            df = df.sort_values(['year', 'quarter'])
+            
+            # 创建单季数据DataFrame
+            quarterly_df = df.copy()
+            
+            for col in cumulative_columns:
+                if col not in df.columns:
+                    continue
+                    
+                # 计算单季数据
+                quarterly_df[f'{col}_quarterly'] = df[col]
+                
+                # Q1保持不变
+                mask_q1 = quarterly_df['quarter'] == 1
+                # Q2-Q4需要减去上一季度的累计值
+                mask_not_q1 = quarterly_df['quarter'] != 1
+                
+                quarterly_df.loc[mask_not_q1, f'{col}_quarterly'] = (
+                    quarterly_df.loc[mask_not_q1, col].values - 
+                    quarterly_df.groupby('year')[col].shift(1).loc[mask_not_q1].values
+                )
+                
+            return quarterly_df
+        
+        # 利润表需要计算单季的列
+        profit_cumulative_columns = [
+            'total_operate_income', 'operate_income', 'total_operate_cost',
+            'operate_cost', 'sale_expense', 'manage_expense', 'finance_expense',
+            'operate_profit', 'total_profit', 'income_tax', 'netprofit',
+            'parent_netprofit', 'deduct_parent_netprofit'
+        ]
+        
+        # 现金流量表需要计算单季的列
+        cashflow_cumulative_columns = [
+            'sales_services', 'tax_refund', 'other_operate_received',
+            'total_operate_received', 'goods_services_received', 'employee_received',
+            'tax_payments', 'other_operate_payments', 'total_operate_payments',
+            'operate_net_cash_flow', 'invest_withdrawal', 'invest_income',
+            'fix_asset_disposal', 'total_invest_received', 'fix_asset_acquisition',
+            'invest_payments', 'total_invest_payments', 'invest_net_cash_flow',
+            'accept_invest_received', 'loan_received', 'total_finance_received',
+            'loan_repayment', 'dividend_interest_payments', 'total_finance_payments',
+            'finance_net_cash_flow', 'cash_equivalent_increase'
+        ]
+        
+        # 计算单季数据
+        profit_quarterly = calculate_quarterly_data(profit_df, profit_cumulative_columns)
+        cashflow_quarterly = calculate_quarterly_data(cashflow_df, cashflow_cumulative_columns)
+        
+        # 资产负债表是时点数据，不需要计算单季
+        balance_quarterly = balance_df
+        
+        # 添加季度标识
+        for df in [balance_quarterly, cashflow_quarterly, profit_quarterly]:
+            df['period'] = df.apply(lambda x: f"{x['year']}Q{x['quarter']}", axis=1)
+        
+        return {
+            'balance': balance_quarterly,
+            'cashflow': cashflow_quarterly,
+            'profit': profit_quarterly,
+            'balance_raw': balance_df,
+            'cashflow_raw': cashflow_df,
+            'profit_raw': profit_df
+        }
+
+    def prepare_data_for_ai(self, data_dict: Dict[str, pd.DataFrame]) -> Dict:
+        """将三张财务报表数据转换为适合AI分析的格式"""
+        balance_df = data_dict['balance']
+        cashflow_df = data_dict['cashflow']
+        profit_df = data_dict['profit']
+        
+        latest = {
+            'balance': balance_df.iloc[0],
+            'cashflow': cashflow_df.iloc[0],
+            'profit': profit_df.iloc[0]
         }
         
-        # 构建财务指标数据
+        # 基础财务指标
         financial_metrics = {
             "基本信息": {
-                "股票代码": latest['symbol'],
-                "报告期": latest['report_date'].strftime('%Y-%m-%d'),
+                "股票代码": latest['balance']['symbol'],
+                "报告期": latest['balance']['period'],
+                "公司名称": latest['balance']['security_name']
             },
-            "盈利能力指标": {
-                "ROE(%)": latest['roe'],
-                "净利率(%)": latest['net_profit_margin'],
-                "毛利率(%)": latest.get('gross_profit_margin'),
-                "加权ROE(%)": latest['weighted_roe']
+            "资产负债情况": {
+                "总流动资产": latest['balance']['total_current_assets'],
+                "总流动负债": latest['balance']['total_current_liab'],
+                "商誉": latest['balance']['goodwill'],
+                "无形资产": latest['balance']['intangible_assets'],
+                "所有者权益": latest['balance']['total_parent_equity']
             },
-            "运营能力指标": {
-                "总资产周转率": latest['total_asset_turnover'],
-                "应收账款周转天数": latest['accounts_receivable_days'],
-                "存货周转天数": latest['inventory_days']
+            "季度经营情况": {
+                "营业总收入(单季)": latest['profit']['total_operate_income_quarterly'],
+                "营业成本(单季)": latest['profit']['operate_cost_quarterly'],
+                "销售费用(单季)": latest['profit']['sale_expense_quarterly'],
+                "管理费用(单季)": latest['profit']['manage_expense_quarterly'],
+                "财务费用(单季)": latest['profit']['finance_expense_quarterly'],
+                "净利润(单季)": latest['profit']['netprofit_quarterly']
             },
-            "偿债能力指标": {
-                "资产负债率(%)": latest['asset_liability_ratio'],
-                "流动比率": latest['current_ratio'],
-                "速动比率": latest['quick_ratio']
-            },
-            "成长能力指标": yoy_changes,
-            "现金流指标": {
-                "经营活动现金流量": latest['ocf_to_revenue'],
-                "现金流量比率": latest['cash_flow_ratio']
+            "季度现金流情况": {
+                "经营活动现金流入(单季)": latest['cashflow']['total_operate_received_quarterly'],
+                "经营活动现金流出(单季)": latest['cashflow']['total_operate_payments_quarterly'],
+                "经营活动净现金流(单季)": latest['cashflow']['operate_net_cash_flow_quarterly'],
+                "投资活动净现金流(单季)": latest['cashflow']['invest_net_cash_flow_quarterly'],
+                "筹资活动净现金流(单季)": latest['cashflow']['finance_net_cash_flow_quarterly']
             }
         }
         
-        # 添加历史趋势数据（确保数据可序列化）
+        # 计算季度环比增长
+        def calculate_qoq_growth(df: pd.DataFrame, column: str) -> List[float]:
+            """计算环比增长率"""
+            values = df[f'{column}_quarterly'].values
+            qoq_growth = [(values[i] - values[i+1]) / abs(values[i+1]) * 100 if values[i+1] != 0 else 0 
+                        for i in range(len(values)-1)]
+            return qoq_growth
+        
+        # 添加趋势数据
         trends = {
-            'roe_trend': [safe_round(x) for x in df['roe'].tolist()],
-            'profit_margin_trend': [safe_round(x) for x in df['net_profit_margin'].tolist()],
-            'asset_liability_trend': [safe_round(x) for x in df['asset_liability_ratio'].tolist()],
-            'report_dates': df['report_date'].dt.strftime('%Y-%m-%d').tolist()
+            'periods': profit_df['period'].tolist(),
+            'quarterly_revenue': {
+                'values': profit_df['total_operate_income_quarterly'].tolist(),
+                'qoq_growth': calculate_qoq_growth(profit_df, 'total_operate_income')
+            },
+            'quarterly_profit': {
+                'values': profit_df['netprofit_quarterly'].tolist(),
+                'qoq_growth': calculate_qoq_growth(profit_df, 'netprofit')
+            },
+            'quarterly_cashflow': {
+                'values': cashflow_df['operate_net_cash_flow_quarterly'].tolist(),
+                'qoq_growth': calculate_qoq_growth(cashflow_df, 'operate_net_cash_flow')
+            },
+            'asset_trend': balance_df['total_current_assets'].tolist()
         }
         
         return {
@@ -171,12 +269,13 @@ class FinancialAIAnalyzer:
         """完整的分析流程"""
         try:
             # 1. 获取数据
-            df = self.get_financial_data(symbol)
-            if df.empty:
-                return "未找到该公司数据"
+            data_dict  = self.get_financial_data(symbol)
+            # 检查数据是否为空
+            if any(df.empty for df in [data_dict['balance'], data_dict['cashflow'], data_dict['profit']]):
+                return "未找到该公司完整的财务数据"
 
             # 2. 准备数据
-            data = self.prepare_data_for_ai(df)
+            data = self.prepare_data_for_ai(data_dict)
 
             # 3. 生成prompt
             prompt = self.generate_ai_prompt(data)
@@ -190,7 +289,6 @@ class FinancialAIAnalyzer:
             return f"分析过程中出现错误: {str(e)}"
 
 def main():
-    # 配置参数
     db_params = {
         'host': 'localhost',
         'port': 5432,
@@ -201,15 +299,25 @@ def main():
     
     api_key = "sk-db3726af7480474e964c7d02369f7dc2"
     
-    # 创建分析器实例
     analyzer = FinancialAIAnalyzer(db_params, api_key)
     
-    # 分析特定公司
-    symbol = '002245'
-    result = analyzer.analyze_company(symbol)
+    print("财务报表AI分析系统")
+    print("-" * 50)
     
-    # 打印分析结果
-    print(result)
+    symbol = input("请输入股票代码（例如：002245）：")
+    
+    print("\n正在获取财务数据...")
+    try:
+        result = analyzer.analyze_company(symbol)
+        
+        # 保存分析结果到文件
+        with open(f'analysis_{symbol}_{time.strftime("%Y%m%d_%H%M%S")}.txt', 'w', encoding='utf-8') as f:
+            f.write(result)
+            
+        print("\n分析完成！结果已保存到文件。")
+        
+    except Exception as e:
+        print(f"\n错误：{str(e)}")
 
 if __name__ == "__main__":
     main()

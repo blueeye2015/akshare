@@ -1,0 +1,40 @@
+2025-03-22 20:09:50,147 - ReportSchedule - INFO - 开始获取 20250315 的数据
+2025-03-22 20:09:51,950 - ReportSchedule - ERROR - 保存数据失败: can't adapt type 'numpy.datetime64'
+2025-03-22 20:09:51,951 - ReportSchedule - INFO - 保存了 0 条记录
+2025-03-22 20:09:52,958 - ReportSchedule - INFO - 开始获取 20250316 的数据
+2025-03-22 20:09:55,712 - ReportSchedule - INFO - 开始获取 20250317 的数据
+2025-03-22 20:09:57,554 - ReportSchedule - ERROR - 保存数据失败: can't adapt type 'numpy.datetime64'
+2025-03-22 20:09:57,554 - ReportSchedule - INFO - 保存了 0 条记录
+2025-03-22 20:09:58,566 - ReportSchedule - INFO - 开始获取 20250318 的数据
+2025-03-22 20:12:33,508 - ReportSchedule - INFO - 开始获取 20250315 的数据
+2025-03-22 20:12:35,273 - ReportSchedule - INFO - 保存了 36 条记录
+2025-03-22 20:12:36,286 - ReportSchedule - INFO - 开始获取 20250316 的数据
+2025-03-22 20:12:37,960 - ReportSchedule - INFO - 20250316 没有数据
+2025-03-22 20:12:38,973 - ReportSchedule - INFO - 开始获取 20250317 的数据
+2025-03-22 20:12:40,587 - ReportSchedule - INFO - 保存了 23 条记录
+2025-03-22 20:12:41,588 - ReportSchedule - INFO - 开始获取 20250318 的数据
+2025-03-22 20:12:43,533 - ReportSchedule - INFO - 保存了 67 条记录
+2025-03-22 20:12:44,541 - ReportSchedule - INFO - 开始获取 20250319 的数据
+2025-03-22 20:12:46,917 - ReportSchedule - INFO - 保存了 46 条记录
+2025-03-22 20:12:47,919 - ReportSchedule - INFO - 开始获取 20250320 的数据
+2025-03-22 20:12:50,117 - ReportSchedule - INFO - 保存了 100 条记录
+2025-03-22 20:12:51,129 - ReportSchedule - INFO - 开始获取 20250321 的数据
+2025-03-22 20:12:52,977 - ReportSchedule - INFO - 保存了 100 条记录
+2025-03-22 20:12:53,979 - ReportSchedule - INFO - 开始获取 20250322 的数据
+2025-03-22 20:12:55,984 - ReportSchedule - INFO - 保存了 72 条记录
+2025-03-24 14:50:34,614 - ReportSchedule - INFO - 开始获取 20250317 的数据
+2025-03-24 14:50:36,691 - ReportSchedule - INFO - 保存了 23 条记录
+2025-03-24 14:50:37,699 - ReportSchedule - INFO - 开始获取 20250318 的数据
+2025-03-24 14:50:39,616 - ReportSchedule - INFO - 保存了 67 条记录
+2025-03-24 14:50:40,630 - ReportSchedule - INFO - 开始获取 20250319 的数据
+2025-03-24 14:50:43,000 - ReportSchedule - INFO - 保存了 46 条记录
+2025-03-24 14:50:44,002 - ReportSchedule - INFO - 开始获取 20250320 的数据
+2025-03-24 14:50:45,820 - ReportSchedule - INFO - 保存了 100 条记录
+2025-03-24 14:50:46,833 - ReportSchedule - INFO - 开始获取 20250321 的数据
+2025-03-24 14:50:53,060 - ReportSchedule - INFO - 保存了 100 条记录
+2025-03-24 14:50:54,074 - ReportSchedule - INFO - 开始获取 20250322 的数据
+2025-03-24 14:50:55,938 - ReportSchedule - INFO - 保存了 72 条记录
+2025-03-24 14:50:56,949 - ReportSchedule - INFO - 开始获取 20250323 的数据
+2025-03-24 14:50:58,756 - ReportSchedule - INFO - 20250323 没有数据
+2025-03-24 14:50:59,772 - ReportSchedule - INFO - 开始获取 20250324 的数据
+2025-03-24 14:51:01,646 - ReportSchedule - INFO - 保存了 85 条记录

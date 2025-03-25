@@ -164,6 +164,30 @@ class ProfitSheetCollector:
             logger.error(f"Error getting stock list: {str(e)}")
             return []
 
+    def get_7day_stocks(self) -> List[str]:
+        """从report_schedule表获取最近一周的股票代码"""
+        try:
+            with self.Session() as session:
+                # 构建查询语句
+                query = text("""
+                    SELECT DISTINCT stock_code || '.' || exchange as symbol
+                    FROM report_schedule 
+                    WHERE exchange IN ('SZ', 'SH')
+                    AND created_at >= CURRENT_DATE - INTERVAL '7 days'
+                    AND stock_code ~ '^[0-9]+$'  -- 确保股票代码只包含数字
+                    AND stock_code ~ '^(000|001|002|003|300|600|601|603|605)'  -- 确保是主板、创业板、科创板的股票
+                """)
+                
+                result = session.execute(query)
+                stock_list = [row[0] for row in result]
+                
+                logger.info(f"从report_schedule获取到 {len(stock_list)} 个最近一周的股票代码")
+                return stock_list
+                
+        except Exception as e:
+            logger.error(f"从report_schedule获取股票列表时出错: {str(e)}")
+            return [] 
+        
     def get_stocks_to_update(self) -> List[str]:
         """获取需要更新的股票代码"""
         try:
@@ -261,7 +285,7 @@ class ProfitSheetCollector:
 
     def incremental_update(self):
         """增量更新数据"""
-        stock_list = self.get_stocks_to_update()
+        stock_list = self.get_7day_stocks()
         total_stocks = len(stock_list)
         
         for i, symbol in enumerate(stock_list, 1):

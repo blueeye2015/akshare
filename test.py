@@ -5,8 +5,10 @@ import numpy as np
 # database_url = 'postgresql://postgres:12@localhost:5432/Financialdata'
 # engine = create_engine(database_url)
 # 获取数据
-stock_financial_analysis_indicator = ak.stock_financial_analysis_indicator(symbol='002315', start_year='2024')
-print(stock_financial_analysis_indicator)
+#stock_financial_analysis_indicator = ak.stock_financial_analysis_indicator(symbol='002315', start_year='2024')
+#print(stock_financial_analysis_indicator)
+news_report_time_baidu_df = ak.news_report_time_baidu(date="20250320")
+print(news_report_time_baidu_df)
 #stock_balance_sheet_by_report_em_df = ak.stock_balance_sheet_by_report_em(symbol="SH600651")
 #stock_cash_flow_sheet_by_report_em = ak.stock_cash_flow_sheet_by_report_em(symbol="SH600519")
 #stock_profit_sheet_by_report_em = ak.stock_profit_sheet_by_report_em(symbol="SH603409")

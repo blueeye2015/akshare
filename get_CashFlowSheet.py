@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer
+from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.dialects.postgresql import insert
 from datetime import datetime
@@ -215,6 +215,29 @@ class CashFlowSheetCollector:
         finally:
             session.close()
 
+    def get_7days_stocks(self) -> List[str]:
+        """从report_schedule表获取最近一周的股票代码"""
+        try:
+            with self.Session() as session:
+                query = text("""
+                    SELECT DISTINCT stock_code || '.' || exchange as symbol
+                    FROM report_schedule 
+                    WHERE exchange IN ('SZ', 'SH')
+                    AND created_at >= CURRENT_DATE - INTERVAL '7 days'
+                    AND stock_code ~ '^[0-9]+$'
+                    AND stock_code ~ '^(000|001|002|003|300|600|601|603|605)'
+                """)
+                
+                result = session.execute(query)
+                stock_list = [row[0] for row in result]
+                
+                logger.info(f"从report_schedule获取到最近一周的股票代码，共 {len(stock_list)} 个")
+                return stock_list
+                
+        except Exception as e:
+            logger.error(f"获取最近一周股票列表时出错: {str(e)}")
+            return []
+        
     def collect_data(self, symbol: str):
         """采集单个股票的数据"""
         try:
@@ -267,11 +290,23 @@ class CashFlowSheetCollector:
             raise
 
 
-    def collect_all_stocks(self, batch_size: int = 50):
-        """批量采集所有股票数据"""
-        # 获取股票列表
-        stock_list = self.get_stock_list()
+    def collect_all_stocks(self, batch_size: int = 50, mode: str = 'initial'):
+        """批量采集股票数据
+        
+        Args:
+            batch_size (int): 每批处理的股票数量
+            mode (str): 'initial' 为处理所有股票，'update' 为处理最近一周的股票
+        """
+        # 根据模式选择获取股票列表的方法
+        if mode == 'initial':
+            stock_list = self.get_all_stocks()
+            logger.info("使用全量模式获取股票列表")
+        else:
+            stock_list = self.get_7days_stocks()
+            logger.info("使用增量更新模式获取最近一周股票列表")
+        
         total_stocks = len(stock_list)
+        logger.info(f"开始处理 {total_stocks} 只股票的现金流量表数据")
         
         # 批量处理
         for i in range(0, total_stocks, batch_size):
@@ -288,17 +323,22 @@ class CashFlowSheetCollector:
             
             # 每批次处理完后额外等待
             logger.info(f"批次处理完成，等待 10 秒后继续...")
-            time.sleep(10) 
+            time.sleep(10)
             
 def main():
-    # parser = argparse.ArgumentParser(description='现金流量表数据采集工具')
-    # parser.add_argument('--symbols', nargs='+', required=True, help='股票代码列表')
+    parser = argparse.ArgumentParser(description='现金流量表数据采集工具')
+    parser.add_argument(
+        '--mode',
+        choices=['initial', 'update'],
+        required=True,
+        help='运行模式: initial-首次运行完整采集, update-增量更新'
+    )
     
-    # try:
-    #     args = parser.parse_args()
-    # except SystemExit:
-    #     parser.print_help()
-    #     sys.exit(1)
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        parser.print_help()
+        sys.exit(1)
 
     # 数据库配置
     db_config = {
@@ -316,12 +356,12 @@ def main():
         batch_size = 50
         
         # 开始采集数据
-        logger.info("开始采集现金流量表数据...")
-        collector.collect_all_stocks(batch_size)
-        # for symbol in args.symbols:
-        #     logger.info(f"开始处理股票 {symbol}")
-        #     collector.collect_data(symbol)
-        
+        if args.mode == 'initial':
+            logger.info("开始全量采集现金流量表数据...")
+        else:
+            logger.info("开始增量更新现金流量表数据...")
+            
+        collector.collect_all_stocks(batch_size, args.mode)
         
     except KeyboardInterrupt:
         logger.info("程序被用户中断")

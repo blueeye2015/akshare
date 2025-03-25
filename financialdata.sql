@@ -479,3 +479,19 @@ CREATE TABLE cash_flow_sheet (
 -- 创建索引
 CREATE INDEX idx_cash_flow_sheet_symbol ON cash_flow_sheet(symbol);
 CREATE INDEX idx_cash_flow_sheet_report_date ON cash_flow_sheet(report_date);
+
+
+CREATE TABLE IF NOT EXISTS report_schedule (
+    id BIGSERIAL PRIMARY KEY,
+    stock_code VARCHAR(10) NOT NULL,
+    exchange VARCHAR(10) NOT NULL,
+    stock_name VARCHAR(100) NOT NULL,
+    report_period VARCHAR(50) NOT NULL,
+    report_date DATE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (stock_code, report_date)  -- 防止重复数据
+);
+
+-- 创建索引
+CREATE INDEX idx_report_schedule_date ON report_schedule(report_date);
+CREATE INDEX idx_report_schedule_stock ON report_schedule(stock_code);

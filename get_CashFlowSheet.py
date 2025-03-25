@@ -356,12 +356,12 @@ def main():
         batch_size = 50
         
         # 开始采集数据
-        if args.mode == 'initial':
-            logger.info("开始全量采集现金流量表数据...")
-        else:
-            logger.info("开始增量更新现金流量表数据...")
-            
-        collector.collect_all_stocks(batch_size, args.mode)
+        logger.info("开始采集现金流量表数据...")
+        #collector.collect_all_stocks(batch_size)
+        for symbol in args.symbols:
+            logger.info(f"开始处理股票 {symbol}")
+            collector.collect_data(symbol)
+        
         
     except KeyboardInterrupt:
         logger.info("程序被用户中断")

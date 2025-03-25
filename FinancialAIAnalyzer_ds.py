@@ -140,9 +140,9 @@ class FinancialAIAnalyzer:
         profit_df = data_dict['profit']
         
         latest = {
-            'balance': balance_df.iloc[0],
-            'cashflow': cashflow_df.iloc[0],
-            'profit': profit_df.iloc[0]
+            'balance': balance_df.iloc[balance_df.shape[0]-1],#获取最后一行数据
+            'cashflow': cashflow_df.iloc[cashflow_df.shape[0]-1],
+            'profit': profit_df.iloc[profit_df.shape[0]-1] 
         }
         
         # 基础财务指标
@@ -226,6 +226,7 @@ class FinancialAIAnalyzer:
                 - 偿债风险评估
                 - 运营风险评估
                 - 现金流风险评估
+                - 存货风险评估
 
                 3. 现金流状况评估
                 - 经营现金流质量
@@ -236,14 +237,12 @@ class FinancialAIAnalyzer:
                 - 关键指标变动原因分析
 
                 5. 需要重点关注的问题
-                - 列出潜在风险点
-                - 提供改善建议
+                - 列出潜在风险点                
 
                 请给出详细的分析结论和建议。回答要求：
                 1. 分析要客观、专业，基于数据说话
                 2. 对异常指标要重点分析原因
-                3. 结合历史趋势给出合理的判断
-                4. 提供具体的改善建议"""
+                3. 结合历史趋势给出合理的判断"""
 
     def call_ai_api(self, prompt: str) -> str:
         """调用AI API进行分析"""

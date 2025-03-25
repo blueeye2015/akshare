@@ -291,14 +291,14 @@ class CashFlowSheetCollector:
             time.sleep(10) 
             
 def main():
-    # parser = argparse.ArgumentParser(description='现金流量表数据采集工具')
-    # parser.add_argument('--symbols', nargs='+', required=True, help='股票代码列表')
+    parser = argparse.ArgumentParser(description='现金流量表数据采集工具')
+    parser.add_argument('--symbols', nargs='+', required=True, help='股票代码列表')
     
-    # try:
-    #     args = parser.parse_args()
-    # except SystemExit:
-    #     parser.print_help()
-    #     sys.exit(1)
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        parser.print_help()
+        sys.exit(1)
 
     # 数据库配置
     db_config = {
@@ -317,10 +317,10 @@ def main():
         
         # 开始采集数据
         logger.info("开始采集现金流量表数据...")
-        collector.collect_all_stocks(batch_size)
-        # for symbol in args.symbols:
-        #     logger.info(f"开始处理股票 {symbol}")
-        #     collector.collect_data(symbol)
+        #collector.collect_all_stocks(batch_size)
+        for symbol in args.symbols:
+            logger.info(f"开始处理股票 {symbol}")
+            collector.collect_data(symbol)
         
         
     except KeyboardInterrupt:

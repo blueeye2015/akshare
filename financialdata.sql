@@ -479,3 +479,33 @@ CREATE TABLE cash_flow_sheet (
 -- 创建索引
 CREATE INDEX idx_cash_flow_sheet_symbol ON cash_flow_sheet(symbol);
 CREATE INDEX idx_cash_flow_sheet_report_date ON cash_flow_sheet(report_date);
+
+
+ALTER TABLE balance_sheet
+ADD COLUMN security_code character varying(10)
+GENERATED ALWAYS AS (
+    
+         LEFT(symbol, 6)
+        
+    
+) STORED;
+
+ALTER TABLE profit_sheet
+ADD COLUMN security_code character varying(10)
+GENERATED ALWAYS AS (
+    
+         LEFT(symbol, 6)
+        
+    
+) STORED;
+
+CREATE INDEX idx_profit_sheet_security_code
+    ON public.profit_sheet USING btree
+    (security_code)
+    WITH (deduplicate_items=True)
+;
+CREATE INDEX idx_balance_sheet_security_code
+    ON public.balance_sheet USING btree
+    (security_code)
+    WITH (deduplicate_items=True)
+;

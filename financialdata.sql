@@ -495,3 +495,157 @@ CREATE TABLE IF NOT EXISTS report_schedule (
 -- 创建索引
 CREATE INDEX idx_report_schedule_date ON report_schedule(report_date);
 CREATE INDEX idx_report_schedule_stock ON report_schedule(stock_code);
+
+-- 创建表
+
+
+CREATE TABLE financial_statement (
+    -- 基础信息
+    id BIGSERIAL PRIMARY KEY,
+    symbol VARCHAR(10) NOT NULL,
+    security_code VARCHAR(10) NOT NULL,
+    security_name_abbr VARCHAR(50),
+    org_code VARCHAR(50),
+    org_type VARCHAR(20),
+    report_date DATE NOT NULL,
+    report_type VARCHAR(20),
+    report_date_name VARCHAR(50),
+    security_type_code VARCHAR(20),
+    notice_date DATE,
+    update_date TIMESTAMP,
+    currency VARCHAR(10),
+
+    -- 资产类项目
+    monetaryfunds NUMERIC(20,4),
+    trading_assets NUMERIC(20,4),
+    notes_receivable NUMERIC(20,4),
+    accounts_rece NUMERIC(20,4),
+    financing_rece NUMERIC(20,4),
+    prepayment NUMERIC(20,4),
+    other_rece NUMERIC(20,4),
+    inventory NUMERIC(20,4),
+    contract_asset NUMERIC(20,4),
+    current_asset_other NUMERIC(20,4),
+    current_asset_balance NUMERIC(20,4),
+    
+    -- 非流动资产
+    fixed_asset NUMERIC(20,4),
+    cip NUMERIC(20,4),
+    intangible_asset NUMERIC(20,4),
+    goodwill NUMERIC(20,4),
+    long_prepaid_expense NUMERIC(20,4),
+    defer_tax_asset NUMERIC(20,4),
+    noncurrent_asset_other NUMERIC(20,4),
+    noncurrent_asset_balance NUMERIC(20,4),
+    
+    -- 负债类项目
+    short_loan NUMERIC(20,4),
+    loan_pbc NUMERIC(20,4),
+    note_payable NUMERIC(20,4),
+    accounts_payable NUMERIC(20,4),
+    advance_receivables NUMERIC(20,4),
+    contract_liab NUMERIC(20,4),
+    staff_salary_payable NUMERIC(20,4),
+    tax_payable NUMERIC(20,4),
+    other_payable NUMERIC(20,4),
+    current_liab_other NUMERIC(20,4),
+    current_liab_balance NUMERIC(20,4),
+
+    -- 非流动负债
+    long_loan NUMERIC(20,4),
+    bond_payable NUMERIC(20,4),
+    lease_liab NUMERIC(20,4),
+    long_payable NUMERIC(20,4),
+    predict_liab NUMERIC(20,4),
+    defer_income NUMERIC(20,4),
+    defer_tax_liab NUMERIC(20,4),
+    noncurrent_liab_other NUMERIC(20,4),
+    noncurrent_liab_balance NUMERIC(20,4),
+    liab_balance NUMERIC(20,4),
+
+    -- 所有者权益
+    share_capital NUMERIC(20,4),
+    capital_reserve NUMERIC(20,4),
+    treasury_shares NUMERIC(20,4),
+    special_reserve NUMERIC(20,4),
+    surplus_reserve NUMERIC(20,4),
+    unassign_rpofit NUMERIC(20,4),
+    minority_equity NUMERIC(20,4),
+    other_compre_income NUMERIC(20,4),
+    equity_balance NUMERIC(20,4),
+
+    -- 特殊项目
+    total_assets NUMERIC(20,4),
+    total_liabilities NUMERIC(20,4),
+    total_equity NUMERIC(20,4),
+    
+    -- 同比增长率字段 (YOY)
+    monetaryfunds_yoy NUMERIC(10,4),
+    total_assets_yoy NUMERIC(10,4),
+    total_liabilities_yoy NUMERIC(10,4),
+    equity_balance_yoy NUMERIC(10,4),
+
+    -- 状态字段
+    opinion_type VARCHAR(50),
+    osopinion_type VARCHAR(50),
+    listing_state VARCHAR(20),
+
+    -- 创建时间和更新时间
+    created_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- 唯一约束
+    CONSTRAINT udx_security_report UNIQUE (symbol, report_date)
+);
+
+-- 创建索引
+CREATE INDEX idx_symbol ON financial_statement(symbol);
+CREATE INDEX idx_report_date ON financial_statement(report_date);
+CREATE INDEX idx_org_code ON financial_statement(org_code);
+
+-- 添加字段注释
+COMMENT ON TABLE financial_statement IS '财务报表数据表';
+
+-- 基础信息字段注释
+COMMENT ON COLUMN financial_statement.id IS '主键ID';
+COMMENT ON COLUMN financial_statement.symbol IS '证券代码';
+COMMENT ON COLUMN financial_statement.security_code IS '安全码';
+COMMENT ON COLUMN financial_statement.security_name_abbr IS '证券简称';
+COMMENT ON COLUMN financial_statement.org_code IS '机构代码';
+COMMENT ON COLUMN financial_statement.org_type IS '机构类型';
+COMMENT ON COLUMN financial_statement.report_date IS '报告日期';
+COMMENT ON COLUMN financial_statement.report_type IS '报告类型';
+COMMENT ON COLUMN financial_statement.report_date_name IS '报告期名称';
+COMMENT ON COLUMN financial_statement.security_type_code IS '证券类型代码';
+COMMENT ON COLUMN financial_statement.notice_date IS '公告日期';
+COMMENT ON COLUMN financial_statement.update_date IS '更新日期';
+COMMENT ON COLUMN financial_statement.currency IS '货币类型';
+
+-- 资产类项目字段注释
+COMMENT ON COLUMN financial_statement.monetaryfunds IS '货币资金';
+COMMENT ON COLUMN financial_statement.trading_assets IS '交易性金融资产';
+COMMENT ON COLUMN financial_statement.notes_receivable IS '应收票据';
+COMMENT ON COLUMN financial_statement.accounts_rece IS '应收账款';
+COMMENT ON COLUMN financial_statement.financing_rece IS '应收款项融资';
+COMMENT ON COLUMN financial_statement.prepayment IS '预付款项';
+COMMENT ON COLUMN financial_statement.other_rece IS '其他应收款';
+COMMENT ON COLUMN financial_statement.inventory IS '存货';
+COMMENT ON COLUMN financial_statement.contract_asset IS '合同资产';
+COMMENT ON COLUMN financial_statement.current_asset_other IS '其他流动资产';
+COMMENT ON COLUMN financial_statement.current_asset_balance IS '流动资产合计';
+
+-- [其他字段注释继续添加...]
+
+-- 创建更新时间触发器
+CREATE OR REPLACE FUNCTION update_update_time_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.update_time = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_financial_statement_update_time
+    BEFORE UPDATE ON financial_statement
+    FOR EACH ROW
+    EXECUTE FUNCTION update_update_time_column();

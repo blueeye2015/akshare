@@ -89,7 +89,8 @@ class FinancialAIAnalyzer:
                     quarterly_df.loc[mask_not_q1, col].values - 
                     quarterly_df.groupby('year')[col].shift(1).loc[mask_not_q1].values
                 )
-                
+            
+            quarterly_df = quarterly_df.sort_values('report_date', ascending=False)    
             return quarterly_df
         
         # 利润表需要计算单季的列
@@ -139,10 +140,14 @@ class FinancialAIAnalyzer:
         cashflow_df = data_dict['cashflow']
         profit_df = data_dict['profit']
         
+        # print("资产负债表最新报告期:", balance_df['report_date'].iloc[0])
+        # print("利润表最新报告期:", profit_df['report_date'].iloc[0])
+        # print("现金流量表最新报告期:", cashflow_df['report_date'].iloc[0])
+        
         latest = {
-            'balance': balance_df.iloc[balance_df.shape[0]-1],#获取最后一行数据
-            'cashflow': cashflow_df.iloc[cashflow_df.shape[0]-1],
-            'profit': profit_df.iloc[profit_df.shape[0]-1] 
+            'balance': balance_df.iloc[0],#获取最后一行数据
+            'cashflow': cashflow_df.iloc[0],
+            'profit': profit_df.iloc[0] 
         }
         
         # 基础财务指标
@@ -239,7 +244,7 @@ class FinancialAIAnalyzer:
                 5. 需要重点关注的问题
                 - 列出潜在风险点                
 
-                请给出详细的分析结论和建议。回答要求：
+                请给出详细的分析结论。回答要求：
                 1. 分析要客观、专业，基于数据说话
                 2. 对异常指标要重点分析原因
                 3. 结合历史趋势给出合理的判断"""

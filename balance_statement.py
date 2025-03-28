@@ -110,10 +110,10 @@ class BalanceSheet(Base):
     total_equity = Column(Numeric(20,4))
 
     # 同比增长率字段
-    monetaryfunds_yoy = Column(Numeric(10,4))
-    total_assets_yoy = Column(Numeric(10,4))
-    total_liabilities_yoy = Column(Numeric(10,4))
-    equity_balance_yoy = Column(Numeric(10,4))
+    # monetaryfunds_yoy = Column(Numeric(10,6))
+    # total_assets_yoy = Column(Numeric(10,6))
+    # total_liabilities_yoy = Column(Numeric(10,6))
+    # equity_balance_yoy = Column(Numeric(10,6))
 
     # 状态字段
     opinion_type = Column(String(50))
@@ -231,10 +231,10 @@ class BalanceSheetCollector:
             'TOTAL_EQUITY': 'total_equity',
             
             # 同比增长率字段 (YOY)
-            'MONETARYFUNDS_YOY': 'monetaryfunds_yoy',
-            'TOTAL_ASSETS_YOY': 'total_assets_yoy',
-            'TOTAL_LIABILITIES_YOY': 'total_liabilities_yoy',
-            'EQUITY_BALANCE_YOY': 'equity_balance_yoy',
+            # 'MONETARYFUNDS_YOY': 'monetaryfunds_yoy',
+            # 'TOTAL_ASSETS_YOY': 'total_assets_yoy',
+            # 'TOTAL_LIABILITIES_YOY': 'total_liabilities_yoy',
+            # 'EQUITY_BALANCE_YOY': 'equity_balance_yoy',
             
             # 状态字段
             'OPINION_TYPE': 'opinion_type',

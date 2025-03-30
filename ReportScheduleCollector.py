@@ -14,7 +14,7 @@ class ReportScheduleCollector:
         Args:
             db_params: 数据库连接参数
                 {
-                    "host": "localhost",
+                    "host": "192.168.50.149",
                     "database": "Financialdata",
                     "user": "postgres",
                     "password": "12",
@@ -128,7 +128,7 @@ class ReportScheduleCollector:
 def main():
     # 数据库连接参数
     db_params = {
-        "host": "localhost",
+        "host": "192.168.50.149",
         "database": "Financialdata",
         "user": "postgres",
         "password": "12",

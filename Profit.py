@@ -323,7 +323,7 @@ def main():
     args = parser.parse_args()
 
     db_config = {
-        'host': 'localhost',
+        'host': '192.168.50.149',
         'port': 5432,
         'user': 'postgres',
         'password': '12',

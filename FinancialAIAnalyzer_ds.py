@@ -294,7 +294,7 @@ class FinancialAIAnalyzer:
 
 def main():
     db_params = {
-        'host': 'localhost',
+        'host': '192.168.50.149',
         'port': 5432,
         'user': 'postgres',
         'password': '12',

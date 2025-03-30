@@ -2,7 +2,7 @@ import akshare as ak
 import pandas as pd
 from sqlalchemy import create_engine
 import numpy as np
-# database_url = 'postgresql://postgres:12@localhost:5432/Financialdata'
+# database_url = 'postgresql://postgres:12@192.168.50.149:5432/Financialdata'
 # engine = create_engine(database_url)
 # 获取数据
 #stock_financial_analysis_indicator = ak.stock_financial_analysis_indicator(symbol='002315', start_year='2024')

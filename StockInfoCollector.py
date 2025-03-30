@@ -151,7 +151,7 @@ class StockInfoCollector:
 if __name__ == "__main__":
     # 数据库连接参数
     db_config = {
-        "db_host": "localhost",
+        "db_host": "192.168.50.149",
         "db_port": 5432,
         "db_user": "postgres",
         "db_password": "12",

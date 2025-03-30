@@ -200,7 +200,7 @@ def main():
 
     # 数据库配置
     db_config = {
-        'host': 'localhost',
+        'host': '192.168.50.149',
         'port': 5432,
         'user': 'postgres',
         'password': '12',

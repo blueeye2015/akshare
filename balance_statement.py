@@ -11,6 +11,9 @@ import logging
 import akshare as ak
 import sys
 import argparse
+import multiprocessing
+from itertools import islice
+from functools import partial
 
 # 设置日志
 logging.basicConfig(
@@ -24,6 +27,42 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 Base = declarative_base()
+
+def chunks(lst: List, n: int) -> List[List]:
+    """将列表分割成n个大致相等的块"""
+    if not lst:
+        return []
+    
+    # 计算每个块的大小
+    size = len(lst)
+    chunk_size = (size + n - 1) // n  # 向上取整确保覆盖所有元素
+    
+    # 生成分块
+    return [lst[i:i + chunk_size] for i in range(0, size, chunk_size)]
+
+def process_stock_batch(db_config: Dict, stock_batch: List[str], batch_id: int):
+    """处理一批股票的数据采集"""
+    collector = BalanceSheetCollector(db_config)
+    total_stocks = len(stock_batch)
+    
+    logger.info(f"Batch {batch_id}: Starting processing {total_stocks} stocks")
+    
+    for idx, symbol in enumerate(stock_batch, 1):
+        try:
+            time.sleep(random.uniform(1, 3))
+            
+            df = collector.fetch_balance_sheet_data(symbol)
+            if df is not None and not df.empty:
+                records = collector.process_data(df, symbol)
+                collector.upsert_records(records)
+                
+                logger.info(f"Batch {batch_id} Progress: {idx}/{total_stocks} - Successfully processed {symbol}")
+            else:
+                logger.warning(f"Batch {batch_id}: No balance sheet data available for {symbol}")
+            
+        except Exception as e:
+            logger.error(f"Batch {batch_id}: Error processing {symbol}: {str(e)}")
+            continue
 
 class BalanceSheet(Base):
     __tablename__ = 'financial_statement'
@@ -129,6 +168,7 @@ class BalanceSheet(Base):
 
 class BalanceSheetCollector:
     def __init__(self, db_config: Dict):
+        self.db_config = db_config  # 保存db_config作为实例变量
         self.db_url = f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
         self.engine = create_engine(self.db_url)
         
@@ -426,29 +466,42 @@ class BalanceSheetCollector:
     #         logger.error(f"Error getting stocks to update: {str(e)}")
     #         return []
     
-    def initial_data_collection(self):
-        """初始化数据收集"""
+    def initial_data_collection(self, num_processes=10):
+        """并行初始化数据收集"""
         stocks = self.get_all_stocks()
         total_stocks = len(stocks)
         
-        logger.info(f"Starting initial balance sheet data collection for {total_stocks} stocks")
+        logger.info(f"Starting parallel initial balance sheet data collection for {total_stocks} stocks using {num_processes} processes")
         
-        for idx, symbol in enumerate(stocks, 1):
-            try:
-                time.sleep(random.uniform(1, 3))
+        # 调整进程数，确保不会超过股票数量
+        num_processes = min(num_processes, total_stocks)
+        
+        try:
+                # 将股票列表分成num_processes份
+                stock_batches = chunks(stocks, num_processes)
                 
-                df = self.fetch_balance_sheet_data(symbol)
-                if df is not None and not df.empty:
-                    records = self.process_data(df,symbol)
-                    self.upsert_records(records)
+                # 创建任务列表
+                tasks = []
+                for i, batch in enumerate(stock_batches):
+                    if batch:  # 确保批次不为空
+                        tasks.append((self.db_config, batch, i))
+                
+                if not tasks:
+                    logger.error("No valid tasks created")
+                    return
                     
-                    logger.info(f"Progress: {idx}/{total_stocks} - Successfully processed {symbol}")
-                else:
-                    logger.warning(f"No balance sheet data available for {symbol}")
+                logger.info(f"Created {len(tasks)} tasks for processing")
                 
-            except Exception as e:
-                logger.error(f"Error processing {symbol}: {str(e)}")
-                continue
+                # 创建进程池
+                with multiprocessing.Pool(processes=num_processes) as pool:
+                    # 使用进程池并行处理每个批次
+                    pool.starmap(process_stock_batch, tasks)
+                    
+                logger.info("All batches completed")
+                
+        except Exception as e:
+                logger.error(f"Error in initial_data_collection: {str(e)}")
+                raise
 
     def incremental_update(self):
         """增量更新数据"""
@@ -475,12 +528,18 @@ class BalanceSheetCollector:
                 continue
 
 def main():
-    parser = argparse.ArgumentParser(description='业绩预告数据采集工具')
+    parser = argparse.ArgumentParser(description='财务报表数据采集工具')
     parser.add_argument(
         '--mode',
         choices=['initial', 'update'],
         required=True,
         help='运行模式: initial-首次运行完整采集, update-增量更新'
+    )
+    parser.add_argument(
+        '--processes',
+        type=int,
+        default=10,
+        help='并行进程数'
     )
     
     try:
@@ -502,11 +561,11 @@ def main():
     
     try:
         if args.mode == 'initial':
-            logger.info("开始初始数据采集...")
-            collector.initial_data_collection()
+            logger.info(f"开始并行初始数据采集（使用 {args.processes} 个进程）...")
+            collector.initial_data_collection(num_processes=args.processes)
         else:
-            logger.info("开始增量更新...")
-            collector.incremental_update()
+            logger.info(f"开始并行增量更新（使用 {args.processes} 个进程）...")
+            collector.incremental_update(num_processes=args.processes)
     except KeyboardInterrupt:
         logger.info("程序被用户中断")
     except Exception as e:
@@ -516,4 +575,6 @@ def main():
         logger.info("程序运行完成")
 
 if __name__ == "__main__":
+    # 确保在 Windows 环境下正确启动多进程
+    multiprocessing.freeze_support()
     main()

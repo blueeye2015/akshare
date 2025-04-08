@@ -9,7 +9,7 @@ import numpy as np
 #print(stock_financial_analysis_indicator)
 #stock_balance_sheet_by_report_em_df = ak.stock_balance_sheet_by_report_em(symbol="SZ000099")
 #stock_cash_flow_sheet_by_report_em = ak.stock_cash_flow_sheet_by_report_em(symbol="SZ000534")
-news_report_time_baidu=ak.news_report_time_baidu(date="2025-03-15")
+news_report_time_baidu=ak.news_report_time_baidu(date="20250331")
 #stock_profit_sheet_by_report_em = ak.stock_profit_sheet_by_report_em(symbol="SH603409")
 #stock_yjkb_em_df = ak.stock_yjkb_em(date="20241231")
 # df = ak.stock_info_a_code_name()

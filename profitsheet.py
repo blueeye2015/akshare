@@ -280,6 +280,24 @@ class ProfitSheetCollector:
             logger.error(f"Error in incremental_update: {str(e)}")
             raise
     
+    def update_single_stock(self, symbol: str):
+        """更新单个股票的数据"""
+        try:
+            logger.info(f"开始更新股票 {symbol} 的数据...")
+            
+            # 获取并处理数据
+            df = self.fetch_profit_sheet_data(symbol)
+            if df is not None and not df.empty:
+                records = self.process_data(df, symbol)
+                self.upsert_records(records)
+                logger.info(f"成功更新股票 {symbol} 的数据")
+            else:
+                logger.warning(f"没有找到股票 {symbol} 的利润表数据")
+                
+        except Exception as e:
+            logger.error(f"更新股票 {symbol} 时发生错误: {str(e)}")
+            raise
+    
     # 其他方法（get_all_stocks, get_stocks_to_update等）与资产负债表采集器相同
     # 可以直接复用之前的代码
     def get_all_stocks(self) -> List[str]:
@@ -301,20 +319,31 @@ def main():
     parser = argparse.ArgumentParser(description='利润表数据采集工具')
     parser.add_argument(
         '--mode',
-        choices=['initial', 'update'],
+        choices=['initial', 'single'],  # 将 'update' 改为 'single'
         required=True,
-        help='运行模式: initial-首次运行完整采集, update-增量更新'
+        help='运行模式: initial-首次运行完整采集, single-单个股票更新'
     )
     parser.add_argument(
         '--processes',
         type=int,
         default=10,
-        help='并行进程数'
+        help='并行进程数（仅用于initial模式）'
+    )
+    parser.add_argument(
+        '--code',
+        type=str,
+        help='股票代码（例如：000837）'
     )
     
     try:
         args = parser.parse_args()
     except SystemExit:
+        parser.print_help()
+        sys.exit(1)
+
+    # 验证参数
+    if args.mode == 'single' and not args.code:
+        logger.error("单股票更新模式需要提供股票代码参数 --code")
         parser.print_help()
         sys.exit(1)
 
@@ -332,9 +361,11 @@ def main():
         if args.mode == 'initial':
             logger.info(f"开始并行初始数据采集（使用 {args.processes} 个进程）...")
             collector.initial_data_collection(num_processes=args.processes)
-        else:
-            logger.info(f"开始并行增量更新（使用 {args.processes} 个进程）...")
-            collector.incremental_update(num_processes=args.processes)
+        else:  # single mode
+            # 处理股票代码格式
+            code = args.code
+            symbol = f"{code}.{'SH' if code.startswith('6') else 'SZ'}"
+            collector.update_single_stock(symbol)
     except KeyboardInterrupt:
         logger.info("程序被用户中断")
     except Exception as e:

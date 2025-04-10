@@ -11712,3 +11712,18 @@
 
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-04-06 22:01:52,440 - INFO - Successfully fetched profit sheet data for 000826.SZ
+2025-04-10 11:16:40,667 - INFO - 开始更新股票 001335.SZ 的数据...
+2025-04-10 11:17:07,214 - INFO - Successfully fetched profit sheet data for 001335.SZ
+2025-04-10 11:17:28,295 - ERROR - Error upserting records: (psycopg2.OperationalError) connection to server at "192.168.50.149", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-10 11:17:28,296 - ERROR - 更新股票 001335.SZ 时发生错误: (psycopg2.OperationalError) connection to server at "192.168.50.149", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-10 11:17:28,296 - ERROR - 程序运行出错: (psycopg2.OperationalError) connection to server at "192.168.50.149", port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-10 11:17:28,297 - INFO - 程序运行完成

@@ -307,7 +307,7 @@ class ProfitSheetCollector:
             stock_list = [
                 f"{code}.{'SH' if str(code).startswith('6') else 'SZ'}"
                 for code in df['code'].tolist()
-                if str(code).startswith(('000', '001', '002', '003', '300', '600', '601', '603', '605'))
+                if str(code).startswith(('0', '3', '6'))
             ]
             logger.info(f"Successfully retrieved {len(stock_list)} stock codes")
             return stock_list

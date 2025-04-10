@@ -96,9 +96,7 @@ class PerformanceExpressCollector:
             '每股净资产': 'bps',
             '净资产收益率': 'roe',
             '所处行业': 'industry',
-            '公告日期': 'announce_date',
-            '市场板块': 'market_type',
-            '证券类型': 'security_type'
+            '公告日期': 'announce_date'
         })
         
         # 添加报告期
@@ -126,7 +124,7 @@ class PerformanceExpressCollector:
             'eps', 'revenue', 'revenue_last_year', 'revenue_yoy_change',
             'revenue_qoq_change', 'net_profit', 'net_profit_last_year',
             'net_profit_yoy_change', 'net_profit_qoq_change', 'bps',
-            'roe', 'industry', 'market_type', 'security_type'
+            'roe', 'industry'
         ]
         
         return df[columns]
@@ -218,7 +216,7 @@ def main():
         #.collect_data(mode='incremental')
         
         # 全量模式
-        collector.collect_data(mode='full', start_date='20100331')
+        collector.collect_data(mode='full', start_date='20250101')
         
     except Exception as e:
         logger.error(f"数据采集失败: {str(e)}")

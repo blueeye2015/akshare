@@ -1,5 +1,5 @@
 
-CREATE TABLE financial_indicators_ths (
+CREATE TABLE financial_indicators (
     -- 主键
     symbol VARCHAR(10) NOT NULL,
     report_period VARCHAR(20) NOT NULL,

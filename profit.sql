@@ -603,14 +603,14 @@ FROM crosstab(
   'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
-  "2023-03-31" numeric,
   "2023-06-30" numeric,
   "2023-09-30" numeric,
   "2023-12-31" numeric,
   "2024-03-31" numeric,
   "2024-06-30" numeric,
   "2024-09-30" numeric,
-  "2024-12-31" numeric
+  "2024-12-31" numeric,
+  "2025-03-31" numeric
 );
 
 -- 对净利润进行行转列
@@ -620,14 +620,14 @@ FROM crosstab(
   'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
-  "2023-03-31" numeric,
   "2023-06-30" numeric,
   "2023-09-30" numeric,
   "2023-12-31" numeric,
   "2024-03-31" numeric,
   "2024-06-30" numeric,
   "2024-09-30" numeric,
-  "2024-12-31" numeric
+  "2024-12-31" numeric,
+  "2025-03-31" numeric
 );
 
 -- 对扣非净利润进行行转列
@@ -637,14 +637,14 @@ FROM crosstab(
   'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
-  "2023-03-31" numeric,
   "2023-06-30" numeric,
   "2023-09-30" numeric,
   "2023-12-31" numeric,
   "2024-03-31" numeric,
   "2024-06-30" numeric,
   "2024-09-30" numeric,
-  "2024-12-31" numeric
+  "2024-12-31" numeric,
+  "2025-03-31" numeric
 );
 DROP TABLE CTE2
 

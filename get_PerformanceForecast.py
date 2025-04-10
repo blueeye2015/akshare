@@ -29,12 +29,12 @@ class PerformanceForecast(Base):
     # 复合主键
     symbol = Column(String(10), primary_key=True)
     report_period = Column(String(8), primary_key=True)  # 报告期 YYYYMMDD
-    announce_date = Column(String(10), primary_key=True)  # 公告日期 YYYY-MM-DD
+    announce_date = Column(String(10))  # 公告日期 YYYY-MM-DD
     
     # 业绩预告数据
     stock_name = Column(String(50))  # 股票简称
-    forecast_indicator = Column(Float)  # 预测指标
-    performance_change = Column(Float)  # 业绩变动
+    forecast_indicator = Column(String(50), primary_key=True)  # 预测指标
+    performance_change = Column(String(50)) # 业绩变动
     forecast_value = Column(Float)  # 预测数值
     change_rate = Column(Float)  # 业绩变动幅度
     change_reason = Column(Text)  # 业绩变动原因
@@ -91,8 +91,7 @@ class PerformanceForecastCollector:
         df['announce_date'] = pd.to_datetime(df['announce_date']).dt.strftime('%Y-%m-%d')
         
         # 数值类型转换
-        numeric_columns = ['forecast_indicator', 'performance_change', 'forecast_value', 
-                        'change_rate', 'last_year_value']
+        numeric_columns = [ 'forecast_value', 'change_rate', 'last_year_value']
         for col in numeric_columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
         
@@ -110,7 +109,7 @@ class PerformanceForecastCollector:
         
         # 去除重复记录，保留最新的记录
         df = df.sort_values('announce_date', ascending=False)
-        df = df.drop_duplicates(subset=['symbol', 'report_period', 'announce_date'], keep='first')
+        df = df.drop_duplicates(subset=['symbol', 'report_period', 'forecast_indicator'], keep='first')
         
         return df
 

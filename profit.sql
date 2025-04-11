@@ -570,17 +570,17 @@ with cte as (
 select * from (
 select symbol,report_date,round(coalesce(total_operate_income,operate_income)/10000,2) as total_operate_income, round(parent_netprofit/10000,2) as parent_netprofit,round(deduct_parent_netprofit/10000,2) as  deduct_parent_netprofit,
 ROW_NUMBER() OVER (PARTITION BY symbol order by report_date desc)cnt from public.profit_sheet
-) a where cnt <=7
+) a where cnt <=8
 )  ,cte1 as (
 select symbol,report_date,total_operate_income,parent_netprofit,deduct_parent_netprofit
-from cte a  where left(symbol,6) in (select symbol from financial_express where report_period = '20241231') 
-or left(symbol,6) in (select symbol from financial_forecast where report_period = '20241231')
+from cte a  where left(symbol,6) in (select symbol from performance_express where report_period = '20250331') 
+or left(symbol,6) in (select symbol from performance_forecast where report_period = '20250331')
 union all
-select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,
-CAST(report_period as timestamp)::VARCHAR ,NULLIF("营业收入", 0),round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2) from forecast where report_period='20241231'
+select symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,
+CAST(report_period as timestamp)::VARCHAR ,NULLIF(round("营业收入"/100000000,2), 0),round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2) from forecast 
 union all
-select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,CAST(report_period as timestamp)::VARCHAR ,round(revenue/100000000,2),round(net_profit/100000000,2),0 
-from financial_express where report_period = '20241231'
+select symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,CAST(report_period as timestamp)::VARCHAR ,round(revenue/100000000,2),round(net_profit/100000000,2),0 
+from financial_express where report_period = '20250331'
 ), cte2 as (
 select symbol,report_date,
 CASE WHEN total_operate_income =0 THEN 0 ELSE

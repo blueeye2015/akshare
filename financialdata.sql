@@ -265,7 +265,7 @@ CREATE TABLE profit_sheet (
     -- 时间戳
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 更新时间
-    
+    security_code character varying(6) COLLATE pg_catalog."default" GENERATED ALWAYS AS ("left"((symbol)::text, 6)) STORED,
     -- 设置主键
     PRIMARY KEY (symbol, report_date)
 );

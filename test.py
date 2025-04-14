@@ -14,10 +14,11 @@ import numpy as np
 #stock_yjkb_em_df = ak.stock_yjkb_em(date="20241231")
 # df = ak.stock_info_a_code_name()
 # df.to_sql('stock_info_a_code_name', engine, if_exists='replace', index=False)
-stock_yjyg_em = ak.stock_yjyg_em(date="20250331")
+#stock_yjyg_em = ak.stock_yjyg_em(date="20241231")
 # 保存为CSV文件
-stock_yjyg_em.to_csv('20250331.csv', encoding='utf-8-sig', index=False)
+#stock_yjyg_em.to_csv('20241231.csv', encoding='utf-8-sig', index=False)
 #print(stock_yjyg_em)
-
+stock_a_indicator_lg = ak.stock_a_indicator_lg(symbol='SZ301560')
+print(stock_a_indicator_lg)
 #stock_individual_info_em_df = ak.stock_individual_info_em(symbol="SZ000001")
 #print(stock_balance_sheet_by_report_em_df)

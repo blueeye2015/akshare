@@ -216,7 +216,7 @@ def main():
         #.collect_data(mode='incremental')
         
         # 全量模式
-        collector.collect_data(mode='full', start_date='20250101')
+        collector.collect_data(mode='full', start_date='20240101')
         
     except Exception as e:
         logger.error(f"数据采集失败: {str(e)}")

@@ -11727,3 +11727,18 @@
 
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-04-10 11:17:28,297 - INFO - 程序运行完成
+2025-04-10 14:40:06,281 - INFO - 开始更新股票 001335.SZ 的数据...
+2025-04-10 14:40:13,371 - INFO - Successfully fetched profit sheet data for 001335.SZ
+2025-04-10 14:40:13,424 - INFO - Successfully upserted 10 records
+2025-04-10 14:40:13,424 - INFO - 成功更新股票 001335.SZ 的数据
+2025-04-10 14:40:13,425 - INFO - 程序运行完成
+2025-04-10 15:12:06,758 - INFO - 开始更新股票 301078.SZ 的数据...
+2025-04-10 15:12:20,214 - INFO - Successfully fetched profit sheet data for 301078.SZ
+2025-04-10 15:12:20,281 - INFO - Successfully upserted 28 records
+2025-04-10 15:12:20,281 - INFO - 成功更新股票 301078.SZ 的数据
+2025-04-10 15:12:20,281 - INFO - 程序运行完成
+2025-04-10 15:13:52,473 - INFO - 开始更新股票 301165.SZ 的数据...
+2025-04-10 15:14:01,486 - INFO - Successfully fetched profit sheet data for 301165.SZ
+2025-04-10 15:14:01,522 - INFO - Successfully upserted 19 records
+2025-04-10 15:14:01,522 - INFO - 成功更新股票 301165.SZ 的数据
+2025-04-10 15:14:01,523 - INFO - 程序运行完成

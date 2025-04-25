@@ -23,7 +23,7 @@ class FinancialAIAnalyzer:
         # 资产负债表查询 - 获取所有季报数据
         balance_query = f"""
         SELECT *
-        FROM balance_sheet
+        FROM financial_statement
         WHERE security_code = '{symbol}'
         ORDER BY report_date DESC
         LIMIT {periods}
@@ -113,13 +113,42 @@ class FinancialAIAnalyzer:
             'loan_repayment', 'dividend_interest_payments', 'total_finance_payments',
             'finance_net_cash_flow', 'cash_equivalent_increase'
         ]
+
+        balance_cumulative_columns  = [
+            # 重要资产项目
+            'monetaryfunds',          # 货币资金：反映企业流动性
+            'accounts_rece',          # 应收账款：反映企业营运能力
+            'inventory',              # 存货：反映企业营运效率
+            'current_asset_balance',  # 流动资产合计
+            'fixed_asset',           # 固定资产：反映企业实力
+            'goodwill',              # 商誉：反映企业并购风险
+            'intangible_asset',      # 无形资产：反映企业科技创新能力
+            'noncurrent_asset_balance', # 非流动资产合计
+            
+            # 重要负债项目
+            'short_loan',            # 短期借款：反映短期偿债压力
+            'accounts_payable',      # 应付账款：反映企业商业信用
+            'current_liab_balance',  # 流动负债合计
+            'long_loan',             # 长期借款：反映长期债务状况
+            'noncurrent_liab_balance', # 非流动负债合计
+            'liab_balance',          # 负债合计
+            
+            # 核心所有者权益项目
+            'share_capital',         # 股本
+            'unassign_rpofit',      # 未分配利润：反映盈利积累
+            'equity_balance',        # 所有者权益合计
+            
+            # 总计项目
+            'total_assets',          # 资产总计
+            'total_liabilities',     # 负债总计
+            'total_equity'           # 所有者权益总计
+        ]
+
         
         # 计算单季数据
         profit_quarterly = calculate_quarterly_data(profit_df, profit_cumulative_columns)
         cashflow_quarterly = calculate_quarterly_data(cashflow_df, cashflow_cumulative_columns)
-        
-        # 资产负债表是时点数据，不需要计算单季
-        balance_quarterly = balance_df
+        balance_quarterly = calculate_quarterly_data(balance_df, balance_cumulative_columns)
         
         # 添加季度标识
         for df in [balance_quarterly, cashflow_quarterly, profit_quarterly]:
@@ -154,15 +183,40 @@ class FinancialAIAnalyzer:
         financial_metrics = {
             "基本信息": {
                 "股票代码": latest['balance']['symbol'],
-                "报告期": latest['balance']['period'],
-                "公司名称": latest['balance']['security_name']
+                "报告期": latest['balance']['report_date'].strftime('%Y-%m-%d'),
+                "公司名称": latest['balance']['security_name_abbr']
             },
-            "资产负债情况": {
-                "总流动资产": latest['balance']['total_current_assets'],
-                "总流动负债": latest['balance']['total_current_liab'],
-                "商誉": latest['balance']['goodwill'],
-                "无形资产": latest['balance']['intangible_assets'],
-                "所有者权益": latest['balance']['total_parent_equity']
+            "资产结构": {
+                "货币资金": latest['balance']['monetaryfunds'],          # 反映流动性
+                "应收账款": latest['balance']['accounts_rece'],          # 反映营运能力
+                "存货": latest['balance']['inventory'],                  # 反映营运效率
+                "流动资产合计": latest['balance']['current_asset_balance']
+            },
+            "非流动资产": {
+                "固定资产": latest['balance']['fixed_asset'],           # 反映实物资产规模
+                "无形资产": latest['balance']['intangible_asset'],      # 反映科技创新能力
+                "商誉": latest['balance']['goodwill'],                  # 反映并购风险
+                "非流动资产合计": latest['balance']['noncurrent_asset_balance']
+            },
+            "负债结构": {
+                "短期借款": latest['balance']['short_loan'],            # 短期偿债压力
+                "应付账款": latest['balance']['accounts_payable'],      # 商业信用
+                "流动负债合计": latest['balance']['current_liab_balance']
+            },
+            "非流动负债": {
+                "长期借款": latest['balance']['long_loan'],             # 长期债务状况
+                "非流动负债合计": latest['balance']['noncurrent_liab_balance'],
+                "负债合计": latest['balance']['liab_balance']
+            },
+            "所有者权益": {
+                "股本": latest['balance']['share_capital'],
+                "未分配利润": latest['balance']['unassign_rpofit'],     # 反映盈利积累
+                "所有者权益合计": latest['balance']['equity_balance']
+            },
+            "资产负债总计": {
+                "资产总计": latest['balance']['total_assets'],
+                "负债总计": latest['balance']['total_liabilities'],
+                "所有者权益总计": latest['balance']['total_equity']
             },
             "季度经营情况": {
                 "营业总收入(单季)": latest['profit']['total_operate_income_quarterly'],
@@ -204,7 +258,7 @@ class FinancialAIAnalyzer:
                 'values': cashflow_df['operate_net_cash_flow_quarterly'].tolist(),
                 'qoq_growth': calculate_qoq_growth(cashflow_df, 'operate_net_cash_flow')
             },
-            'asset_trend': balance_df['total_current_assets'].tolist()
+            'asset_trend': balance_df['current_asset_balance'].tolist()
         }
         
         return {
@@ -247,7 +301,9 @@ class FinancialAIAnalyzer:
                 请给出详细的分析结论。回答要求：
                 1. 分析要客观、专业，基于数据说话
                 2. 对异常指标要重点分析原因
-                3. 结合历史趋势给出合理的判断"""
+                3. 结合历史趋势给出合理的判断
+                4. 以中短期投资标的给出购买建议"""
+                
 
     def call_ai_api(self, prompt: str) -> str:
         """调用AI API进行分析"""

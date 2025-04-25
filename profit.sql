@@ -533,74 +533,81 @@ order by symbol,report_date
 delete from cte1 where report_date < '2023-03-31'
 
 
-SELECT symbol,report_period,营业收入,归属于上市公司股东的净利润,扣除非经常性损益后的净利润 into TEMPORARY forecast
+SELECT split_part(row_id, '_', 1) as symbol,
+  split_part(row_id, '_', 2) as report_period,
+  营业收入,归属于上市公司股东的净利润,扣除非经常性损益后的净利润 into TEMPORARY forecast
 FROM crosstab(
     -- 第一个参数：查询原始数据，按 symbol 和 report_period 分组
     $$
     SELECT
-        symbol,
-        report_period,
+        symbol || '_' || report_period as row_id,
         forecast_indicator,
         forecast_value
     FROM
-        financial_forecast
-	
+        (SELECT *,
+		 		ROW_NUMBER() OVER (PARTITION BY symbol,report_period,forecast_indicator 
+				ORDER BY announce_date desc) CNT 
+		 FROM public.performance_forecast) a
+	WHERE CNT = 1	
     ORDER BY
         1, 2, 3
     $$,
     -- 第二个参数：动态生成列名（forecast_indicator 的唯一值）
     $$
-    SELECT DISTINCT forecast_indicator
-    FROM financial_forecast
-    ORDER BY 1
+	SELECT forecast_indicator FROM (
+    SELECT DISTINCT forecast_indicator,
+			 CASE WHEN forecast_indicator = '营业收入' THEN 1 
+				  WHEN forecast_indicator = '归属于上市公司股东的净利润' THEN 2
+				  ELSE 3 END as sortorder
+    FROM performance_forecast 
+	WHERE forecast_indicator IN ('归属于上市公司股东的净利润','扣除非经常性损益后的净利润','营业收入')
+    ) a ORDER BY sortorder
     $$
 ) AS ct (
-    symbol TEXT,
-    report_period TEXT,
-   "主营业务收入" NUMERIC,
-	"净利润" NUMERIC,
+    row_id TEXT,
+    "营业收入" NUMERIC,
 	"归属于上市公司股东的净利润" NUMERIC,
-	"扣除后营业收入" NUMERIC,
-	"扣除非经常性损益后的净利润" NUMERIC,
-	"每股收益" NUMERIC,
-	"营业收入" NUMERIC
+	"扣除非经常性损益后的净利润" NUMERIC
 );
 
 with cte as (
 select * from (
 select symbol,report_date,round(coalesce(total_operate_income,operate_income)/10000,2) as total_operate_income, round(parent_netprofit/10000,2) as parent_netprofit,round(deduct_parent_netprofit/10000,2) as  deduct_parent_netprofit,
-ROW_NUMBER() OVER (PARTITION BY symbol order by report_date desc)cnt from public.profit_sheet
+ROW_NUMBER() OVER (PARTITION BY symbol order by report_date desc)cnt,'profit' as 'tabletype' from public.profit_sheet
 ) a where cnt <=8
 )  ,cte1 as (
-select symbol,report_date,total_operate_income,parent_netprofit,deduct_parent_netprofit
-from cte a  where left(symbol,6) in (select symbol from performance_express where report_period = '20250331') 
-or left(symbol,6) in (select symbol from performance_forecast where report_period = '20250331')
+select symbol,report_date,total_operate_income,parent_netprofit,deduct_parent_netprofit,tabletype
+from cte a
 union all
-select symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,
-CAST(report_period as timestamp)::VARCHAR ,NULLIF(round("营业收入"/100000000,2), 0),round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2) from forecast 
+select 	symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,
+		CAST(report_period as timestamp)::VARCHAR ,NULLIF(round("营业收入"/100000000,2), 0),
+		round(归属于上市公司股东的净利润/100000000,2),round(扣除非经常性损益后的净利润/100000000,2),'forecast' 
+from forecast 
 union all
-select symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,CAST(report_period as timestamp)::VARCHAR ,round(revenue/100000000,2),round(net_profit/100000000,2),0 
-from financial_express where report_period = '20250331'
+select 	symbol || '.S' || CASE WHEN LEFT(symbol, 2) IN ('00', '30') THEN 'Z' ELSE 'H' END AS symbol,
+		CAST(report_period as timestamp)::VARCHAR ,round(revenue/100000000,2),round(net_profit/100000000,2),0,'express' 
+from 	performance_express 
 ), cte2 as (
 select symbol,report_date,
-CASE WHEN total_operate_income =0 THEN 0 ELSE
+NULLIF(CASE WHEN total_operate_income =0 THEN 0 ELSE
 round(total_operate_income-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' 
-THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END, 2) END as "总营收/亿",
-CASE WHEN parent_netprofit =0 THEN 0 ELSE 
-round((parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(parent_netprofit, 1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END as "净利润/亿",
-CASE WHEN deduct_parent_netprofit =0 THEN 0 ELSE 
-round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END as "扣非净利润/亿" from cte1
+THEN Lag(total_operate_income,1)  OVER (PARTITION BY symbol ORDER BY report_date ) ELSE 0 END, 2) END,0) as "总营收/亿",
+NULLIF(CASE WHEN parent_netprofit =0 THEN 0 ELSE 
+round((parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(parent_netprofit, 1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END,0) as "净利润/亿",
+NULLIF(CASE WHEN deduct_parent_netprofit =0 THEN 0 ELSE 
+round((deduct_parent_netprofit-CASE WHEN SUBSTRING(report_date, 6, 5)<>'03-31' THEN Lag(deduct_parent_netprofit,1)  OVER (PARTITION BY symbol ORDER BY report_date) ELSE 0 END),2) END,0) as "扣非净利润/亿" from cte1
 order by symbol,report_date
 )
 select * into TEMPORARY cte2 from cte2
 --删除新股数据，会有超过2年的日期
 delete from cte2 where report_date < '2023-01-01'
 delete from cte2 where "总营收/亿" is null and "净利润/亿" is null and "扣非净利润/亿" is null
+delete from cte2 where left(symbol,1) in ('8','9')
 -- 总营收
 SELECT *
 FROM crosstab(
-  'SELECT symbol, report_date, "总营收/亿" FROM cte2 ORDER BY 1,2',
-  'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
+  'SELECT symbol, report_date, "总营收/亿" FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1,2',
+  'SELECT DISTINCT report_date FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
   "2023-06-30" numeric,
@@ -616,8 +623,8 @@ FROM crosstab(
 -- 对净利润进行行转列
 SELECT *
 FROM crosstab(
-  'SELECT symbol, report_date, "净利润/亿" FROM cte2 ORDER BY 1,2',
-  'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
+  'SELECT symbol, report_date, "净利润/亿" FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1,2',
+  'SELECT DISTINCT report_date FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
   "2023-06-30" numeric,
@@ -633,8 +640,8 @@ FROM crosstab(
 -- 对扣非净利润进行行转列
 SELECT *
 FROM crosstab(
-  'SELECT symbol, report_date, "扣非净利润/亿" FROM cte2 ORDER BY 1,2',
-  'SELECT DISTINCT report_date FROM cte2 ORDER BY 1'
+  'SELECT symbol, report_date, "扣非净利润/亿" FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1,2',
+  'SELECT DISTINCT report_date FROM cte2 where  report_date::timestamp>=''2023-06-30'' and  report_date::timestamp<=''2025-03-31'' ORDER BY 1'
 ) AS pivot_table (
   symbol varchar,
   "2023-06-30" numeric,
@@ -647,6 +654,8 @@ FROM crosstab(
   "2025-03-31" numeric
 );
 DROP TABLE CTE2
+drop table forecast
+
 
 select COALESCE(is_nan_or_null(total_current_assets)/nullif(is_nan_or_null(total_current_liab),0),0) as "流动比例",
 COALESCE((is_nan_or_null(accounts_rece)+is_nan_or_null(note_rece)+is_nan_or_null(other_rece))/10000/is_nan_or_null(total_operate_income),0) as "应收账款风险",

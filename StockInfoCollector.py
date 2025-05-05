@@ -37,7 +37,7 @@ class StockInfoCollector:
         """从数据库获取所有股票代码"""
         with self.get_db_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT code FROM stock_info_a_code_name")
+                cur.execute("SELECT left(code,6) FROM stock_info_a_code_name")
                 codes = [row[0] for row in cur.fetchall()]
                 return codes
     

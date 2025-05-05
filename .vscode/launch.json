@@ -9,9 +9,9 @@
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "e:/akshare/get_PerformanceForecast.py",
-            "args": ["--mode", "update"],
-            "python": "D:/ProgramData/anaconda3/envs/akshare/python.exe",
+            "program": "D:/akshare/StockHistory.py",
+            "args": ["--mode", "full"],
+            "python": "D:/ProgramData/anaconda3/envs/trade/python.exe",
             "cwd": "${workspaceFolder}"
         }
     ]

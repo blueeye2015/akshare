@@ -669,3 +669,37 @@ from balance_sheet
 
 select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,round(total_mv/10000,2) from public.stock_indicator where trade_date =(select max(trade_date) from stock_indicator)
 
+
+select symbol || '.S' || CASE WHEN LEFT(symbol, 3) IN ('000', '300') THEN 'Z' ELSE 'H' END AS symbol,round(total_mv/10000,2) from public.stock_indicator where trade_date =(select max(trade_date) from stock_indicator)
+
+SELECT 
+  split_part(row_id, '_', 1) as symbol,
+  split_part(row_id, '_', 2) as report_period,
+  "营业收入",
+  "归属于上市公司股东的净利润",
+  "扣除非经常性损益后的净利润",
+  "每股收益"
+
+FROM crosstab(
+  $$
+  SELECT
+    symbol || '_' || report_period as row_id,
+    forecast_indicator,
+    forecast_value
+  FROM
+    performance_forecast
+  WHERE 
+    symbol='002204'
+  ORDER BY
+    1, 2
+  $$,
+  $$
+  SELECT unnest(ARRAY['营业收入', '归属于上市公司股东的净利润', '扣除非经常性损益后的净利润', '每股收益'])
+  $$
+) AS ct (
+  row_id TEXT,
+  "营业收入" NUMERIC,
+  "归属于上市公司股东的净利润" NUMERIC,
+  "扣除非经常性损益后的净利润" NUMERIC,
+  "每股收益" NUMERIC
+);

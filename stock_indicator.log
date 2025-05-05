@@ -27750,3 +27750,31 @@ LINE 2:                     INSERT INTO {self.table_name} ({','.join...
 2025-04-11 21:34:43,051 - INFO - 开始获取股票 002173 的数据 (12/5386)
 2025-04-11 21:34:43,678 - INFO - 成功保存 13 条记录
 2025-04-11 21:34:43,679 - INFO - 完成股票 002173 的数据获取和保存
+2025-05-05 16:25:53,672 - INFO - 开始incremental模式的并行数据采集（使用 10 个进程）...
+2025-05-05 16:26:47,855 - INFO - 开始并行数据采集，共 5386 只股票，使用 10 个进程
+2025-05-05 16:26:47,855 - INFO - 创建了 10 个任务批次
+2025-05-05 16:26:48,924 - INFO - Batch 0: Starting processing 539 stocks
+2025-05-05 16:26:49,323 - INFO - Batch 1: Starting processing 539 stocks
+2025-05-05 16:26:49,594 - INFO - Batch 2: Starting processing 539 stocks
+2025-05-05 16:26:49,636 - INFO - Batch 3: Starting processing 539 stocks
+2025-05-05 16:26:49,676 - INFO - Batch 4: Starting processing 539 stocks
+2025-05-05 16:26:49,685 - INFO - Batch 5: Starting processing 539 stocks
+2025-05-05 16:26:49,690 - INFO - Batch 6: Starting processing 539 stocks
+2025-05-05 16:26:49,694 - INFO - Batch 7: Starting processing 539 stocks
+2025-05-05 16:26:49,698 - INFO - Batch 8: Starting processing 539 stocks
+2025-05-05 16:26:49,700 - INFO - Batch 9: Starting processing 535 stocks
+2025-05-05 16:27:03,711 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:03,712 - INFO - Batch 9 Progress: 1/535 - Successfully processed 688459
+2025-05-05 16:27:09,860 - ERROR - Batch 3: Error processing 300290: Expecting value: line 1 column 1 (char 0)
+2025-05-05 16:27:12,637 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:12,637 - INFO - Batch 7 Progress: 1/539 - Successfully processed 688338
+2025-05-05 16:27:15,692 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:15,693 - INFO - Batch 8 Progress: 1/539 - Successfully processed 301053
+2025-05-05 16:27:24,455 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:24,456 - INFO - Batch 6 Progress: 1/539 - Successfully processed 603177
+2025-05-05 16:28:36,987 - INFO - 开始incremental模式的并行数据采集（使用 10 个进程）...
+2025-05-05 16:28:55,660 - INFO - 程序被用户中断
+2025-05-05 16:28:55,660 - INFO - 程序运行完成
+2025-05-05 16:29:20,695 - INFO - 开始incremental模式的并行数据采集（使用 20 个进程）...
+2025-05-05 16:29:35,694 - INFO - 程序被用户中断
+2025-05-05 16:29:35,695 - INFO - 程序运行完成

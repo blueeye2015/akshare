@@ -27750,3 +27750,87 @@ LINE 2:                     INSERT INTO {self.table_name} ({','.join...
 2025-04-11 21:34:43,051 - INFO - 开始获取股票 002173 的数据 (12/5386)
 2025-04-11 21:34:43,678 - INFO - 成功保存 13 条记录
 2025-04-11 21:34:43,679 - INFO - 完成股票 002173 的数据获取和保存
+2025-05-05 16:25:53,672 - INFO - 开始incremental模式的并行数据采集（使用 10 个进程）...
+2025-05-05 16:26:47,855 - INFO - 开始并行数据采集，共 5386 只股票，使用 10 个进程
+2025-05-05 16:26:47,855 - INFO - 创建了 10 个任务批次
+2025-05-05 16:26:48,924 - INFO - Batch 0: Starting processing 539 stocks
+2025-05-05 16:26:49,323 - INFO - Batch 1: Starting processing 539 stocks
+2025-05-05 16:26:49,594 - INFO - Batch 2: Starting processing 539 stocks
+2025-05-05 16:26:49,636 - INFO - Batch 3: Starting processing 539 stocks
+2025-05-05 16:26:49,676 - INFO - Batch 4: Starting processing 539 stocks
+2025-05-05 16:26:49,685 - INFO - Batch 5: Starting processing 539 stocks
+2025-05-05 16:26:49,690 - INFO - Batch 6: Starting processing 539 stocks
+2025-05-05 16:26:49,694 - INFO - Batch 7: Starting processing 539 stocks
+2025-05-05 16:26:49,698 - INFO - Batch 8: Starting processing 539 stocks
+2025-05-05 16:26:49,700 - INFO - Batch 9: Starting processing 535 stocks
+2025-05-05 16:27:03,711 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:03,712 - INFO - Batch 9 Progress: 1/535 - Successfully processed 688459
+2025-05-05 16:27:09,860 - ERROR - Batch 3: Error processing 300290: Expecting value: line 1 column 1 (char 0)
+2025-05-05 16:27:12,637 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:12,637 - INFO - Batch 7 Progress: 1/539 - Successfully processed 688338
+2025-05-05 16:27:15,692 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:15,693 - INFO - Batch 8 Progress: 1/539 - Successfully processed 301053
+2025-05-05 16:27:24,455 - INFO - 成功保存 12 条记录
+2025-05-05 16:27:24,456 - INFO - Batch 6 Progress: 1/539 - Successfully processed 603177
+2025-05-05 16:28:36,987 - INFO - 开始incremental模式的并行数据采集（使用 10 个进程）...
+2025-05-05 16:28:55,660 - INFO - 程序被用户中断
+2025-05-05 16:28:55,660 - INFO - 程序运行完成
+2025-05-05 16:29:20,695 - INFO - 开始incremental模式的并行数据采集（使用 20 个进程）...
+2025-05-05 16:29:35,694 - INFO - 程序被用户中断
+2025-05-05 16:29:35,695 - INFO - 程序运行完成
+2025-05-05 16:36:46,192 - INFO - 开始incremental模式的并行数据采集（使用 10 个进程）...
+2025-05-05 16:37:09,985 - INFO - 开始并行数据采集，共 5386 只股票，使用 10 个进程
+2025-05-05 16:37:09,985 - INFO - 创建了 10 个任务批次
+2025-05-05 16:37:11,409 - INFO - Batch 0: Starting processing 539 stocks
+2025-05-05 16:37:11,633 - INFO - Batch 1: Starting processing 539 stocks
+2025-05-05 16:37:11,723 - INFO - Batch 2: Starting processing 539 stocks
+2025-05-05 16:37:11,728 - INFO - Batch 3: Starting processing 539 stocks
+2025-05-05 16:37:11,735 - INFO - Batch 4: Starting processing 539 stocks
+2025-05-05 16:37:11,751 - INFO - Batch 5: Starting processing 539 stocks
+2025-05-05 16:37:11,760 - INFO - Batch 6: Starting processing 539 stocks
+2025-05-05 16:37:11,769 - INFO - Batch 7: Starting processing 539 stocks
+2025-05-05 16:37:11,775 - INFO - Batch 8: Starting processing 539 stocks
+2025-05-05 16:37:11,779 - INFO - Batch 9: Starting processing 535 stocks
+2025-05-05 16:37:44,343 - INFO - Batch 9 Progress: 1/535 - Successfully processed 688459
+2025-05-05 16:37:48,497 - INFO - 成功保存 12 条记录
+2025-05-05 16:37:48,498 - INFO - Batch 4 Progress: 1/539 - Successfully processed 300866
+2025-05-05 16:37:53,302 - INFO - Batch 7 Progress: 1/539 - Successfully processed 688338
+2025-05-05 16:37:58,810 - INFO - Batch 8 Progress: 1/539 - Successfully processed 301053
+2025-05-05 16:38:04,759 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:04,760 - INFO - Batch 9 Progress: 2/535 - Successfully processed 837046
+2025-05-05 16:38:09,471 - ERROR - Batch 3: Error processing 300290: ('Connection broken: IncompleteRead(5671 bytes read, 4569 more expected)', IncompleteRead(5671 bytes read, 4569 more expected))
+2025-05-05 16:38:16,488 - ERROR - Batch 6: Error processing 603177: HTTPSConnectionPool(host='legulegu.com', port=443): Max retries exceeded with url: /api/s/base-info/?token=a1fdfc37c6f2cf09b7e3d8988c8043ba&id=603177 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2025-05-05 16:38:18,289 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:18,290 - INFO - Batch 2 Progress: 1/539 - Successfully processed 002702
+2025-05-05 16:38:19,551 - INFO - Batch 0 Progress: 1/539 - Successfully processed 002162
+2025-05-05 16:38:23,304 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:23,305 - INFO - Batch 8 Progress: 2/539 - Successfully processed 688711
+2025-05-05 16:38:24,276 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:24,277 - INFO - Batch 7 Progress: 2/539 - Successfully processed 688339
+2025-05-05 16:38:31,369 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:31,370 - INFO - Batch 9 Progress: 3/535 - Successfully processed 301316
+2025-05-05 16:38:44,465 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:44,466 - INFO - Batch 1 Progress: 1/539 - Successfully processed 000925
+2025-05-05 16:38:48,490 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:48,490 - INFO - Batch 5 Progress: 1/539 - Successfully processed 600686
+2025-05-05 16:38:50,265 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:50,265 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:50,265 - INFO - Batch 8 Progress: 3/539 - Successfully processed 688776
+2025-05-05 16:38:50,265 - INFO - Batch 9 Progress: 4/535 - Successfully processed 430476
+2025-05-05 16:38:51,620 - INFO - 成功保存 12 条记录
+2025-05-05 16:38:51,621 - INFO - Batch 3 Progress: 2/539 - Successfully processed 300291
+2025-05-05 16:38:58,198 - ERROR - Batch 6: Error processing 603178: HTTPSConnectionPool(host='legulegu.com', port=443): Max retries exceeded with url: /api/s/base-info/?token=a1fdfc37c6f2cf09b7e3d8988c8043ba&id=603178 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2025-05-05 16:39:00,749 - INFO - 成功保存 12 条记录
+2025-05-05 16:39:00,749 - INFO - Batch 4 Progress: 2/539 - Successfully processed 300867
+2025-05-05 16:39:04,194 - ERROR - Batch 9: Error processing 603163: Expecting value: line 1 column 1 (char 0)
+2025-05-05 16:39:08,797 - INFO - 成功保存 12 条记录
+2025-05-05 16:39:08,798 - INFO - Batch 2 Progress: 2/539 - Successfully processed 002703
+2025-05-05 16:39:09,308 - ERROR - Batch 3: Error processing 300292: Expecting value: line 1 column 1 (char 0)
+2025-05-05 16:39:13,000 - INFO - 成功保存 12 条记录
+2025-05-05 16:39:13,000 - INFO - Batch 8 Progress: 4/539 - Successfully processed 001215
+2025-05-05 16:39:16,578 - ERROR - Batch 3: Error processing 300293: Expecting value: line 1 column 1 (char 0)
+2025-05-05 16:39:16,600 - INFO - 成功保存 12 条记录
+2025-05-05 16:39:16,600 - INFO - Batch 7 Progress: 3/539 - Successfully processed 688356
+2025-05-05 16:39:19,034 - ERROR - Batch 0: Error processing 002163: HTTPSConnectionPool(host='legulegu.com', port=443): Max retries exceeded with url: /api/s/base-info/?token=a1fdfc37c6f2cf09b7e3d8988c8043ba&id=002163 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+2025-05-05 16:39:29,555 - INFO - 成功保存 12 条记录
+2025-05-05 16:39:29,555 - INFO - Batch 9 Progress: 6/535 - Successfully processed 835892

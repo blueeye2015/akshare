@@ -37,7 +37,7 @@ class StockInfoCollector:
         """从数据库获取所有股票代码"""
         with self.get_db_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT code FROM stock_info_a_code_name")
+                cur.execute("SELECT left(code,6) FROM stock_info_a_code_name")
                 codes = [row[0] for row in cur.fetchall()]
                 return codes
     
@@ -77,42 +77,45 @@ class StockInfoCollector:
             '流通股': 'circulating_shares'
         }
         
-        # 提取需要的列并重命名
-        result_df = pd.DataFrame()
-        for orig_col, new_col in column_mapping.items():
-            if orig_col in df.columns:
-                result_df[new_col] = df[orig_col]
-            elif orig_col == 'symbol':
-                # symbol可能是外部传入的
-                result_df['symbol'] = df.index if 'symbol' not in df.columns else df['symbol']
-        
-        with self.get_db_connection() as conn:
-            with conn.cursor() as cur:
-                # 准备数据
-                columns = result_df.columns.tolist()
-                values = [tuple(x) for x in result_df.values]
-                
-                # 构建列名部分
-                columns_str = ','.join(columns)
-                
-                # 构建更新部分
-                update_parts = []
-                for col in columns:
-                    if col != 'symbol':
-                        update_parts.append(f"{col}=EXCLUDED.{col}")
-                update_str = ','.join(update_parts)
-                
-                # 手动构建SQL语句
-                insert_stmt = f"INSERT INTO {self.table_name} ({columns_str}) VALUES %s ON CONFLICT (symbol) DO UPDATE SET {update_str}, update_time=CURRENT_TIMESTAMP"
-                
-                try:
+        try:
+            # 创建一个新的DataFrame，确保有正确的索引
+            result_df = pd.DataFrame(index=[0])
+            
+            # 添加symbol列
+            result_df['symbol'] = df.get('symbol', df.index[0] if isinstance(df.index, pd.Index) else None)
+            
+            # 添加其他列
+            for orig_col, new_col in column_mapping.items():
+                if orig_col != 'symbol':  # symbol已经处理过了
+                    if orig_col in df:
+                        result_df[new_col] = df[orig_col].values[0] if isinstance(df, pd.DataFrame) else df.get(orig_col)
+            
+            with self.get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    # 准备数据
+                    columns = result_df.columns.tolist()
+                    values = [tuple(x) for x in result_df.values]
+                    
+                    # 构建列名部分
+                    columns_str = ','.join(columns)
+                    
+                    # 构建更新部分
+                    update_parts = []
+                    for col in columns:
+                        if col != 'symbol':
+                            update_parts.append(f"{col}=EXCLUDED.{col}")
+                    update_str = ','.join(update_parts)
+                    
+                    # 构建SQL语句
+                    insert_stmt = f"INSERT INTO {self.table_name} ({columns_str}) VALUES %s ON CONFLICT (symbol) DO UPDATE SET {update_str}, update_time=CURRENT_TIMESTAMP"
+                    
                     execute_values(cur, insert_stmt, values)
                     conn.commit()
                     logger.info(f"成功保存 {len(result_df)} 条记录")
-                except Exception as e:
-                    conn.rollback()
-                    logger.error(f"保存数据失败: {str(e)}")
-                    raise
+                    
+        except Exception as e:
+            logger.error(f"保存数据失败: {str(e)}")
+            raise
     
     def collect_stock_info(self):
         """收集所有股票的详细信息"""

@@ -703,3 +703,132 @@ FROM crosstab(
   "扣除非经常性损益后的净利润" NUMERIC,
   "每股收益" NUMERIC
 );
+
+
+WITH latest_balance AS (
+    -- 获取资产负债表最新季度数据
+    SELECT b.*
+    FROM (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
+        FROM balance_sheet
+    ) b
+    WHERE b.rn = 1
+),
+
+latest_profit AS (
+    -- 获取利润表最新季度数据
+    SELECT p.*
+    FROM (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
+        FROM profit_sheet
+    ) p
+    WHERE p.rn = 1
+),
+
+ltm_profit AS (
+    -- 计算最近12个月利润
+    SELECT 
+        symbol,
+        SUM(parent_netprofit) as ltm_parent_netprofit
+    FROM (
+        SELECT 
+            symbol,
+            parent_netprofit,
+            report_date,
+			ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
+        FROM profit_sheet 
+            
+    ) last_four_quarters
+	where rn <=4
+    GROUP BY symbol
+),
+
+prev_year_quarter AS (
+    -- 获取去年同期数据
+    SELECT p.*
+    FROM (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
+        FROM profit_sheet
+    ) p
+    WHERE p.rn = 1
+),
+
+financial_health AS (
+    SELECT 
+        lb.symbol,
+        lb.security_name,
+        
+        -- 1. 财务指标：(应收账款、票据+其它、长期应收)/营收 < 50%
+        (COALESCE(lb.accounts_rece, 0) + COALESCE(lb.note_rece, 0) + COALESCE(lb.other_rece, 0) + COALESCE(lb.long_rece, 0)) / 
+            NULLIF(lp.total_operate_income, 0) * 100 as receivables_to_revenue,
+            
+        -- 2. 务指标：流动资产/流动负债 > 1.50
+        COALESCE(lb.total_current_assets, 0) / NULLIF(lb.total_current_liab, 0) as current_ratio,
+        
+        -- 3. 稳指标：(商誉+开发支出+无形资产)/(净资产-优先股-永续债) < 25%
+        (COALESCE(lb.goodwill, 0) + COALESCE(lb.develop_expense, 0) + COALESCE(lb.intangible_assets, 0)) / 
+            NULLIF((COALESCE(lb.total_parent_equity, 0) - COALESCE(lb.preferred_stock, 0) - COALESCE(lb.perpetual_bond, 0)), 0) * 100 as intangible_to_equity,
+            
+        -- 4. 健指标：(流动资产-流动负债)/(长期借款+应付债券) > 75%
+        (COALESCE(lb.total_current_assets, 0) - COALESCE(lb.total_current_liab, 0)) / 
+            NULLIF((COALESCE(lb.long_loan, 0) + COALESCE(lb.bonds_payable, 0)), 0) * 100 as working_capital_to_long_debt,
+            
+        -- 5. 业绩指标：归属母公司股东净利润(LTM) > 0
+        ltp.ltm_parent_netprofit,
+        
+        -- 6. 季度归属母公司股东净利润 > 0
+        lp.parent_netprofit as quarterly_parent_netprofit,
+        
+        -- 7. 营收同比增长
+        lp.total_operate_income as current_revenue,
+        pyq.total_operate_income as prev_year_revenue,
+        
+        -- 8. 净利润同比增长
+        lp.parent_netprofit as current_netprofit,
+        pyq.parent_netprofit as prev_year_netprofit,
+        
+        -- 添加报告日期信息，便于调试
+        lb.report_date as balance_report_date,
+        lp.report_date as profit_report_date,
+        pyq.report_date as prev_year_report_date
+        
+    FROM latest_balance lb
+    JOIN latest_profit lp ON lb.symbol = lp.symbol
+    LEFT JOIN ltm_profit ltp ON lb.symbol = ltp.symbol
+    LEFT JOIN prev_year_quarter pyq ON lb.symbol = pyq.symbol
+)
+
+SELECT 
+    symbol,
+    security_name,
+    receivables_to_revenue,
+    current_ratio,
+    intangible_to_equity,
+    working_capital_to_long_debt,
+    ltm_parent_netprofit/100000000 as ltm_parent_netprofit_billion,
+    quarterly_parent_netprofit/100000000 as quarterly_parent_netprofit_billion,
+    current_revenue/100000000 as current_revenue_billion,
+    prev_year_revenue/100000000 as prev_year_revenue_billion,
+    current_netprofit/100000000 as current_netprofit_billion,
+    prev_year_netprofit/100000000 as prev_year_netprofit_billion,
+    balance_report_date,
+    profit_report_date,
+    prev_year_report_date
+FROM financial_health
+WHERE 
+    -- 符合骑A指数的筛选条件
+    receivables_to_revenue < 50 AND
+    current_ratio > 1.50 AND
+    intangible_to_equity < 25 AND
+    working_capital_to_long_debt > 75 AND
+    ltm_parent_netprofit > 0 AND
+    quarterly_parent_netprofit > 0 AND
+    current_revenue > prev_year_revenue AND
+    current_netprofit > prev_year_netprofit
+ORDER BY ltm_parent_netprofit DESC;

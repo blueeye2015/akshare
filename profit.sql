@@ -704,102 +704,157 @@ FROM crosstab(
   "每股收益" NUMERIC
 );
 
-
-WITH latest_balance AS (
-    -- 获取资产负债表最新季度数据
-    SELECT b.*
-    FROM (
-        SELECT 
-            *,
-            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
-        FROM balance_sheet
-    ) b
-    WHERE b.rn = 1
+WITH quarterly_periods AS (
+    -- 定义季度期间，用于后续计算
+    SELECT 
+        2025 as year, 1 as quarter, '2025-03-31' as end_date UNION ALL
+        SELECT 2024, 4, '2024-12-31' UNION ALL
+        SELECT 2024, 3, '2024-09-30' UNION ALL
+        SELECT 2024, 2, '2024-06-30' UNION ALL
+        SELECT 2024, 1, '2024-03-31' UNION ALL
+        SELECT 2023, 4, '2023-12-31'
 ),
 
-latest_profit AS (
-    -- 获取利润表最新季度数据
-    SELECT p.*
+latest_balance AS (
+    -- 获取资产负债表最新季度数据
+    SELECT fs.*
     FROM (
         SELECT 
             *,
             ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
-        FROM profit_sheet
-    ) p
-    WHERE p.rn = 1
+        FROM financial_statement
+        
+    ) fs
+    WHERE fs.rn = 1
+),
+
+profit_with_period AS (
+    -- 为每个利润表数据标记其所属季度，先转换日期格式
+    SELECT 
+        p.*,
+        -- 尝试转换日期，如果失败则使用备选方法
+         CASE 
+            WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 3 THEN 1
+            WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 6 THEN 2
+            WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 9 THEN 3
+            WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 12 THEN 4
+        END as quarter,
+        EXTRACT(YEAR FROM CAST(report_date AS DATE)) as year
+    FROM profit_sheet p
+),
+
+profit_with_quarterly_data AS (
+    -- 使用窗口函数计算单季度数据
+    SELECT 
+        p.*,
+        -- 计算单季度营收：当前累计值减去上一季度累计值（如果是第一季度则直接使用累计值）
+        CASE 
+            WHEN quarter = 1 THEN total_operate_income
+            ELSE total_operate_income - LAG(total_operate_income, 1, 0) OVER (
+                PARTITION BY symbol, year 
+                ORDER BY quarter
+            )
+        END as quarterly_revenue,
+        
+        -- 计算单季度净利润：当前累计值减去上一季度累计值（如果是第一季度则直接使用累计值）
+        CASE 
+            WHEN quarter = 1 THEN parent_netprofit
+            ELSE parent_netprofit - LAG(parent_netprofit, 1, 0) OVER (
+                PARTITION BY symbol, year 
+                ORDER BY quarter
+            )
+        END as quarterly_parent_netprofit
+    FROM profit_with_period p
+    WHERE quarter IS NOT NULL AND year IS NOT NULL
+),
+
+quarterly_profit AS (
+    -- 筛选需要的季度数据
+    SELECT *
+    FROM profit_with_quarterly_data
+    WHERE (year = 2025 AND quarter = 1) OR
+          (year = 2024 AND quarter BETWEEN 1 AND 4) OR
+          (year = 2023 AND quarter = 4)
+),
+
+latest_quarterly_profit AS (
+    -- 获取最新季度的单季利润数据
+    SELECT qp.*
+    FROM (
+        SELECT 
+            *,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY year DESC, quarter DESC) as rn
+        FROM quarterly_profit
+    ) qp
+    WHERE qp.rn = 1
 ),
 
 ltm_profit AS (
-    -- 计算最近12个月利润
+    -- 计算最近12个月利润 (LTM)
     SELECT 
         symbol,
-        SUM(parent_netprofit) as ltm_parent_netprofit
-    FROM (
-        SELECT 
-            symbol,
-            parent_netprofit,
-            report_date,
-			ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
-        FROM profit_sheet 
-            
-    ) last_four_quarters
-	where rn <=4
+        SUM(quarterly_parent_netprofit) as ltm_parent_netprofit,
+        SUM(quarterly_revenue) as ltm_revenue
+    FROM quarterly_profit
+    WHERE (year = 2024 AND quarter BETWEEN 2 AND 4) OR
+          (year = 2025 AND quarter = 1)
     GROUP BY symbol
 ),
 
 prev_year_quarter AS (
-    -- 获取去年同期数据
-    SELECT p.*
+    -- 获取去年同期单季数据
+    SELECT qp.*
     FROM (
         SELECT 
             *,
             ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
-        FROM profit_sheet
-    ) p
-    WHERE p.rn = 1
+        FROM quarterly_profit
+        WHERE (year = 2024 AND quarter = 1)
+    ) qp
+    WHERE qp.rn = 1
 ),
 
 financial_health AS (
     SELECT 
         lb.symbol,
-        lb.security_name,
+        lb.security_name_abbr as security_name,
         
-        -- 1. 财务指标：(应收账款、票据+其它、长期应收)/营收 < 50%
-        (COALESCE(lb.accounts_rece, 0) + COALESCE(lb.note_rece, 0) + COALESCE(lb.other_rece, 0) + COALESCE(lb.long_rece, 0)) / 
-            NULLIF(lp.total_operate_income, 0) * 100 as receivables_to_revenue,
+        -- 1. 财务指标：(应收账款、票据+其它)/营收(LTM) < 50%
+        (COALESCE(lb.accounts_rece, 0) + COALESCE(lb.notes_receivable, 0) + COALESCE(lb.other_rece, 0)) / 
+            NULLIF(ltp.ltm_revenue, 0) * 100 as receivables_to_revenue,
             
         -- 2. 务指标：流动资产/流动负债 > 1.50
-        COALESCE(lb.total_current_assets, 0) / NULLIF(lb.total_current_liab, 0) as current_ratio,
+        COALESCE(lb.current_asset_balance, 0) / NULLIF(lb.current_liab_balance, 0) as current_ratio,
         
-        -- 3. 稳指标：(商誉+开发支出+无形资产)/(净资产-优先股-永续债) < 25%
-        (COALESCE(lb.goodwill, 0) + COALESCE(lb.develop_expense, 0) + COALESCE(lb.intangible_assets, 0)) / 
-            NULLIF((COALESCE(lb.total_parent_equity, 0) - COALESCE(lb.preferred_stock, 0) - COALESCE(lb.perpetual_bond, 0)), 0) * 100 as intangible_to_equity,
+        -- 3. 稳指标：(商誉+无形资产)/(净资产) < 25%
+        (COALESCE(lb.goodwill, 0) + COALESCE(lb.intangible_asset, 0)) / 
+            NULLIF(lb.equity_balance, 0) * 100 as intangible_to_equity,
             
         -- 4. 健指标：(流动资产-流动负债)/(长期借款+应付债券) > 75%
-        (COALESCE(lb.total_current_assets, 0) - COALESCE(lb.total_current_liab, 0)) / 
-            NULLIF((COALESCE(lb.long_loan, 0) + COALESCE(lb.bonds_payable, 0)), 0) * 100 as working_capital_to_long_debt,
+        (COALESCE(lb.current_asset_balance, 0) - COALESCE(lb.current_liab_balance, 0)) / 
+            NULLIF((COALESCE(lb.long_loan, 0) + COALESCE(lb.bond_payable, 0)), 0) * 100 as working_capital_to_long_debt,
             
         -- 5. 业绩指标：归属母公司股东净利润(LTM) > 0
         ltp.ltm_parent_netprofit,
         
         -- 6. 季度归属母公司股东净利润 > 0
-        lp.parent_netprofit as quarterly_parent_netprofit,
+        lqp.quarterly_parent_netprofit,
         
         -- 7. 营收同比增长
-        lp.total_operate_income as current_revenue,
-        pyq.total_operate_income as prev_year_revenue,
+        lqp.quarterly_revenue as current_revenue,
+        pyq.quarterly_revenue as prev_year_revenue,
         
         -- 8. 净利润同比增长
-        lp.parent_netprofit as current_netprofit,
-        pyq.parent_netprofit as prev_year_netprofit,
+        lqp.quarterly_parent_netprofit as current_netprofit,
+        pyq.quarterly_parent_netprofit as prev_year_netprofit,
         
         -- 添加报告日期信息，便于调试
         lb.report_date as balance_report_date,
-        lp.report_date as profit_report_date,
+        lqp.report_date as current_profit_report_date,
         pyq.report_date as prev_year_report_date
         
     FROM latest_balance lb
-    JOIN latest_profit lp ON lb.symbol = lp.symbol
+    JOIN latest_quarterly_profit lqp ON lb.symbol = lqp.symbol
     LEFT JOIN ltm_profit ltp ON lb.symbol = ltp.symbol
     LEFT JOIN prev_year_quarter pyq ON lb.symbol = pyq.symbol
 )
@@ -818,7 +873,7 @@ SELECT
     current_netprofit/100000000 as current_netprofit_billion,
     prev_year_netprofit/100000000 as prev_year_netprofit_billion,
     balance_report_date,
-    profit_report_date,
+    current_profit_report_date,
     prev_year_report_date
 FROM financial_health
 WHERE 

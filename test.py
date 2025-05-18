@@ -2,6 +2,7 @@ import akshare as ak
 import pandas as pd
 from sqlalchemy import create_engine
 import numpy as np
+import tushare as ts
 #database_url = 'postgresql://postgres:12@localhost:5432/Financialdata'
 #engine = create_engine(database_url)
 # 获取数据
@@ -30,5 +31,10 @@ import numpy as np
 #print(stock_zh_a_hist_df)
 #stock_individual_info_em_df = ak.stock_individual_info_em(symbol="000001")
 #print(stock_individual_info_em_df)
-stock_mda_ym_df = ak.stock_mda_ym(symbol="002259")
-stock_mda_ym_df.to_csv('SZ002259.csv', encoding='utf-8-sig', index=False)
+#stock_mda_ym_df = ak.stock_mda_ym(symbol="002259")
+#stock_mda_ym_df.to_csv('SZ002259.csv', encoding='utf-8-sig', index=False)
+
+pro = ts.pro_api('540a303240aac02dc8cfeaa32f1110aacf880c9fb8d3cd5dd395af4c')
+
+df = pro.balancesheet(ts_code='688186.SH', start_date='20180101', end_date='20250430')
+df.to_csv('688186.csv', encoding='utf-8-sig', index=False)

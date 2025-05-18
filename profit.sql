@@ -703,7 +703,6 @@ FROM crosstab(
   "扣除非经常性损益后的净利润" NUMERIC,
   "每股收益" NUMERIC
 );
-
 WITH quarterly_periods AS (
     -- 定义季度期间，用于后续计算
     SELECT 
@@ -717,14 +716,14 @@ WITH quarterly_periods AS (
 
 latest_balance AS (
     -- 获取资产负债表最新季度数据
-    SELECT fs.*
+    SELECT fs.*,b.code as symbol, b.name as security_name_abbr
     FROM (
         SELECT 
             *,
-            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_date DESC) as rn
-        FROM financial_statement
-        
-    ) fs
+            ROW_NUMBER() OVER (PARTITION BY ts_code ORDER BY end_date DESC,update_flag DESC) as rn
+        FROM balancesheet 
+     
+    ) fs join stock_info_a_code_name b on fs.ts_code = b.code
     WHERE fs.rn = 1
 ),
 
@@ -733,7 +732,7 @@ profit_with_period AS (
     SELECT 
         p.*,
         -- 尝试转换日期，如果失败则使用备选方法
-         CASE 
+        CASE 
             WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 3 THEN 1
             WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 6 THEN 2
             WHEN EXTRACT(MONTH FROM CAST(report_date AS DATE)) = 9 THEN 3
@@ -749,20 +748,20 @@ profit_with_quarterly_data AS (
         p.*,
         -- 计算单季度营收：当前累计值减去上一季度累计值（如果是第一季度则直接使用累计值）
         CASE 
-            WHEN quarter = 1 THEN total_operate_income
-            ELSE total_operate_income - LAG(total_operate_income, 1, 0) OVER (
+            WHEN quarter = 1 THEN COALESCE(total_operate_income, 0)
+            ELSE COALESCE(total_operate_income, 0) - COALESCE(LAG(total_operate_income, 1, 0) OVER (
                 PARTITION BY symbol, year 
                 ORDER BY quarter
-            )
+            ), 0)
         END as quarterly_revenue,
         
         -- 计算单季度净利润：当前累计值减去上一季度累计值（如果是第一季度则直接使用累计值）
         CASE 
-            WHEN quarter = 1 THEN parent_netprofit
-            ELSE parent_netprofit - LAG(parent_netprofit, 1, 0) OVER (
+            WHEN quarter = 1 THEN COALESCE(parent_netprofit, 0)
+            ELSE COALESCE(parent_netprofit, 0) - COALESCE(LAG(parent_netprofit, 1, 0) OVER (
                 PARTITION BY symbol, year 
                 ORDER BY quarter
-            )
+            ), 0)
         END as quarterly_parent_netprofit
     FROM profit_with_period p
     WHERE quarter IS NOT NULL AND year IS NOT NULL
@@ -785,6 +784,7 @@ latest_quarterly_profit AS (
             *,
             ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY year DESC, quarter DESC) as rn
         FROM quarterly_profit
+        WHERE (year = 2025 AND quarter = 1)
     ) qp
     WHERE qp.rn = 1
 ),
@@ -820,36 +820,49 @@ financial_health AS (
         lb.security_name_abbr as security_name,
         
         -- 1. 财务指标：(应收账款、票据+其它)/营收(LTM) < 50%
-        (COALESCE(lb.accounts_rece, 0) + COALESCE(lb.notes_receivable, 0) + COALESCE(lb.other_rece, 0)) / 
-            NULLIF(ltp.ltm_revenue, 0) * 100 as receivables_to_revenue,
+        -- 根据新表结构调整字段名
+        CASE 
+            WHEN is_nan_or_null(ltp.ltm_revenue) = 0 THEN NULL  -- 避免除以零
+            ELSE (is_nan_or_null(lb.accounts_receiv) + is_nan_or_null(lb.notes_receiv) + is_nan_or_null(lb.oth_receiv))/10000 / 
+                 is_nan_or_null(ltp.ltm_revenue) * 100  -- 如果ltm_revenue为NULL，使用1避免除以零
+        END as receivables_to_revenue,
             
-        -- 2. 务指标：流动资产/流动负债 > 1.50
-        COALESCE(lb.current_asset_balance, 0) / NULLIF(lb.current_liab_balance, 0) as current_ratio,
+        -- 2. 财务指标：流动资产/流动负债 > 1.50
+        CASE 
+            WHEN is_nan_or_null(lb.total_cur_liab) = 0 THEN NULL  -- 避免除以零
+            ELSE is_nan_or_null(lb.total_cur_assets) / is_nan_or_null(lb.total_cur_liab)
+        END as current_ratio,
         
-        -- 3. 稳指标：(商誉+无形资产)/(净资产) < 25%
-        (COALESCE(lb.goodwill, 0) + COALESCE(lb.intangible_asset, 0)) / 
-            NULLIF(lb.equity_balance, 0) * 100 as intangible_to_equity,
+        -- 3. 稳健指标：(商誉+无形资产)/(净资产) < 25%
+        CASE 
+            WHEN is_nan_or_null(lb.total_hldr_eqy_exc_min_int) = 0 THEN NULL  -- 避免除以零
+            ELSE (is_nan_or_null(lb.goodwill) + is_nan_or_null(lb.intan_assets)) / 
+                 is_nan_or_null(lb.total_hldr_eqy_exc_min_int) * 100
+        END as intangible_to_equity,
             
-        -- 4. 健指标：(流动资产-流动负债)/(长期借款+应付债券) > 75%
-        (COALESCE(lb.current_asset_balance, 0) - COALESCE(lb.current_liab_balance, 0)) / 
-            NULLIF((COALESCE(lb.long_loan, 0) + COALESCE(lb.bond_payable, 0)), 0) * 100 as working_capital_to_long_debt,
+        -- 4. 健康指标：(流动资产-流动负债)/(长期借款+应付债券) > 75%
+        CASE 
+            WHEN is_nan_or_null(lb.lt_borr) + is_nan_or_null(lb.bond_payable) = 0 THEN NULL  -- 避免除以零
+            ELSE (is_nan_or_null(lb.total_cur_assets) - is_nan_or_null(lb.total_cur_liab)) / 
+                 is_nan_or_null(NULLIF(is_nan_or_null(lb.lt_borr) + is_nan_or_null(lb.bond_payable), 0)) * 100
+        END as working_capital_to_long_debt,
             
         -- 5. 业绩指标：归属母公司股东净利润(LTM) > 0
-        ltp.ltm_parent_netprofit,
+        is_nan_or_null(ltp.ltm_parent_netprofit) as ltm_parent_netprofit,
         
         -- 6. 季度归属母公司股东净利润 > 0
-        lqp.quarterly_parent_netprofit,
+        is_nan_or_null(lqp.quarterly_parent_netprofit) as quarterly_parent_netprofit,
         
         -- 7. 营收同比增长
-        lqp.quarterly_revenue as current_revenue,
-        pyq.quarterly_revenue as prev_year_revenue,
+        is_nan_or_null(lqp.quarterly_revenue) as current_revenue,
+        is_nan_or_null(pyq.quarterly_revenue) as prev_year_revenue,
         
         -- 8. 净利润同比增长
-        lqp.quarterly_parent_netprofit as current_netprofit,
-        pyq.quarterly_parent_netprofit as prev_year_netprofit,
+        is_nan_or_null(lqp.quarterly_parent_netprofit) as current_netprofit,
+        is_nan_or_null(pyq.quarterly_parent_netprofit) as prev_year_netprofit,
         
         -- 添加报告日期信息，便于调试
-        lb.report_date as balance_report_date,
+        lb.end_date as balance_report_date,
         lqp.report_date as current_profit_report_date,
         pyq.report_date as prev_year_report_date
         
@@ -858,7 +871,7 @@ financial_health AS (
     LEFT JOIN ltm_profit ltp ON lb.symbol = ltp.symbol
     LEFT JOIN prev_year_quarter pyq ON lb.symbol = pyq.symbol
 )
-
+insert into financial_health
 SELECT 
     symbol,
     security_name,
@@ -874,16 +887,60 @@ SELECT
     prev_year_netprofit/100000000 as prev_year_netprofit_billion,
     balance_report_date,
     current_profit_report_date,
-    prev_year_report_date
+    prev_year_report_date 
 FROM financial_health
 WHERE 
-    -- 符合骑A指数的筛选条件
-    receivables_to_revenue < 50 AND
-    current_ratio > 1.50 AND
-    intangible_to_equity < 25 AND
-    working_capital_to_long_debt > 75 AND
+    -- 符合骑A指数的筛选条件，添加NULL值检查
+    (receivables_to_revenue < 50 OR receivables_to_revenue IS NULL) AND
+    (current_ratio > 1.50 OR current_ratio IS NULL) AND
+    (intangible_to_equity < 25 OR intangible_to_equity IS NULL) AND
+    (working_capital_to_long_debt > 75 OR working_capital_to_long_debt IS NULL) AND
     ltm_parent_netprofit > 0 AND
     quarterly_parent_netprofit > 0 AND
     current_revenue > prev_year_revenue AND
     current_netprofit > prev_year_netprofit
 ORDER BY ltm_parent_netprofit DESC;
+
+
+
+-- 计算特定交易日的统A指数PE/PB/PS值
+WITH valid_stocks AS (
+    -- 筛选出有效的股票数据（排除负值）
+    SELECT 
+        trade_date,
+        -- PE值：剔除负值和异常值
+        CASE WHEN pe > 0 AND pe < 1000 THEN pe ELSE NULL END AS valid_pe,
+        CASE WHEN pe_ttm > 0 AND pe_ttm < 1000 THEN pe_ttm ELSE NULL END AS valid_pe_ttm,
+        -- PB值：剔除负值和异常值
+        CASE WHEN pb > 0 AND pb < 100 THEN pb ELSE NULL END AS valid_pb,
+        -- PS值：剔除负值和异常值
+        CASE WHEN ps > 0 AND ps < 100 THEN ps ELSE NULL END AS valid_ps,
+        CASE WHEN ps_ttm > 0 AND ps_ttm < 100 THEN ps_ttm ELSE NULL END AS valid_ps_ttm
+    FROM 
+        public.daily_basic
+	where ts_code in (select symbol from financial_health)
+)
+insert into all_stock_index_basic
+SELECT 
+    trade_date,
+    -- 计算PE中位数
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valid_pe) AS pe_median,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valid_pe_ttm) AS pe_ttm_median,
+    -- 计算PB中位数
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valid_pb) AS pb_median,
+    -- 计算PS中位数
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valid_ps) AS ps_median,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valid_ps_ttm) AS ps_ttm_median,
+    -- 计算有效样本数量
+    COUNT(valid_pe) AS valid_pe_count,
+    COUNT(valid_pe_ttm) AS valid_pe_ttm_count,
+    COUNT(valid_pb) AS valid_pb_count,
+    COUNT(valid_ps) AS valid_ps_count,
+    COUNT(valid_ps_ttm) AS valid_ps_ttm_count,
+    -- 计算总样本数量
+    COUNT(*) AS total_stocks 
+	
+FROM 
+    valid_stocks
+GROUP BY 
+    trade_date;

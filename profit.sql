@@ -1404,6 +1404,10 @@ SELECT
     -- 市值与 LTM 扣非
     ROUND((lmd.total_mv/10000)::numeric, 2)       AS 总市值_亿元,
     ROUND(ldp.ltm_deduct_netprofit::numeric, 2)   AS LTM扣非净利润_万元,
+	CASE
+	    WHEN ldp.ltm_deduct_netprofit > 0
+	THEN ROUND(lmd.total_mv/NULLIF(ldp.ltm_deduct_netprofit,0)::numeric,2)
+	ELSE NULL END								   AS 扣非pe,
 	return_20d_pct								   AS "20日涨跌幅",
 	industry									   AS 行业,
     lmd.trade_date                                AS 市场数据日期

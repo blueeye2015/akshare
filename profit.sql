@@ -918,7 +918,7 @@ WITH valid_stocks AS (
         CASE WHEN ps_ttm > 0 AND ps_ttm < 100 THEN ps_ttm ELSE NULL END AS valid_ps_ttm
     FROM 
         public.daily_basic
-	where ts_code in (select symbol from financial_health)
+	where  pe is not null and pe <> 'Nan'
 )
 insert into all_stock_index_basic
 SELECT 
@@ -944,3 +944,479 @@ FROM
     valid_stocks
 GROUP BY 
     trade_date;
+
+--单增
+WITH 
+-- 1. 获取最新的业绩预告数据（净利润和扣非净利润）- 转换为万元
+latest_forecast AS (
+    SELECT 
+        symbol,
+        report_period,
+        announce_date,
+        stock_name,
+        MAX(CASE WHEN forecast_indicator = '归属于上市公司股东的净利润' THEN forecast_value/10000 END) as forecast_netprofit,
+        MAX(CASE WHEN forecast_indicator = '扣除非经常性损益后的净利润' THEN forecast_value/10000 END) as forecast_deduct_netprofit,
+        MAX(CASE WHEN forecast_indicator = '归属于上市公司股东的净利润' THEN last_year_value/10000 END) as ly_netprofit,
+        MAX(CASE WHEN forecast_indicator = '扣除非经常性损益后的净利润' THEN last_year_value/10000 END) as ly_deduct_netprofit
+    FROM performance_forecast pf1
+    WHERE pf1.report_period = '20250630'
+    AND pf1.forecast_indicator IN ('归属于上市公司股东的净利润', '扣除非经常性损益后的净利润')
+    GROUP BY symbol, report_period, announce_date, stock_name
+    HAVING MAX(CASE WHEN forecast_indicator = '归属于上市公司股东的净利润' THEN forecast_value END) IS NOT NULL
+       AND MAX(CASE WHEN forecast_indicator = '扣除非经常性损益后的净利润' THEN forecast_value END) IS NOT NULL
+),
+
+-- 2. 使用开窗函数计算所有季报的单季数据
+quarterly_profit_data AS (
+    SELECT 
+        security_code as symbol,
+        report_period,
+        parent_netprofit,
+        deduct_parent_netprofit,
+        -- 计算单季净利润（当期累积 - 上期累积）
+        CASE 
+            WHEN RIGHT(report_period, 4) = '0331' THEN parent_netprofit  -- Q1直接取累积值
+            ELSE parent_netprofit - LAG(parent_netprofit, 1) OVER (
+                PARTITION BY security_code, LEFT(report_period, 4) 
+                ORDER BY report_period
+            )
+        END as quarterly_netprofit,
+        -- 计算单季扣非净利润
+        CASE 
+            WHEN RIGHT(report_period, 4) = '0331' THEN deduct_parent_netprofit  -- Q1直接取累积值
+            ELSE deduct_parent_netprofit - LAG(deduct_parent_netprofit, 1) OVER (
+                PARTITION BY security_code, LEFT(report_period, 4) 
+                ORDER BY report_period
+            )
+        END as quarterly_deduct_netprofit
+    FROM profit_sheet
+    WHERE security_code IN (SELECT symbol FROM latest_forecast)
+    AND RIGHT(report_period, 4) IN ('0331', '0630', '0930', '1231')
+),
+
+-- 3. 获取当期预告对应的历史累积数据
+current_period_data AS (
+    SELECT 
+        lf.symbol,
+        lf.report_period,
+        lf.stock_name,
+        lf.announce_date,
+        lf.forecast_netprofit,
+        lf.forecast_deduct_netprofit,
+        -- 获取前一期的累积数据
+        COALESCE(ps_prev.parent_netprofit, 0) as prev_cumulative_netprofit,
+        COALESCE(ps_prev.deduct_parent_netprofit, 0) as prev_cumulative_deduct
+    FROM latest_forecast lf
+    LEFT JOIN profit_sheet ps_prev ON lf.symbol = ps_prev.security_code 
+        AND ps_prev.report_period = CASE 
+            WHEN RIGHT(lf.report_period, 4) = '0630' THEN CONCAT(LEFT(lf.report_period, 4), '0331')
+            WHEN RIGHT(lf.report_period, 4) = '0930' THEN CONCAT(LEFT(lf.report_period, 4), '0630')
+            WHEN RIGHT(lf.report_period, 4) = '1231' THEN CONCAT(LEFT(lf.report_period, 4), '0930')
+            ELSE NULL
+        END
+),
+
+-- 4. 计算当期单季数据、去年同期单季数据和上一季度数据
+quarterly_calculations AS (
+    SELECT 
+        cpd.symbol,
+        cpd.report_period,
+        cpd.stock_name,
+        cpd.announce_date,
+        
+        -- 当期单季度值（预告累积值 - 前期累积值）
+        cpd.forecast_netprofit - cpd.prev_cumulative_netprofit as q_netprofit,
+        cpd.forecast_deduct_netprofit - cpd.prev_cumulative_deduct as q_deduct_netprofit,
+        
+        -- 去年同期单季度值
+        qpd_ly.quarterly_netprofit as ly_q_netprofit,
+        qpd_ly.quarterly_deduct_netprofit as ly_q_deduct_netprofit,
+        
+        -- 上一季度单季度值（用于计算环比增速）
+        qpd_prev.quarterly_deduct_netprofit as prev_q_deduct_netprofit,
+        
+        -- 预告的累积值
+        cpd.forecast_netprofit,
+        cpd.forecast_deduct_netprofit
+        
+    FROM current_period_data cpd
+    -- 去年同期数据
+    LEFT JOIN quarterly_profit_data qpd_ly ON cpd.symbol = qpd_ly.symbol 
+        AND qpd_ly.report_period = CONCAT(
+            CAST(CAST(LEFT(cpd.report_period, 4) AS INTEGER) - 1 AS TEXT), 
+            RIGHT(cpd.report_period, 4)
+        )
+    -- 上一季度数据
+    LEFT JOIN quarterly_profit_data qpd_prev ON cpd.symbol = qpd_prev.symbol 
+        AND qpd_prev.report_period = CASE 
+            WHEN RIGHT(cpd.report_period, 4) = '0630' THEN CONCAT(LEFT(cpd.report_period, 4), '0331')
+            WHEN RIGHT(cpd.report_period, 4) = '0930' THEN CONCAT(LEFT(cpd.report_period, 4), '0630')
+            WHEN RIGHT(cpd.report_period, 4) = '1231' THEN CONCAT(LEFT(cpd.report_period, 4), '0930')
+            WHEN RIGHT(cpd.report_period, 4) = '0331' THEN CONCAT(CAST(CAST(LEFT(cpd.report_period, 4) AS INTEGER) - 1 AS TEXT), '1231')
+            ELSE NULL
+        END
+),
+
+-- 5. 获取最新的市场数据和20日涨幅
+latest_market_data AS (
+    WITH daily_data_ranked AS (
+        SELECT 
+            security_code as symbol,
+            trade_date,
+            close,
+            total_mv,
+            circ_mv,
+            pe_ttm,
+            ROW_NUMBER() OVER (PARTITION BY security_code ORDER BY trade_date DESC) as rn
+        FROM daily_basic 
+        WHERE security_code IN (SELECT symbol FROM latest_forecast)
+    ),
+    latest_data AS (
+        SELECT 
+            symbol,
+            trade_date,
+            close as latest_close,
+            total_mv,
+            circ_mv,
+            pe_ttm
+        FROM daily_data_ranked
+        WHERE rn = 1
+    ),
+    data_20d_ago AS (
+        SELECT 
+            symbol,
+            close as close_20d_ago
+        FROM daily_data_ranked
+        WHERE rn = 21  -- 第21个交易日（包含最新日期，所以是20个交易日前）
+    )
+    SELECT 
+        ld.symbol,
+        ld.total_mv,
+        ld.circ_mv,
+        ld.pe_ttm,
+        ld.trade_date,
+        ld.latest_close,
+        d20.close_20d_ago,
+        -- 计算20日涨幅
+        CASE 
+            WHEN d20.close_20d_ago IS NOT NULL AND d20.close_20d_ago > 0
+            THEN ROUND((((ld.latest_close - d20.close_20d_ago) / d20.close_20d_ago * 100))::numeric, 2)
+            ELSE NULL
+        END as return_20d_pct
+    FROM latest_data ld
+    LEFT JOIN data_20d_ago d20 ON ld.symbol = d20.symbol
+),
+
+-- 6. 获取LTM（最近12个月）扣非净利润数据
+ltm_deduct_profit AS (
+    -- 合并历史季报数据和当期预告单季数据
+    WITH complete_quarterly_data AS (
+        -- 历史季报数据（排除当期预告期）
+        SELECT 
+            symbol,
+            report_period,
+            quarterly_deduct_netprofit
+        FROM quarterly_profit_data
+        WHERE quarterly_deduct_netprofit IS NOT NULL
+        AND report_period != (SELECT report_period FROM latest_forecast LIMIT 1)
+        
+        UNION ALL
+        
+        -- 当期预告的单季数据
+        SELECT 
+            symbol,
+            report_period,
+            q_deduct_netprofit as quarterly_deduct_netprofit
+        FROM quarterly_calculations
+        WHERE q_deduct_netprofit IS NOT NULL
+    ),
+    
+    -- 为每个股票的季度数据排序
+    ranked_quarters AS (
+        SELECT 
+            symbol,
+            report_period,
+            quarterly_deduct_netprofit,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_period DESC) as rn
+        FROM complete_quarterly_data
+    )
+    
+    SELECT 
+        symbol,
+        -- 当前LTM（最近4个季度）
+        SUM(CASE WHEN rn <= 4 THEN quarterly_deduct_netprofit ELSE 0 END) as ltm_deduct_netprofit,
+        -- 去年同期LTM（第5-8个季度）
+        SUM(CASE WHEN rn BETWEEN 5 AND 8 THEN quarterly_deduct_netprofit ELSE 0 END) as ly_ltm_deduct_netprofit
+    FROM ranked_quarters
+    WHERE rn <= 8  -- 只需要最近8个季度
+    GROUP BY symbol
+)
+
+-- 7. 最终结果
+SELECT 
+    qc.symbol as 股票代码,
+    qc.stock_name as 股票名称,
+    qc.report_period as 报告期,
+    qc.announce_date as 公告日期,
+    
+    -- 单季度业绩（现在都是万元单位）
+    ROUND(qc.q_netprofit::numeric, 2) as 单季净利润_万元,
+    ROUND(qc.q_deduct_netprofit::numeric, 2) as 单季扣非净利润_万元,
+    
+    -- 单季度增速
+    CASE 
+        WHEN qc.ly_q_netprofit IS NOT NULL AND qc.ly_q_netprofit != 0 
+        THEN ROUND((((qc.q_netprofit - qc.ly_q_netprofit) / ABS(qc.ly_q_netprofit) * 100))::numeric, 2)
+        ELSE NULL 
+    END as 单季净利润增速_pct,
+    
+    CASE 
+        WHEN qc.ly_q_deduct_netprofit IS NOT NULL AND qc.ly_q_deduct_netprofit != 0 
+        THEN ROUND((((qc.q_deduct_netprofit - qc.ly_q_deduct_netprofit) / ABS(qc.ly_q_deduct_netprofit) * 100))::numeric, 2)
+        ELSE NULL 
+    END as 单季扣非增速_pct,
+    
+    -- 单季扣非环比增速（当期扣非 vs 上期扣非）
+    CASE 
+        WHE((
+            (lmd.total_mv / ldp.ltm_deduct_netprofit) / 
+            ((qc.q_deduct_netprofit - qc.ly_q_deduct_netprofit) / ABS(qc.ly_q_deduct_netprofit) * 100)
+        )::numeric, 2)
+        ELSE NULL 
+    END as 单季扣非PEG,
+    
+    -- LTM扣非增速
+    CASE 
+        WHEN ldp.ly_ltm_deduct_netprofit IS NOT NULL AND ldp.ly_ltm_deduct_netprofit != 0 
+        THEN ROUND((((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / ABS(ldp.ly_ltm_deduct_netprofit) * 100))::numeric, 2)
+        ELSE NULL 
+    END as 最新LTM扣非增速_pct,
+    
+    -- LTM扣非PEG
+    CASE 
+        WHEN ldp.ltm_deduct_netprofit > 0 
+             AND ldp.ly_ltm_deduct_netprofit IS NOT NULL 
+             AND ldp.ly_ltm_deduct_netprofit != 0
+             AND ((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / ABS(ldp.ly_ltm_deduct_netprofit) * 100) > 0
+        THEN ROUND((
+            (lmd.total_mv / ldp.ltm_deduct_netprofit) / 
+            ((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / ABS(ldp.ly_ltm_deduct_netprofit) * 100)
+        )::numeric, 2)
+        ELSE NULL 
+    END as 最新LTM扣非PEG,
+    
+    -- 辅助信息
+    ROUND((lmd.total_mv/10000)::numeric, 2) as 总市值_亿元,
+    ROUND(ldp.ltm_deduct_netprofit::numeric, 2) as LTM扣非净利润_万元,
+    lmd.trade_date as 市场数据日期
+
+FROM quarterly_calculations qc
+LEFT JOIN latest_market_data lmd ON qc.symbol = lmd.symbol
+LEFT JOIN ltm_deduct_profit ldp ON qc.symbol = ldp.symbol
+WHERE  qc.ly_q_netprofit IS NOT NULL 
+  AND qc.ly_q_deduct_netprofit IS NOT NULL
+ORDER BY 单季扣非增速_pct DESC NULLS LAST;
+
+-- =========================================================
+-- 双增：当季营收同比>0 且 当季扣非净利同比>50%
+-- 去年同期≤0 或基数过小时，用市值映射固定季度扣非基数
+-- =========================================================
+WITH
+-- 1. 单季利润数据（来源：profit_sheet）
+quarterly_profit_data AS (
+    SELECT
+        security_code as symbol,
+        report_period,
+        parent_netprofit,
+        deduct_parent_netprofit,
+        -- 单季净利润
+        CASE
+            WHEN RIGHT(report_period, 4) = '0331' THEN parent_netprofit
+            ELSE parent_netprofit - LAG(parent_netprofit, 1) OVER (
+                PARTITION BY symbol, LEFT(report_period, 4)
+                ORDER BY report_period
+            )
+        END AS quarterly_netprofit,
+        -- 单季扣非净利润
+        CASE
+            WHEN RIGHT(report_period, 4) = '0331' THEN deduct_parent_netprofit
+            ELSE deduct_parent_netprofit - LAG(deduct_parent_netprofit, 1) OVER (
+                PARTITION BY symbol, LEFT(report_period, 4)
+                ORDER BY report_period
+            )
+        END AS quarterly_deduct_netprofit
+    FROM profit_sheet
+    WHERE RIGHT(report_period, 4) IN ('0331', '0630', '0930', '1231')
+) ,
+
+-- 2. 单季营业收入数据（来源：profit_sheet）
+quarterly_revenue_data AS (
+    SELECT
+        security_code as symbol,
+        report_period,
+        operate_income,
+        -- 单季营业收入
+        CASE
+            WHEN RIGHT(report_period, 4) = '0331' THEN operate_income
+            ELSE operate_income - LAG(operate_income, 1) OVER (
+                PARTITION BY symbol, LEFT(report_period, 4)
+                ORDER BY report_period
+            )
+        END AS quarterly_revenue
+    FROM profit_sheet
+    WHERE RIGHT(report_period, 4) IN ('0331', '0630', '0930', '1231')
+) ,
+
+-- 3. 合并最新季度（2025Q2）的单季利润、营收及去年同期值
+latest_quarter AS (
+    SELECT
+        qpd.symbol,
+        qpd.report_period,
+        -- 当期单季值
+        qrd.quarterly_revenue,
+        qpd.quarterly_netprofit,
+        qpd.quarterly_deduct_netprofit,
+        -- 去年同期单季值
+        qrd_ly.quarterly_revenue          AS ly_q_revenue,
+        qpd_ly.quarterly_netprofit        AS ly_q_netprofit,
+        qpd_ly.quarterly_deduct_netprofit AS ly_q_deduct_netprofit
+    FROM quarterly_profit_data qpd
+    JOIN quarterly_revenue_data qrd
+        ON qpd.symbol = qrd.symbol
+        AND qpd.report_period = qrd.report_period
+    -- 去年同期
+    LEFT JOIN quarterly_profit_data qpd_ly
+        ON qpd.symbol = qpd_ly.symbol
+        AND qpd_ly.report_period = CONCAT(
+            CAST(CAST(LEFT(qpd.report_period, 4) AS INTEGER) - 1 AS TEXT),
+            RIGHT(qpd.report_period, 4)
+        )
+    LEFT JOIN quarterly_revenue_data qrd_ly
+        ON qpd.symbol = qrd_ly.symbol
+        AND qrd_ly.report_period = CONCAT(
+            CAST(CAST(LEFT(qpd.report_period, 4) AS INTEGER) - 1 AS TEXT),
+            RIGHT(qpd.report_period, 4)
+        )
+    WHERE qpd.report_period = '20250630'
+) ,
+
+-- 4. 最新市值、20日涨幅（来源：daily_basic）
+latest_market_data AS (
+    WITH ranked AS (
+        SELECT
+            security_code as symbol,
+            trade_date,
+            close,
+            total_mv,
+            circ_mv,
+            pe,
+            ROW_NUMBER() OVER (PARTITION BY ts_code ORDER BY trade_date DESC) AS rn
+        FROM daily_basic
+    ),
+    latest AS (
+        SELECT symbol, trade_date, close AS latest_close,
+               total_mv, circ_mv, pe
+        FROM ranked WHERE rn = 1
+    ),
+    ago20 AS (
+        SELECT symbol, close AS close_20d_ago
+        FROM ranked WHERE rn = 21
+    )
+    SELECT
+        ld.symbol,
+        ld.total_mv,
+        ld.circ_mv,
+        ld.pe,
+        ld.trade_date,
+        ld.latest_close,
+        d20.close_20d_ago,
+        CASE
+            WHEN d20.close_20d_ago IS NOT NULL AND d20.close_20d_ago > 0
+            THEN ROUND(((ld.latest_close - d20.close_20d_ago) / d20.close_20d_ago * 100)::numeric, 2)
+            ELSE NULL
+        END AS return_20d_pct
+    FROM latest ld
+    LEFT JOIN ago20 d20 ON ld.symbol = d20.symbol
+) ,
+
+-- 5. LTM 扣非净利润（最近 4 个季度）
+ltm_deduct_profit AS (
+    WITH ranked AS (
+        SELECT
+            symbol,
+            report_period,
+            quarterly_deduct_netprofit,
+            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY report_period DESC) AS rn
+        FROM quarterly_profit_data
+    )
+    SELECT
+        symbol,
+        SUM(CASE WHEN rn <= 4 THEN quarterly_deduct_netprofit ELSE 0 END) AS ltm_deduct_netprofit,
+        SUM(CASE WHEN rn BETWEEN 5 AND 8 THEN quarterly_deduct_netprofit ELSE 0 END) AS ly_ltm_deduct_netprofit
+    FROM ranked
+    WHERE rn <= 8
+    GROUP BY symbol
+) 
+
+-- 6. 最终结果
+SELECT
+    lq.symbol                                    AS 股票代码,
+    sb.name                                      AS 股票名称,
+    lq.report_period                             AS 报告期,
+
+    -- 单季值
+    ROUND(lq.quarterly_revenue::numeric, 2)      AS 单季营业收入_万元,
+    ROUND(lq.quarterly_netprofit::numeric, 2)    AS 单季净利润_万元,
+    ROUND(lq.quarterly_deduct_netprofit::numeric, 2) AS 单季扣非净利润_万元,
+
+    -- 单季增速
+    ROUND(((lq.quarterly_revenue - lq.ly_q_revenue) / NULLIF(lq.ly_q_revenue, 0) * 100)::numeric, 2) AS 单季营收增速_pct,
+    ROUND(((lq.quarterly_deduct_netprofit - lq.ly_q_deduct_netprofit) / NULLIF(lq.ly_q_deduct_netprofit, 0) * 100)::numeric, 2) AS 单季扣非增速_pct,
+
+    -- LTM 扣非增速 & PEG
+    CASE
+        WHEN ldp.ly_ltm_deduct_netprofit IS NOT NULL AND ldp.ly_ltm_deduct_netprofit != 0
+        THEN ROUND(((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / NULLIF(ldp.ly_ltm_deduct_netprofit, 0) * 100)::numeric, 2)
+        ELSE NULL
+    END AS 最新LTM扣非增速_pct,
+
+    CASE
+        WHEN ldp.ltm_deduct_netprofit > 0
+             AND ldp.ly_ltm_deduct_netprofit IS NOT NULL
+             AND ldp.ly_ltm_deduct_netprofit != 0
+             AND ((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / NULLIF(ldp.ly_ltm_deduct_netprofit, 0) * 100) > 0
+        THEN ROUND(((lmd.total_mv / ldp.ltm_deduct_netprofit) /
+                    ((ldp.ltm_deduct_netprofit - ldp.ly_ltm_deduct_netprofit) / NULLIF(ldp.ly_ltm_deduct_netprofit, 0) * 100))::numeric, 2)
+        ELSE NULL
+    END AS 最新LTM扣非PEG,
+	-- 当季扣非PEG
+	CASE
+	    WHEN lq.quarterly_deduct_netprofit > 0
+	         AND lq.ly_q_deduct_netprofit IS NOT NULL
+	         AND lq.ly_q_deduct_netprofit <> 0
+	         AND (lq.quarterly_deduct_netprofit - lq.ly_q_deduct_netprofit) / NULLIF(lq.ly_q_deduct_netprofit, 0) > 0
+	    THEN ROUND(
+	        pe /
+	        (((lq.quarterly_deduct_netprofit - lq.ly_q_deduct_netprofit) / NULLIF(lq.ly_q_deduct_netprofit, 0))*100)
+	    ::numeric, 2)
+	    ELSE NULL
+	END 										   AS 当季扣非PEG,
+    -- 市值与 LTM 扣非
+    ROUND((lmd.total_mv/10000)::numeric, 2)       AS 总市值_亿元,
+    ROUND(ldp.ltm_deduct_netprofit::numeric, 2)   AS LTM扣非净利润_万元,
+	return_20d_pct								   AS "20日涨跌幅",
+	industry									   AS 行业,
+    lmd.trade_date                                AS 市场数据日期
+
+FROM latest_quarter lq
+JOIN stock_info_a_code_name sb ON lq.symbol = sb.security_code
+LEFT JOIN latest_market_data lmd ON lq.symbol = lmd.symbol
+LEFT JOIN ltm_deduct_profit ldp ON lq.symbol = ldp.symbol
+LEFT JOIN stock_individual_info sii ON lq.symbol = sii.symbol
+-- 双增过滤条件
+WHERE lq.ly_q_revenue IS NOT NULL
+  AND lq.ly_q_deduct_netprofit IS NOT NULL
+  AND (lq.quarterly_revenue - lq.ly_q_revenue) > 0
+  AND (lq.quarterly_deduct_netprofit - lq.ly_q_deduct_netprofit) / NULLIF(lq.ly_q_deduct_netprofit, 0) > 0.5
+
+ORDER BY 单季扣非增速_pct DESC NULLS LAST;

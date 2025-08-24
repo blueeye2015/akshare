@@ -27834,3 +27834,15 @@ LINE 2:                     INSERT INTO {self.table_name} ({','.join...
 2025-05-05 16:39:19,034 - ERROR - Batch 0: Error processing 002163: HTTPSConnectionPool(host='legulegu.com', port=443): Max retries exceeded with url: /api/s/base-info/?token=a1fdfc37c6f2cf09b7e3d8988c8043ba&id=002163 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
 2025-05-05 16:39:29,555 - INFO - 成功保存 12 条记录
 2025-05-05 16:39:29,555 - INFO - Batch 9 Progress: 6/535 - Successfully processed 835892
+2025-08-16 16:22:55,543 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-08-17 13:48:17,857 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-08-17 13:49:18,159 - ERROR - 处理股票 002162 失败: Expecting value: line 1 column 1 (char 0)
+2025-08-17 13:49:18,160 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-08-17 14:15:46,499 - INFO - 开始incremental模式的数据采集，共 5386 只股票
+2025-08-17 14:15:46,499 - INFO - 开始获取股票 002162 的数据 (1/5386)
+2025-08-17 14:16:46,832 - ERROR - 获取股票 002162 数据时发生错误: Expecting value: line 1 column 1 (char 0)
+2025-08-17 14:17:50,135 - ERROR - 获取股票 002162 数据时发生错误: Expecting value: line 1 column 1 (char 0)
+2025-08-17 14:18:53,467 - ERROR - 获取股票 002162 数据时发生错误: Expecting value: line 1 column 1 (char 0)
+2025-08-17 14:18:53,469 - ERROR - 处理股票 002162 失败: Expecting value: line 1 column 1 (char 0)
+2025-08-17 14:18:53,469 - INFO - 开始获取股票 002163 的数据 (2/5386)
+2025-08-17 14:19:53,786 - ERROR - 获取股票 002163 数据时发生错误: Expecting value: line 1 column 1 (char 0)

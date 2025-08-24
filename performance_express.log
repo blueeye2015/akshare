@@ -206,3 +206,99 @@
 2025-04-11 20:09:45,021 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
 2025-04-11 20:09:45,061 - INFO - 成功保存 8 条记录
 2025-04-11 20:09:45,062 - INFO - 完成 20250331 的数据获取和保存
+2025-07-09 15:08:23,935 - INFO - 开始获取 20240331 的数据
+2025-07-09 15:08:24,124 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,124 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,124 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,124 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,125 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,125 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,125 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,125 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,125 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,126 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,126 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:24,185 - INFO - 成功保存 68 条记录
+2025-07-09 15:08:24,185 - INFO - 完成 20240331 的数据获取和保存
+2025-07-09 15:08:25,186 - INFO - 开始获取 20240631 的数据
+2025-07-09 15:08:25,252 - ERROR - 处理 20240631 失败: 'NoneType' object is not subscriptable
+2025-07-09 15:08:25,252 - INFO - 开始获取 20240931 的数据
+2025-07-09 15:08:25,324 - ERROR - 处理 20240931 失败: 'NoneType' object is not subscriptable
+2025-07-09 15:08:25,324 - INFO - 开始获取 20241231 的数据
+2025-07-09 15:08:25,866 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,866 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,867 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,868 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,868 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,868 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:25,987 - INFO - 成功保存 911 条记录
+2025-07-09 15:08:25,987 - INFO - 完成 20241231 的数据获取和保存
+2025-07-09 15:08:26,988 - INFO - 开始获取 20250331 的数据
+2025-07-09 15:08:27,134 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,134 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,135 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,135 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,135 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,136 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,136 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,136 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,136 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,136 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,137 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:08:27,155 - INFO - 成功保存 16 条记录
+2025-07-09 15:08:27,155 - INFO - 完成 20250331 的数据获取和保存
+2025-07-09 15:08:28,157 - INFO - 开始获取 20250631 的数据
+2025-07-09 15:08:28,217 - ERROR - 处理 20250631 失败: 'NoneType' object is not subscriptable
+2025-07-09 15:24:24,889 - INFO - 开始获取 20240331 的数据
+2025-07-09 15:24:25,076 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,076 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,076 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,077 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,077 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,077 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,077 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,078 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,078 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,078 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,078 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:25,114 - INFO - 成功保存 68 条记录
+2025-07-09 15:24:25,115 - INFO - 完成 20240331 的数据获取和保存
+2025-07-09 15:24:26,115 - INFO - 开始获取 20240631 的数据
+2025-07-09 15:24:26,190 - ERROR - 处理 20240631 失败: 'NoneType' object is not subscriptable
+2025-07-09 15:24:26,191 - INFO - 开始获取 20240931 的数据
+2025-07-09 15:24:26,260 - ERROR - 处理 20240931 失败: 'NoneType' object is not subscriptable
+2025-07-09 15:24:26,261 - INFO - 开始获取 20241231 的数据
+2025-07-09 15:24:26,991 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,991 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,992 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,992 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,992 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,992 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,993 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,993 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,993 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,993 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:26,993 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:27,087 - INFO - 成功保存 911 条记录
+2025-07-09 15:24:27,088 - INFO - 完成 20241231 的数据获取和保存
+2025-07-09 15:24:28,089 - INFO - 开始获取 20250331 的数据
+2025-07-09 15:24:28,280 - WARNING - 列 eps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,280 - WARNING - 列 revenue 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,280 - WARNING - 列 revenue_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,280 - WARNING - 列 revenue_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,280 - WARNING - 列 revenue_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,281 - WARNING - 列 net_profit 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,281 - WARNING - 列 net_profit_last_year 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,281 - WARNING - 列 net_profit_yoy_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,281 - WARNING - 列 net_profit_qoq_change 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,281 - WARNING - 列 bps 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,282 - WARNING - 列 roe 数值转换警告: Can only use .str accessor with string values!
+2025-07-09 15:24:28,322 - INFO - 成功保存 16 条记录
+2025-07-09 15:24:28,322 - INFO - 完成 20250331 的数据获取和保存
+2025-07-09 15:24:29,323 - INFO - 开始获取 20250631 的数据
+2025-07-09 15:24:29,601 - ERROR - 处理 20250631 失败: 'NoneType' object is not subscriptable

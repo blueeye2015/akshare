@@ -94,7 +94,8 @@ class IndexDailyBasicCollector:
             '000905.SH',  # 中证500
             '399001.SZ',  # 深证成指
             '399005.SZ',  # 中小板指
-            '399006.SZ'   # 创业板指
+            '399006.SZ',   # 创业板指
+            '000016.SH',  # 上证50
         ]
         return index_list
 

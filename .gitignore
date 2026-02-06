@@ -1,2 +1,5 @@
 #忽略日志
 *.log
+*.csv
+cache/
+factor_cache_global/

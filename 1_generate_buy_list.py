@@ -18,7 +18,7 @@ FACTOR_DIR = "./factor_cache_global"  # 你的因子文件夹路径
 TOP_N_PCT = 0.03  
 
 # 🔥 目标日期：对应文件名 factor_YYYY-MM.parquet
-TARGET_DATE = '2025-12' 
+TARGET_DATE = '2026-02' 
 
 # 🔥🔥🔥 新增：模拟实盘的初始本金 (例如 100 万)
 INITIAL_CAPITAL = 1000000.0 

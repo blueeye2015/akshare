@@ -3,206 +3,120 @@ import numpy as np
 import os
 import glob
 from sqlalchemy import create_engine
-import datetime
-
 from dotenv import load_dotenv
+
+# 加载环境变量
 load_dotenv('.env')
 DSN = os.getenv('DB_DSN1')
+
 # --- 配置部分 ---
 FACTOR_DIR = "./factor_cache_global"  # 你的因子文件夹路径
+OUTPUT_FILE = "my_holdings.csv"       # 输出的清单文件名
 
-
-# 🔥 核心配置：持仓数量
-# 如果全市场约 5000 只股票，0.03 (3%) 大约是 150 只
-# 如果你觉得还不够，可以调大这个比例，或者直接指定 TOP_N = 100
+# 🔥 核心配置：选股比例
 TOP_N_PCT = 0.03  
 
-# 🔥 目标日期：对应文件名 factor_YYYY-MM.parquet
-TARGET_DATE = '2026-02' 
-
-# 🔥🔥🔥 新增：模拟实盘的初始本金 (例如 100 万)
-INITIAL_CAPITAL = 1000000.0 
-
-def load_target_factor(factor_dir, target_month):
-    file_name = f"factor_{target_month}.parquet"
-    file_path = os.path.join(factor_dir, file_name)
+def load_latest_factor(factor_dir):
+    """
+    自动查找目录下最新的 factor_*.parquet 文件并加载
+    """
+    files = sorted(glob.glob(os.path.join(factor_dir, "factor_*.parquet")))
+    if not files:
+        raise FileNotFoundError(f"❌ 目录下没有找到任何 factor_*.parquet 文件: {factor_dir}")
     
-    if os.path.exists(file_path):
-        print(f"✅ 找到指定因子文件: {file_path}")
-        return pd.read_parquet(file_path)
-    else:
-        print(f"⚠️ 未找到 {file_name}，尝试查找该目录下最新的 parquet 文件...")
-        files = sorted(glob.glob(os.path.join(factor_dir, "factor_*.parquet")))
-        if not files:
-            raise FileNotFoundError(f"❌ 目录下没有找到任何 factor_*.parquet 文件")
-        latest_file = files[-1]
-        print(f"👉 加载最新的文件代替: {latest_file}")
-        return pd.read_parquet(latest_file)
+    latest_file = files[-1]
+    print(f"✅ 自动加载最新的因子文件: {os.path.basename(latest_file)}")
+    return pd.read_parquet(latest_file)
 
 def get_basic_info():
+    """
+    获取股票基础信息（名称、上市日期）
+    """
     engine = create_engine(DSN)
     df_basic = pd.read_sql("SELECT symbol, list_date, name FROM stock_basic", engine)
     df_basic['list_date'] = pd.to_datetime(df_basic['list_date'])
     return df_basic
 
-def get_next_open_batch(current_date_str, symbol_list):
-    """
-    🔥 极速版：只查 T+1 日的 Open，不需要算 LAG
-    """
-    if not symbol_list: return None
-    
-    engine = create_engine(DSN)
-    symbols_str = "'" + "','".join(symbol_list) + "'"
-    
-    # SQL 只需要查 T+1 的开盘价
-    sql = f"""
-    SELECT DISTINCT ON (symbol)
-        symbol, 
-        open as next_open, 
-        trade_date as next_date
-    FROM stock_history
-    WHERE trade_date > '{current_date_str}' 
-      AND symbol IN ({symbols_str})
-    ORDER BY symbol, trade_date ASC
-    """
-    
-    try:
-        df = pd.read_sql(sql, engine)
-        return df
-    except Exception as e:
-        print(f"❌ SQL 查询失败: {e}")
-        return pd.DataFrame()
-    
 def generate_buy_list():
-    print(f"1. 加载 {TARGET_DATE} 的因子数据...")
-    df_factor = load_target_factor(FACTOR_DIR, TARGET_DATE)
-    if isinstance(df_factor.index, pd.MultiIndex): df_factor = df_factor.reset_index()
+    print("1. 正在加载最新的因子数据...")
+    df_factor = load_latest_factor(FACTOR_DIR)
     
-    # 因子产生的日期 (T日)
-    factor_date = df_factor['trade_date'].max()
-    # 转换为字符串 yyyy-mm-dd
+    # 如果是多重索引，重置索引
+    if isinstance(df_factor.index, pd.MultiIndex): 
+        df_factor = df_factor.reset_index()
+    
+    # 获取因子文件中对应的最新交易日期 (即 T 日)
+    factor_date = '2026-02-05'
     factor_date_str = pd.to_datetime(factor_date).strftime('%Y-%m-%d')
-    print(f"   因子基准日: {factor_date_str}")
+    print(f"   📅 因子基准日 (T日): {factor_date_str}")
     
+    # 只取该日期的数据
     df_current = df_factor[df_factor['trade_date'] == factor_date].copy()
     
-    print("2. 加载基础信息...")
+    print("2. 加载基础信息并筛选...")
     df_basic = get_basic_info()
     df_merge = pd.merge(df_current, df_basic, on='symbol', how='left')
     
-    # --- 初步筛选 ---
     candidates = []
     current_time = pd.Timestamp.now()
     
     for _, row in df_merge.iterrows():
         symbol = row['symbol']
-        # 🔥 关键点：直接拿因子文件里的 close 作为“昨收价”
-        # 因为因子文件是 T 日盘后生成的，这个 close 就是 T 日收盘价
-        close_T = row['close']
-
-        name = row['name'] if row['name'] else "Unknown"
+        name = row['name'] if 'name' in row and row['name'] else "Unknown"
         list_date = row['list_date']
         factor_val = row['factor']
         
-        # 基础过滤
-        if pd.isna(list_date) or (current_time - list_date).days < 60: continue
+        # 基础过滤：剔除上市不足 60 天的新股，剔除因子为空的
+        if pd.isna(list_date): continue
+        if (current_time - list_date).days < 60: continue
         if pd.isna(factor_val): continue
-            
+        
+        # 记录候选股票
         candidates.append({
             'symbol': symbol,
             'name': name,
             'factor': factor_val,
-            'pre_close': close_T # 🔥 这里直接存下来，这就是 T 日收盘价
+            'close_price': row.get('close', np.nan), # T日收盘价，仅供参考
+            'signal_date': factor_date_str            # 信号产生日期
         })
     
     df_candidates = pd.DataFrame(candidates)
     
-    # --- 🔥🔥🔥 核心修改：T+1 日可买性检查 🔥🔥🔥 ---
-    print("3. 获取 T+1 日开盘价并校验涨停...")
-    symbol_list = df_candidates['symbol'].tolist()
-    df_next = get_next_open_batch(factor_date_str, symbol_list)
-    
-    if df_next.empty:
-        print("❌ 警告：未获取到 T+1 行情，无法剔除涨停")
-        df_final = df_candidates.copy()
-        df_final['cost_price'] = df_final['pre_close']
-        buy_date = "UNKNOWN"
-    else:
-        # 🔥 Python 内存合并：Candidates (含 pre_close) + Next (含 open)
-        df_final = pd.merge(df_candidates, df_next, on='symbol', how='inner')
-        
-        valid_buy_list = []
-        blocked_count = 0
-        
-        if not df_final.empty:
-            buy_date = df_final['next_date'].mode()[0]
-        else:
-            buy_date = "UNKNOWN"
-            
-        print(f"   锁定买入日期 (T+1日): {buy_date}")
-        
-        for _, row in df_final.iterrows():
-            sym = row['symbol']
-            name = row['name'] if row['name'] else "Unknown"
-            
-            # 🔥 核心计算：用 SQL 查出来的 Open 和 Python 存着的 Pre_Close 对比
-            close_T = row['pre_close'] 
-            open_T1 = row['next_open']
-            
-            # 涨幅计算
-            pct_chg = (open_T1 - close_T) / close_T if close_T > 0 else 0
-            
-            # 涨停逻辑
-            limit_ratio = 0.10
-            if 'ST' in name: limit_ratio = 0.05
-            elif sym.startswith(('688', '300')): limit_ratio = 0.20
-            elif sym.startswith(('8', '4')): limit_ratio = 0.30
-            
-            # 剔除一字板
-            if pct_chg > (limit_ratio - 0.005):
-                blocked_count += 1
-                continue
-                
-            valid_buy_list.append({
-                'symbol': sym,
-                'name': name,
-                'factor': row['factor'],
-                'cost_price': open_T1, # 真实的买入价
-                'buy_date': row['next_date'],
-                'target_weight': 0 # 占位
-            })
-            
-        print(f"   🚫 因开盘涨停(买不进) 剔除: {blocked_count} 只")
-        df_final = pd.DataFrame(valid_buy_list)
-
-    # --- 4. 资金分配 ---
-    if df_final.empty:
-        print("❌ 筛选后无股票")
+    if df_candidates.empty:
+        print("❌ 筛选后无候选股票")
         return
 
-    df_final = df_final.sort_values(by='factor', ascending=False)
-    top_n = int(len(df_final) * TOP_N_PCT)
-    if top_n < 10: top_n = min(10, len(df_final))
+    # --- 3. 选股逻辑 ---
+    print(f"3. 按 Top {int(TOP_N_PCT*100)}% 选股...")
     
-    df_buy = df_final.head(top_n).copy()
+    # 按因子降序排列
+    df_candidates = df_candidates.sort_values(by='factor', ascending=False)
     
-    # --- 计算资金 ---
+    # 计算目标数量
+    top_n = int(len(df_candidates) * TOP_N_PCT)
+    if top_n < 10: top_n = min(10, len(df_candidates))
+    
+    df_buy = df_candidates.head(top_n).copy()
+    
+    # --- 4. 分配权重 ---
+    # 这里只分配“理论权重”，不计算具体股数，因为资金由执行脚本动态获取
     df_buy['target_weight'] = 1.0 / len(df_buy)
-    target_amt_per_stock = INITIAL_CAPITAL * df_buy['target_weight']
-    df_buy['volume'] = (target_amt_per_stock / df_buy['cost_price']) // 100 * 100
-    df_buy = df_buy[df_buy['volume'] > 0].copy()
+    
+    # 重命名列以保持兼容性，虽然 cost_price 这里只是参考价
+    df_buy.rename(columns={'close_price': 'ref_close_price', 'signal_date': 'buy_date'}, inplace=True)
 
-    # --- 输出 ---
-    output_cols = ['symbol', 'name', 'cost_price', 'volume', 'buy_date', 'factor', 'target_weight']
-    output_file = "my_holdings.csv"
-    df_buy[output_cols].to_csv(output_file, index=False, encoding='utf-8-sig')
+    # --- 5. 输出结果 ---
+    output_cols = ['symbol', 'name', 'ref_close_price', 'buy_date', 'factor', 'target_weight']
+    
+    df_buy[output_cols].to_csv(OUTPUT_FILE, index=False, encoding='utf-8-sig')
     
     print("\n" + "="*50)
-    print(f"✅ 模拟持仓文件已生成: {output_file}")
-    print(f"   交易日期: {buy_date}")
-    print(f"   持仓股票: {len(df_buy)} 只")
+    print(f"✅ 理论买入清单已生成: {OUTPUT_FILE}")
+    print(f"   信号日期: {factor_date_str}")
+    print(f"   候选股票: {len(df_buy)} 只")
+    print(f"   ⚠️  注意: 此文件仅包含股票列表及权重，实际买入将在下一个交易日由执行脚本处理。")
     print("="*50)
-    print(df_buy[['symbol', 'name', 'cost_price', 'volume', 'buy_date']].head(5))
+    print(df_buy[['symbol', 'name', 'ref_close_price', 'target_weight']].head(10))
 
 if __name__ == '__main__':
     generate_buy_list()

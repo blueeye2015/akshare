@@ -3,3 +3,8 @@
 *.csv
 cache/
 factor_cache_global/
+factor_cache_global_short/
+*.png
+articles/
+*.md
+workspace-state.json

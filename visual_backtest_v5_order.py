@@ -6,6 +6,7 @@
 - 因子分数加权
 - 波动率自适应止盈止损
 - 真实交易成本
+- 增加notify_order函数，添加止损逻辑
 """
 import backtrader as bt
 import pandas as pd
@@ -306,6 +307,34 @@ class MLFactorStrategy(bt.Strategy):
             'value': self.broker.getvalue(),
             'cash': self.broker.getcash()
         })    
+
+        
+
+    def notify_order(self, order):
+        if order.status in [order.Submitted, order.Accepted]:
+            # 订单已提交/被接受，无需操作
+            return
+
+        # 检查订单是否完成（全部成交）
+        if order.status == order.Completed:
+            symbol = order.data._name
+            
+            if order.isbuy():
+                # 买入成交：记录实际成交均价
+                self.stock_entry_price[symbol] = order.executed.price
+                if self.p.debug:
+                    print(f"[{self.datetime.date(0)}] ✅ 买入成交: {symbol} | 价格: {order.executed.price:.2f} | 数量: {order.executed.size}")
+                    
+            elif order.issell():
+                # 卖出成交：清空成本记录（可选）
+                if symbol in self.stock_entry_price:
+                    del self.stock_entry_price[symbol]
+                if self.p.debug:
+                    print(f"[{self.datetime.date(0)}] ✅ 卖出成交: {symbol} | 价格: {order.executed.price:.2f} | 数量: {order.executed.size}")
+
+        elif order.status in [order.Canceled, order.Margin, order.Rejected]:
+            if self.p.debug:
+                print(f"[{self.datetime.date(0)}] ⚠️ 订单异常: {order.data._name} | 状态: {order.status}")
 
     def notify_trade(self, trade):
         if not trade.isclosed or trade.data._name == BENCHMARK_SYMBOL:

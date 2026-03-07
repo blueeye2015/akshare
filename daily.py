@@ -296,7 +296,7 @@ def main():
     parser = argparse.ArgumentParser(description='股票历史数据采集工具')
     parser.add_argument('--mode', choices=['incremental', 'full'], default='incremental',
                        help='运行模式: incremental-增量更新, full-全量更新')
-    parser.add_argument('--adjust', choices=['', 'qfq', 'hfq'], default='',
+    parser.add_argument('--adjust', choices=['', 'qfq', 'hfq'], default='hfq',
                        help='复权方式: 空-不复权, qfq-前复权, hfq-后复权')
     parser.add_argument('--processes', type=int, default=10, help='并行进程数')
     parser.add_argument('--start_date', type=str, default='20100101',

@@ -3,7 +3,7 @@ import numpy as np
 import os
 import glob
 import shutil
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import datetime
 
 # --- 配置部分 ---
@@ -15,7 +15,9 @@ HOLDINGS_FILE = "my_holdings.csv"
 HISTORY_DIR = "./history_holdings"
 TOP_N_PCT = 0.03   
 
-# 🔥 初始资金 & 摩擦成本
+# 🔥 新增配置：每日收益记录表名
+PERFORMANCE_TABLE = "my_holdings_performance" 
+
 DEFAULT_START_CAPITAL = 1000000.0 
 FRICTION_RATE = 0.003 
 
@@ -24,23 +26,85 @@ os.makedirs(HISTORY_DIR, exist_ok=True)
 def get_db_engine():
     return create_engine(DSN)
 
+def ensure_performance_table(engine):
+    """
+    确保收益记录表存在，不存在则创建
+    """
+    create_sql = f"""
+    CREATE TABLE IF NOT EXISTS {PERFORMANCE_TABLE} (
+        date DATE PRIMARY KEY,
+        total_value DECIMAL(20, 2),
+        daily_return DECIMAL(10, 4),
+        note VARCHAR(255),
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+    with engine.connect() as conn:
+        conn.execute(text(create_sql))
+        conn.commit()
+    print(f"✅ 已检查/创建收益记录表: {PERFORMANCE_TABLE}")
+
+def log_daily_performance(engine, trade_date, total_value, note=""):
+    """
+    记录当日收益到数据库 (Upsert: 存在则更新，不存在则插入)
+    """
+    # 1. 获取上一交易日的市值，计算日收益率
+    prev_value_sql = f"SELECT total_value FROM {PERFORMANCE_TABLE} WHERE date < :date ORDER BY date DESC LIMIT 1"
+    
+    daily_return = 0.0
+    with engine.connect() as conn:
+        # 使用 text() 包装 SQL 语句
+        result = conn.execute(text(prev_value_sql), {"date": trade_date}).fetchone()
+        if result and result[0]:
+            prev_val = result[0]
+            if prev_val > 0:
+                daily_return = (total_value - prev_val) / prev_val
+        
+        # 2. 插入或更新数据 (PostgreSQL 语法)
+        # 注意：如果你的数据库是 MySQL，语法略有不同 (ON DUPLICATE KEY UPDATE)
+        upsert_sql = f"""
+        INSERT INTO {PERFORMANCE_TABLE} (date, total_value, daily_return, note)
+        VALUES (:date, :total_value, :daily_return, :note)
+        ON CONFLICT (date) 
+        DO UPDATE SET 
+            total_value = EXCLUDED.total_value,
+            daily_return = EXCLUDED.daily_return,
+            note = EXCLUDED.note,
+            updated_at = CURRENT_TIMESTAMP
+        """
+        
+        conn.execute(text(upsert_sql), {
+            "date": trade_date,
+            "total_value": total_value,
+            "daily_return": daily_return,
+            "note": note
+        })
+        conn.commit()
+        
+    print(f"📊 已记录收益数据 | 日期: {trade_date} | 总市值: {total_value:,.2f} | 日收益: {daily_return:.4%}")
+
 def get_current_asset_value():
-    """计算当前持仓的清算价值 (滚动资金)"""
+    """
+    计算当前持仓的清算价值 (滚动资金)
+    返回: (总市值, 最新的交易日期, 是否存在旧持仓)
+    """
     if not os.path.exists(HOLDINGS_FILE):
         print("ℹ️ 未找到旧持仓文件，将使用默认初始资金启动。")
-        return DEFAULT_START_CAPITAL, False
+        return DEFAULT_START_CAPITAL, None, False
 
     print("🔄 正在计算旧持仓的清算价值...")
     df_old = pd.read_csv(HOLDINGS_FILE)
     df_old['symbol'] = df_old['symbol'].astype(str).str.zfill(6)
     
     symbol_list = df_old['symbol'].tolist()
-    if not symbol_list: return DEFAULT_START_CAPITAL, False
+    if not symbol_list: return DEFAULT_START_CAPITAL, None, False
         
     engine = get_db_engine()
     symbols_str = "'" + "','".join(symbol_list) + "'"
     
-    # 获取最新收盘价
+    # 获取最新收盘价及其对应的日期
+    # 注意：这里取的是每只股票的最新日期，可能不同。
+    # 简单起见，我们取这些日期中最近的一个作为整个组合的“估值日”
     sql = f"""
     SELECT DISTINCT ON (symbol) symbol, close, trade_date
     FROM stock_history WHERE symbol IN ({symbols_str})
@@ -49,9 +113,11 @@ def get_current_asset_value():
     try:
         df_price = pd.read_sql(sql, engine)
         price_map = df_price.set_index('symbol')['close'].to_dict()
+        # 获取所有股票的最新交易日期，取最大值作为组合估值日
+        latest_trade_date = df_price['trade_date'].max()
     except Exception as e:
         print(f"❌ 无法获取旧持仓行情: {e}")
-        return DEFAULT_START_CAPITAL, False
+        return DEFAULT_START_CAPITAL, None, False
 
     total_value = 0
     for _, row in df_old.iterrows():
@@ -61,17 +127,14 @@ def get_current_asset_value():
         curr_price = price_map.get(sym, row['cost_price']) 
         total_value += curr_price * vol
         
-    print(f"   旧持仓总市值: {total_value:,.2f}")
-    return total_value, True
+    print(f"   旧持仓总市值: {total_value:,.2f} (估值日: {latest_trade_date})")
+    return total_value, latest_trade_date, True
 
 def load_latest_factor(factor_dir):
-    """
-    🔥 自动寻找目录下最新的因子文件 (按文件名排序)
-    """
+    """自动寻找目录下最新的因子文件"""
     files = sorted(glob.glob(os.path.join(factor_dir, "factor_*.parquet")))
     if not files: 
         raise FileNotFoundError(f"❌ 目录 {factor_dir} 下没有找到任何 factor_*.parquet 文件")
-    
     latest_file = files[-1]
     print(f"📂 自动锁定最新因子文件: {os.path.basename(latest_file)}")
     return pd.read_parquet(latest_file)
@@ -81,8 +144,6 @@ def get_next_open_batch(current_date_str, symbol_list):
     if not symbol_list: return None
     engine = get_db_engine()
     symbols_str = "'" + "','".join(symbol_list) + "'"
-    
-    # 查找比 current_date_str 晚的第一条数据
     sql = f"""
     SELECT DISTINCT ON (symbol) 
         symbol, 
@@ -101,9 +162,18 @@ def get_next_open_batch(current_date_str, symbol_list):
         return pd.DataFrame()
 
 def generate_buy_list():
-    # 1. 资金计算
-    current_asset, is_rollover = get_current_asset_value()
+    engine = get_db_engine()
     
+    # 0. 初始化收益记录表
+    ensure_performance_table(engine)
+
+    # 1. 计算当前资产价值 (这是在调仓前的市值)
+    current_asset, last_val_date, is_rollover = get_current_asset_value()
+    
+    # 🔥🔥 核心修改：记录当前持仓的今日收益 (在调仓前记录)
+    if last_val_date:
+        log_daily_performance(engine, last_val_date, current_asset, note="调仓前市值")
+
     if is_rollover:
         available_capital = current_asset * (1 - FRICTION_RATE)
         # 归档旧文件
@@ -118,23 +188,19 @@ def generate_buy_list():
     print(f"\n1. 读取因子数据...")
     df_factor = load_latest_factor(FACTOR_DIR)
     
-    # 🔥🔥🔥 核心：获取因子文件里的真实最大日期 🔥🔥🔥
+    # 获取因子日期
     factor_date = df_factor['trade_date'].max()
     factor_date_str = pd.to_datetime(factor_date).strftime('%Y-%m-%d')
     print(f"   ⏱️ 因子数据截止日期 (T日): {factor_date_str}")
     
-    # ⚠️ 过期检查 (可选)
+    # 检查数据过期
     days_lag = (datetime.datetime.now() - pd.to_datetime(factor_date)).days
     if days_lag > 10:
-        print(f"   ⚠️⚠️⚠️ 警告: 你的因子数据已经是 {days_lag} 天前的了！")
-        print(f"   请确认是否忘记运行 prepare_data_daily 更新数据？")
-        # x = input("   按回车键继续使用旧数据，或 Ctrl+C 中止: ")
+        print(f"   ⚠️⚠️⚠️ 警告: 因子数据滞后 {days_lag} 天")
 
-    # 提取当日数据
     df_current = df_factor[df_factor['trade_date'] == factor_date].copy()
     
     # 加载基础信息
-    engine = get_db_engine()
     df_basic = pd.read_sql("SELECT symbol, list_date, name FROM stock_basic", engine)
     df_basic['list_date'] = pd.to_datetime(df_basic['list_date'])
     df_merge = pd.merge(df_current, df_basic, on='symbol', how='left')
@@ -157,23 +223,13 @@ def generate_buy_list():
     
     if df_next.empty:
         print("❌ 错误：数据库里没有找到 T+1 日的数据！")
-        print("   原因可能是：stock_history 没有更新到最新日期。")
         return
 
-    # 合并
     df_final = pd.merge(df_candidates, df_next, on='symbol', how='inner')
-    
-    # 确定目标交易日 (众数)
     market_trade_date = df_final['next_date'].mode()[0]
     trade_date_str = pd.to_datetime(market_trade_date).strftime('%Y-%m-%d')
     print(f"   📅 锁定目标交易日 (T+1): {trade_date_str}")
     
-    # 再次检查日期距离
-    days_gap = (pd.to_datetime(market_trade_date) - pd.to_datetime(factor_date)).days
-    if days_gap > 10:
-        print(f"   ⚠️ 注意：因子日期({factor_date_str}) 与 交易日期({trade_date_str}) 相差 {days_gap} 天。")
-        print("   这意味着你在用很久以前的信号做交易。")
-
     # 4. 过滤 (停牌/涨停)
     valid_list = []
     suspend_count = 0
@@ -184,12 +240,10 @@ def generate_buy_list():
         next_date = row['next_date']
         vol = row['volume']
         
-        # 停牌过滤
         if next_date != market_trade_date or vol == 0:
             suspend_count += 1
             continue
             
-        # 涨停过滤
         limit_ratio = 0.10
         if 'ST' in str(row['name']): limit_ratio = 0.05
         elif sym.startswith(('688', '300')): limit_ratio = 0.20
@@ -222,9 +276,15 @@ def generate_buy_list():
     df_buy['volume'] = (available_capital * df_buy['target_weight'] / df_buy['cost_price']) // 100 * 100
     df_buy = df_buy[df_buy['volume'] > 0].copy()
 
-    # 输出
+    # 输出 CSV
     output_cols = ['symbol', 'name', 'cost_price', 'volume', 'buy_date', 'factor', 'target_weight']
     df_buy[output_cols].to_csv(HOLDINGS_FILE, index=False, encoding='utf-8-sig')
+    
+    # 🔥🔥 可选：同时记录新组合在 T+1 日的预计开盘市值
+    # 这一步是为了让资金曲线连续，但注意此时用的是 Open 价格，不是 Close
+    # 如果你希望用收盘价记录，建议每天专门运行一个只记录不含调仓的脚本
+    # new_portfolio_value = (df_buy['cost_price'] * df_buy['volume']).sum()
+    # log_daily_performance(engine, market_trade_date, new_portfolio_value, note="新组合开盘市值")
     
     print("\n" + "="*50)
     print(f"✅ 购买清单已更新: {HOLDINGS_FILE}")

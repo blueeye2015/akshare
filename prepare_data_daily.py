@@ -243,7 +243,7 @@ def process_single_stock(symbol):
         out_cols = feature_cols + ['target_label', 'close']
         
         # 截取有效时间段
-        res = df.loc['2014-01-01':'2026-02-28', out_cols].copy()
+        res = df.loc['2014-01-01':'2026-05-09', out_cols].copy()
         res['symbol'] = symbol
         
         return res.reset_index()

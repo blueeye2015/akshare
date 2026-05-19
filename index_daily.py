@@ -2,12 +2,11 @@
 """
 指数每日行情采集（index_daily）
 用法：
-python index_daily.py --tushare_token YOUR_TOKEN  \
-                      --mode incremental          \
+python index_daily.py --mode incremental          \
                       --processes 4               \
                       --start_date 20040101
 """
-import tushare as ts
+import os
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -18,8 +17,12 @@ import multiprocessing
 import argparse
 import sys
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 from functools import wraps
 from typing import List, Dict, Optional
+from python_fetch import python_fetch, get_pro_client
+
+load_dotenv('.env')
 
 # ---------------- 日志 ----------------
 logging.basicConfig(
@@ -59,10 +62,13 @@ def retry_on_exception(retries=3, delay=5, backoff=2, exceptions=(Exception,)):
 
 # ---------------- 采集器 ----------------
 class IndexDailyCollector:
-    def __init__(self, db_params: dict, tushare_token: str):
+    def __init__(self, db_params: dict):
         self.db_params = db_params
         self.table_name = 'index_daily'
-        self.pro = ts.pro_api(tushare_token)
+        tushare_token = os.getenv('TUSHARE')
+        if not tushare_token:
+            raise ValueError("Missing TUSHARE in .env")
+        self.pro = get_pro_client(tushare_token)
 
     # ---------- PG 连接 ----------
     def get_db_connection(self):
@@ -103,7 +109,9 @@ class IndexDailyCollector:
             '399005.SZ',  # 中小板指
             '399006.SZ',  # 创业板指
             '399107.SZ',  # 深证 A 指（全市场成交）
-            '399106.SZ'   # 深证综指
+            '399106.SZ',  # 深证综指
+            '000688.SH',   # 科创50
+            '000018.SH'   # 180金融
         ]
 
     # ---------- 增量用 ----------
@@ -122,7 +130,7 @@ class IndexDailyCollector:
     # ---------- 拉数据 ----------
     @retry_on_exception(retries=3, delay=5, backoff=2)
     def fetch_data(self, ts_code: str, start_date: str, end_date: str) -> pd.DataFrame:
-        df = self.pro.index_daily(
+        df = python_fetch('index_daily', pro=self.pro, 
             ts_code=ts_code,
             start_date=start_date,
             end_date=end_date,
@@ -158,12 +166,12 @@ class IndexDailyCollector:
         logger.info(f"Upsert {len(df)} 条记录")
 
 # ---------------- 多进程任务 ----------------
-def process_index_batch(db_params: Dict, token: str, index_batch: List[str],
+def process_index_batch(db_params: Dict, index_batch: List[str],
                        batch_id: int, start_date: str, end_date: str, mode: str):
     if not index_batch:
         logger.warning(f"Batch {batch_id} 空列表，跳过")
         return
-    collector = IndexDailyCollector(db_params, token)
+    collector = IndexDailyCollector(db_params)
     ok, ng = 0, 0
     for idx, ts_code in enumerate(index_batch, 1):
         try:
@@ -187,23 +195,22 @@ def process_index_batch(db_params: Dict, token: str, index_batch: List[str],
 # ---------------- main ----------------
 def main():
     parser = argparse.ArgumentParser(description='指数每日行情采集（index_daily）')
-    parser.add_argument('--tushare_token', required=True, help='Tushare token')
     parser.add_argument('--mode', choices=['incremental', 'full'], default='incremental')
     parser.add_argument('--processes', type=int, default=4, help='并行进程数')
-    parser.add_argument('--start_date', type=str, default='20040101')
+    parser.add_argument('--start_date', type=str, default='20000101')
     parser.add_argument('--end_date', type=str, default=datetime.now().strftime('%Y%m%d'))
     args = parser.parse_args()
 
     db_params = dict(host='192.168.50.149', port=5432, user='postgres',
                     password='12', database='Financialdata')
 
-    collector = IndexDailyCollector(db_params, args.tushare_token)
+    collector = IndexDailyCollector(db_params)
     collector.init_table()
 
     indexes = collector.get_index_list()
     num = min(args.processes, len(indexes))
     batches = chunks(indexes, num)
-    tasks = [(db_params, args.tushare_token, b, i, args.start_date, args.end_date, args.mode)
+    tasks = [(db_params, b, i, args.start_date, args.end_date, args.mode)
             for i, b in enumerate(batches) if b]
 
     logger.info(f"共 {len(indexes)} 只指数，{num} 进程，{len(tasks)} 个批次，模式={args.mode}")

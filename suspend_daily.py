@@ -2,12 +2,11 @@
 """
 每日停复牌信息采集（suspend_d）
 用法：
-python suspend_daily.py --tushare_token YOUR_TOKEN \
-                        --mode incremental          \
+python suspend_daily.py --mode incremental          \
                         --processes 4               \
                         --start_date 20040101
 """
-import tushare as ts
+import os
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -18,8 +17,12 @@ import multiprocessing
 import argparse
 import sys
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 from functools import wraps
 from typing import List, Dict, Optional
+from python_fetch import python_fetch, get_pro_client
+
+load_dotenv('.env')
 
 # ---------------- 日志 ----------------
 logging.basicConfig(
@@ -59,10 +62,13 @@ def retry_on_exception(retries=3, delay=5, backoff=2, exceptions=(Exception,)):
 
 # ---------------- 采集器 ----------------
 class SuspendDailyCollector:
-    def __init__(self, db_params: dict, tushare_token: str):
+    def __init__(self, db_params: dict):
         self.db_params = db_params
         self.table_name = 'suspend_daily'
-        self.pro = ts.pro_api(tushare_token)
+        tushare_token = os.getenv('TUSHARE')
+        if not tushare_token:
+            raise ValueError("Missing TUSHARE in .env")
+        self.pro = get_pro_client(tushare_token)
 
     # ---------- PG 连接 ----------
     def get_db_connection(self):
@@ -87,7 +93,7 @@ class SuspendDailyCollector:
     # ---------- 股票列表 ----------
     def get_stock_list(self) -> List[str]:
         """获取当日可交易股票列表（可自己扩展）"""
-        df = self.pro.stock_basic(exchange='', list_status='L',
+        df = python_fetch('stock_basic', pro=self.pro, exchange='', list_status='L',
                                  fields='ts_code')
         return df['ts_code'].tolist()
 
@@ -107,7 +113,7 @@ class SuspendDailyCollector:
     # ---------- 拉数据 ----------
     @retry_on_exception(retries=3, delay=5, backoff=2)
     def fetch_data(self, ts_code: str, start_date: str, end_date: str) -> pd.DataFrame:
-        df = self.pro.suspend_d(ts_code=ts_code,
+        df = python_fetch('suspend_d', pro=self.pro, ts_code=ts_code,
                                start_date=start_date,
                                end_date=end_date)
         return df
@@ -150,12 +156,12 @@ class SuspendDailyCollector:
         logger.info(f"Upsert {len(df)} 条记录")
 
 # ---------------- 多进程任务 ----------------
-def process_stock_batch(db_params: Dict, token: str, stock_batch: List[str],
+def process_stock_batch(db_params: Dict, stock_batch: List[str],
                        batch_id: int, start_date: str, end_date: str, mode: str):
     if not stock_batch:
         logger.warning(f"Batch {batch_id} 空列表，跳过")
         return
-    collector = SuspendDailyCollector(db_params, token)
+    collector = SuspendDailyCollector(db_params)
     ok, ng = 0, 0
     for idx, ts_code in enumerate(stock_batch, 1):
         try:
@@ -179,7 +185,6 @@ def process_stock_batch(db_params: Dict, token: str, stock_batch: List[str],
 # ---------------- main ----------------
 def main():
     parser = argparse.ArgumentParser(description='每日停复牌信息采集（suspend_d）')
-    parser.add_argument('--tushare_token', required=True, help='Tushare token')
     parser.add_argument('--mode', choices=['incremental', 'full'], default='incremental')
     parser.add_argument('--processes', type=int, default=4, help='并行进程数')
     parser.add_argument('--start_date', type=str, default='20040101')
@@ -189,13 +194,13 @@ def main():
     db_params = dict(host='192.168.50.149', port=5432, user='postgres',
                     password='12', database='Financialdata')
 
-    collector = SuspendDailyCollector(db_params, args.tushare_token)
+    collector = SuspendDailyCollector(db_params)
     collector.init_table()
 
     stocks = collector.get_stock_list()
     num = min(args.processes, len(stocks))
     batches = chunks(stocks, num)
-    tasks = [(db_params, args.tushare_token, b, i, args.start_date, args.end_date, args.mode)
+    tasks = [(db_params, b, i, args.start_date, args.end_date, args.mode)
             for i, b in enumerate(batches) if b]
 
     logger.info(f"共 {len(stocks)} 只股票，{num} 进程，{len(tasks)} 个批次，模式={args.mode}")

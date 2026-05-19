@@ -3,7 +3,6 @@
 把 akshare 接口整体替换成 tushare 的 daily 接口
 仅改动 fetch_stock_data 与 get_all_stocks 两处，其余代码不变
 """
-import tushare as ts     # 新增
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -16,6 +15,7 @@ import sys
 from datetime import datetime, timedelta
 from functools import wraps
 from typing import List, Dict, Optional
+from python_fetch import python_fetch
 
 # ---------- 日志配置 ----------
 logging.basicConfig(
@@ -69,12 +69,8 @@ def fetch_stock_data(symbol: str, period: str, start_date: str,
     """
     # 原 symbol 是 6 位数字，tushare 需要 000001.SZ 这种格式
     ts_code = _ensure_ts_code(symbol)
-
-    # 初始化 tushare pro 实例（全局也可）
-    pro = ts.pro_api('540a303240aac02dc8cfeaa32f1110aacf880c9fb8d3cd5dd395af4c')          # 如果设置过 TS_TOKEN 环境变量可省略 token 参数
-
     # 拉取数据
-    df = pro.daily(ts_code=ts_code,
+    df = python_fetch('daily', ts_code=ts_code,
                    start_date=start_date,
                    end_date=end_date)
 
@@ -191,8 +187,7 @@ class StockHistoryCollector:
     # 获取股票列表改用 tushare 的 stock_basic
     def get_all_stocks(self) -> List[str]:
         try:
-            pro = ts.pro_api('540a303240aac02dc8cfeaa32f1110aacf880c9fb8d3cd5dd395af4c')
-            df = pro.stock_basic(exchange='', list_status='L',
+            df = python_fetch('stock_basic', exchange='', list_status='L',
                                 fields='ts_code,symbol,name')
             # 只要 0/3/6 开头的 A 股
             stock_list = [

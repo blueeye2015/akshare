@@ -1,4 +1,4 @@
-import tushare as ts
+import os
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -10,7 +10,11 @@ import multiprocessing
 import argparse
 import sys
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 from functools import wraps
+from python_fetch import python_fetch, get_pro_client
+
+load_dotenv('.env')
 
 # 设置日志
 logging.basicConfig(
@@ -51,10 +55,13 @@ def retry_on_exception(retries=3, delay=5, backoff=2, exceptions=(Exception,)):
     return decorator
 
 class DailyBasicCollector:
-    def __init__(self, db_params: dict, tushare_token: str):
+    def __init__(self, db_params: dict):
         self.db_params = db_params
         self.table_name = 'daily_basic'
-        self.pro = ts.pro_api(tushare_token)
+        tushare_token = os.getenv('TUSHARE')
+        if not tushare_token:
+            raise ValueError("Missing TUSHARE in .env")
+        self.pro = get_pro_client(tushare_token)
         
     def get_db_connection(self):
         return psycopg2.connect(**self.db_params)
@@ -95,7 +102,7 @@ class DailyBasicCollector:
     def get_stock_list(self) -> List[str]:
         """获取股票列表"""
         try:
-            df = self.pro.stock_basic(
+            df = python_fetch('stock_basic', pro=self.pro, 
                 exchange='',
                 list_status='L',
                 fields='ts_code'
@@ -122,7 +129,7 @@ class DailyBasicCollector:
     @retry_on_exception(retries=3, delay=5, backoff=2)
     def fetch_data(self, ts_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         """获取每日基本面指标数据"""
-        df = self.pro.daily_basic(
+        df = python_fetch('daily_basic', pro=self.pro, 
             ts_code=ts_code,
             start_date=start_date,
             end_date=end_date
@@ -167,7 +174,7 @@ class DailyBasicCollector:
                     logger.error(f"保存数据失败: {str(e)}")
                     raise
 
-def process_stock_batch(db_params: Dict, tushare_token: str, stock_batch: List[str], 
+def process_stock_batch(db_params: Dict, stock_batch: List[str], 
                        batch_id: int, start_date: str, end_date: str, mode: str):
     """处理一批股票的数据采集"""
     if not stock_batch:
@@ -175,7 +182,7 @@ def process_stock_batch(db_params: Dict, tushare_token: str, stock_batch: List[s
         return
         
     try:
-        collector = DailyBasicCollector(db_params, tushare_token)
+        collector = DailyBasicCollector(db_params)
         total_stocks = len(stock_batch)
         
         logger.info(f"Batch {batch_id}: Starting processing {total_stocks} stocks")
@@ -253,12 +260,6 @@ def main():
         default=datetime.now().strftime('%Y%m%d'),
         help='结束日期 (YYYYMMDD)'
     )
-    parser.add_argument(
-        '--tushare_token',
-        type=str,
-        required=True,
-        help='Tushare API token'
-    )
     
     try:
         args = parser.parse_args()
@@ -276,7 +277,7 @@ def main():
     }
     
     try:
-        collector = DailyBasicCollector(db_params, args.tushare_token)
+        collector = DailyBasicCollector(db_params)
         collector.init_table()
         
         # 获取股票列表
@@ -301,7 +302,6 @@ def main():
             if batch:
                 tasks.append((
                     db_params, 
-                    args.tushare_token,
                     batch, 
                     i, 
                     args.start_date, 

@@ -14,8 +14,8 @@ DST_TABLE = "strategy_performance"   # 收益记录表
 INITIAL_BUDGET = 1000000.0           # 初始总预算 (仅当数据库无历史记录时使用)
 
 # 设定本次回测区间
-START_DATE_STR = '2026-02-06'
-END_DATE_STR = '2026-02-28'
+START_DATE_STR = '2026-03-08'
+END_DATE_STR = '2026-05-08'
 
 def get_db_engine():
     return create_engine(DSN)
@@ -42,7 +42,7 @@ def backfill_history():
 
     # 2. 📂 读取当前持仓
     print(f"2. 📖 读取 {SRC_TABLE} 中的持仓配置...")
-    pos_sql = f"SELECT symbol, volume FROM {SRC_TABLE}"
+    pos_sql = f"SELECT symbol, volume FROM {SRC_TABLE} WHERE status = 'active' "
     df_pos = pd.read_sql(pos_sql, engine)
     
     if df_pos.empty:

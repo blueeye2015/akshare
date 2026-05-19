@@ -12,7 +12,11 @@ from psycopg2.extras import execute_values
 import logging
 import argparse
 import sys
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv('.env')
 
 # ---------- 日志 ----------
 logging.basicConfig(
@@ -27,9 +31,10 @@ logger = logging.getLogger(__name__)
 
 # ---------- 采集器 ----------
 class StockBasicCollector:
-    def __init__(self, db_params: dict, tushare_token: str):
+    def __init__(self, db_params: dict):
         self.db_params = db_params
         self.table_name = 'stock_basic'
+        tushare_token = os.getenv('TUSHARE')
         self.pro = ts.pro_api(tushare_token)
 
     # ---------- PG 连接 ----------
@@ -112,7 +117,6 @@ class StockBasicCollector:
 # ---------- main ----------
 def main():
     parser = argparse.ArgumentParser(description='股票基础信息全量采集')
-    parser.add_argument('--tushare_token', required=True, help='Tushare token')
     parser.add_argument('--market', type=str, help='市场类别 主板/创业板/科创板/CDR/北交所')
     parser.add_argument('--list_status', type=str, default='L', help='上市状态 L/D/P，默认L')
     parser.add_argument('--exchange', type=str, help='交易所 SSE/SZSE/BSE')
@@ -125,7 +129,7 @@ def main():
     db_params = dict(host='192.168.50.149', port=5432, user='postgres',
                     password='12', database='Financialdata')
 
-    collector = StockBasicCollector(db_params, args.tushare_token)
+    collector = StockBasicCollector(db_params)
     collector.init_table()
 
     # 组装过滤参数

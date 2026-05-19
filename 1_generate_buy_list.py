@@ -10,7 +10,7 @@ load_dotenv('.env')
 DSN = os.getenv('DB_DSN1')
 
 # --- 配置部分 ---
-FACTOR_DIR = "./factor_cache_global"  # 你的因子文件夹路径
+FACTOR_DIR = "./factor_cache_global_short"  # 你的因子文件夹路径
 OUTPUT_FILE = "my_holdings.csv"       # 输出的清单文件名
 
 # 🔥 核心配置：选股比例
@@ -46,7 +46,7 @@ def generate_buy_list():
         df_factor = df_factor.reset_index()
     
     # 获取因子文件中对应的最新交易日期 (即 T 日)
-    factor_date = '2026-02-05'
+    factor_date = df_factor['trade_date'].max()
     factor_date_str = pd.to_datetime(factor_date).strftime('%Y-%m-%d')
     print(f"   📅 因子基准日 (T日): {factor_date_str}")
     
@@ -66,10 +66,11 @@ def generate_buy_list():
         list_date = row['list_date']
         factor_val = row['factor']
         
-        # 基础过滤：剔除上市不足 60 天的新股，剔除因子为空的
+        # 基础过滤：剔除上市不足 60 天的新股，剔除因子为空的，剔除 ST 股
         if pd.isna(list_date): continue
         if (current_time - list_date).days < 60: continue
         if pd.isna(factor_val): continue
+        if name and 'ST' in name: continue
         
         # 记录候选股票
         candidates.append({

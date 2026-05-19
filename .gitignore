@@ -1,6 +1,7 @@
 #忽略日志
 *.log
 *.csv
+*.txt
 cache/
 factor_cache_global/
 factor_cache_global_short/
@@ -8,3 +9,4 @@ factor_cache_global_short/
 articles/
 *.md
 workspace-state.json
+history_holdings/

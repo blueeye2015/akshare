@@ -10,3 +10,4 @@ articles/
 *.md
 workspace-state.json
 history_holdings/
+.env
